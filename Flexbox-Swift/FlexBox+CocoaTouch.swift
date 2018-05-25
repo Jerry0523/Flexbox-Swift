@@ -10,7 +10,7 @@ import UIKit
 
 class FlexboxView: UIView, FlexboxDelegate {
     
-    lazy var flexbox = Flexbox(delegate: self)
+    private(set) lazy var flexbox = Flexbox(delegate: self)
     
     override func layoutSubviews() {
         super.layoutSubviews()
