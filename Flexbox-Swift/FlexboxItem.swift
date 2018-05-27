@@ -6,6 +6,15 @@
 //  Copyright © 2018年 com.jerry. All rights reserved.
 //
 
+struct FlexboxPoint: Equatable {
+    
+    var x: Float
+    
+    var y: Float
+    
+    static let zero = FlexboxPoint(x: 0, y: 0)
+}
+
 struct FlexboxSize: Equatable {
     
     var w: Float
@@ -41,26 +50,40 @@ struct FlexboxInsets: Equatable {
     static let zero = FlexboxInsets(top: 0, left: 0, bottom: 0, right: 0)
 }
 
-protocol FlexboxItem: class {
+class FlexboxItem {
     
-    var flex: (flexGrow: Float, flexShrink: Float, flexBasis: Float?) { get set }
+    init(_ onMeasure: @escaping (FlexboxSize) -> (FlexboxSize)) {
+        self.onMeasure = onMeasure
+    }
     
-    var flexOrder: Int { get set }
+    let onMeasure: (FlexboxSize) -> (FlexboxSize)
     
-    var flexGrow: Float { get set }
+    var flex: (flexGrow: Float, flexShrink: Float, flexBasis: Float?) {
+        get {
+            return (flexGrow, flexShrink, flexBasis)
+        }
+        
+        set {
+            flexGrow = newValue.flexGrow
+            flexShrink = newValue.flexShrink
+            flexBasis = newValue.flexBasis
+        }
+    }
     
-    var flexShrink: Float { get set }
+    var flexOrder = 0
     
-    var flexBasis: Float? { get set }
+    var flexGrow = Float(0)
     
-    var alignSelf: Flexbox.AlignSelf { get set }
+    var flexShrink = Float(1.0)
     
-    var flexMargin: FlexboxInsets { get set }
+    var flexBasis: Float?
     
-    var flexFrame: FlexboxRect? { get set }
+    var alignSelf = Flexbox.AlignSelf.auto
     
-    func measure(_ size: FlexboxSize) -> FlexboxSize
+    var flexMargin =  FlexboxInsets.zero
     
+    var flexFrame: FlexboxRect?
+
 }
 
 extension FlexboxItem {

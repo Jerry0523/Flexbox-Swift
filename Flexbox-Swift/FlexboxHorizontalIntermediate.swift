@@ -1,22 +1,22 @@
 //
-//  FlexboxVerticalIntermediate.swift
+//  FlexboxHorizontalIntermediate.swift
 //  Flexbox-Swift
 //
 //  Created by Jerry on 2018/5/24.
 //  Copyright © 2018年 com.jerry. All rights reserved.
 //
 
-struct FlexboxVerticalIntermediate {
+struct FlexboxHorizontalIntermediate {
     
-    let flexContainerDimension: FlexboxSize
+    var flexContainerDimension = FlexboxSize.zero
     
-    let flexWrap: Flexbox.Wrap
+    var flexWrap = Flexbox.Wrap.nowrap
     
-    let flexAlignItems: Flexbox.AlignItems
+    var flexAlignItems = Flexbox.AlignItems.stretch
     
-    let flexAlignContent: Flexbox.AlignContent
+    var flexAlignContent = Flexbox.AlignContent.start
     
-    let flexJustifyContent: Flexbox.JustifyContent
+    var flexJustifyContent = Flexbox.JustifyContent.start
     
     var cursor = FlexboxPoint.zero
     
@@ -32,18 +32,18 @@ struct FlexboxVerticalIntermediate {
     
     var dimensionsOfCross = [Float]()
     
-    init(alignItems: Flexbox.AlignItems, alignContent: Flexbox.AlignContent, wrap: Flexbox.Wrap, justifyContent: Flexbox.JustifyContent, containerSize: FlexboxSize) {
+    init(alignItems: Flexbox.AlignItems, alignContent: Flexbox.AlignContent, wrap: Flexbox.Wrap, justifyContent: Flexbox.JustifyContent, containerDimension: FlexboxSize) {
         flexAlignItems = alignItems
         flexAlignContent = alignContent
         flexWrap = wrap
-        flexContainerDimension = containerSize
+        flexContainerDimension = containerDimension
         flexJustifyContent = justifyContent
     }
     
     mutating func prepare(_ item: FlexboxItem) -> Bool {
         indexOfItemsInCurrentAxis += 1
         measure(item)
-        let shouldWrap = flexWrap.isWrapEnabled && cursor.y + item.flexHeight > flexContainerDimension.h
+        let shouldWrap = flexWrap.isWrapEnabled && cursor.x + item.flexWidth > flexContainerDimension.w
         if shouldWrap {
             dimensionsOfCross.append(dimensionOfCurrentCross)
         }
@@ -51,10 +51,10 @@ struct FlexboxVerticalIntermediate {
     }
     
     mutating func wrap() {
-        cursor.x += dimensionOfCurrentCross
+        cursor.y += dimensionOfCurrentCross
         indexOfItemsInCurrentAxis = 0
         dimensionOfCurrentCross = Float(0)
-        cursor.y = Float(0)
+        cursor.x = Float(0)
         growOfItemsInCurrentAxis.removeAll()
         shrinkOfItemsInCurrentAxis.removeAll()
     }
@@ -63,8 +63,8 @@ struct FlexboxVerticalIntermediate {
         item.flexFrame!.x = cursor.x + item.flexMargin.left
         item.flexFrame!.y = cursor.y + item.flexMargin.top
         
-        cursor.y += item.flexHeight
-        dimensionOfCurrentCross = max(dimensionOfCurrentCross, item.flexWidth)
+        cursor.x += item.flexWidth
+        dimensionOfCurrentCross = max(dimensionOfCurrentCross, item.flexHeight)
         
         if item.flexGrow > 0 {
             growOfItemsInCurrentAxis[indexOfItemsInCurrentAxis] = item.flexGrow
@@ -79,16 +79,16 @@ struct FlexboxVerticalIntermediate {
         var fixedAxisOffset = Float(0)
         var itemsAxisDimension = Float(0)
         items.enumerated().forEach { (index, item) in
-            item.flexFrame?.y += fixedAxisOffset
+            item.flexFrame?.x += fixedAxisOffset
             fixCrossAlignmentForItem(item)
             if let growOffset = growAndShrinkVal.growValInLine?[index] {
-                item.flexFrame?.h += growOffset
+                item.flexFrame?.w += growOffset
                 fixedAxisOffset += growOffset
             } else if let shrinkOffset = growAndShrinkVal.shrinkValInLine?[index] {
-                item.flexFrame?.h -= shrinkOffset
+                item.flexFrame?.w -= shrinkOffset
                 fixedAxisOffset -= shrinkOffset
             }
-            itemsAxisDimension += item.flexHeight
+            itemsAxisDimension += item.flexWidth
         }
         if growAndShrinkVal.growValInLine == nil && growAndShrinkVal.shrinkValInLine == nil {
             fixAxisDistributionForItems(items, axisDimension: itemsAxisDimension)
@@ -99,32 +99,32 @@ struct FlexboxVerticalIntermediate {
         dimensionsOfCross.append(dimensionOfCurrentCross)
         if dimensionsOfCross.count == 1 {
             items.forEach { item in
-                item.flexFrame?.x += (flexContainerDimension.w - dimensionOfCurrentCross) * 0.5
+                item.flexFrame?.y += (flexContainerDimension.h - dimensionOfCurrentCross) * 0.5
             }
         } else if flexAlignContent != .start {
-            let contentWidth = dimensionsOfCross.reduce(0, +)
+            let contentHeight = dimensionsOfCross.reduce(0, +)
             items.enumerated().forEach { (offset, item) in
                 switch flexAlignContent {
                 case .start: break
                 case .end:
-                    item.flexFrame?.x += flexContainerDimension.w - contentWidth
+                    item.flexFrame?.y += flexContainerDimension.h - contentHeight
                 case .center:
-                    item.flexFrame?.x += (flexContainerDimension.w - contentWidth) * 0.5
+                    item.flexFrame?.y += (flexContainerDimension.h - contentHeight) * 0.5
                 case .spaceBetween:
                     if let lineIndex = indexesOfAxisForItems[offset] {
-                        item.flexFrame?.x += (flexContainerDimension.w - contentWidth) * Float(lineIndex) / Float(dimensionsOfCross.count - 1)
+                        item.flexFrame?.y += (flexContainerDimension.h - contentHeight) * Float(lineIndex) / Float(dimensionsOfCross.count - 1)
                     }
                 case .spaceAround:
                     if let lineIndex = indexesOfAxisForItems[offset] {
-                        item.flexFrame?.x += (flexContainerDimension.w - contentWidth) * (Float(lineIndex) + 0.5) / Float(dimensionsOfCross.count)
+                        item.flexFrame?.y += (flexContainerDimension.h - contentHeight) * (Float(lineIndex) + 0.5) / Float(dimensionsOfCross.count)
                     }
                 case .stretch:
                     if let lineIndex = indexesOfAxisForItems[offset] {
-                        var stretchOffsetX = Float(0)
+                        var stretchOffsetY = Float(0)
                         for stretchLineIndex in 0..<lineIndex {
-                            stretchOffsetX += dimensionsOfCross[stretchLineIndex]
+                            stretchOffsetY += dimensionsOfCross[stretchLineIndex]
                         }
-                        item.flexFrame?.x += (stretchOffsetX * flexContainerDimension.w / contentWidth - stretchOffsetX)
+                        item.flexFrame?.y += (stretchOffsetY * flexContainerDimension.h / contentHeight - stretchOffsetY)
                     }
                 }
             }
@@ -132,15 +132,15 @@ struct FlexboxVerticalIntermediate {
     }
 }
 
-extension FlexboxVerticalIntermediate {
+extension FlexboxHorizontalIntermediate {
     
     private func fixCrossAlignmentForItem(_ item: FlexboxItem) {
         let alignment = item.alignSelf.toAlignItems() ?? flexAlignItems
         switch alignment {
         case .start: break
-        case .end: item.flexFrame!.x = cursor.x + dimensionOfCurrentCross - item.flexMargin.right - item.flexFrame!.w
-        case .center: item.flexFrame!.x = cursor.x + (dimensionOfCurrentCross - item.flexWidth) * 0.5 + item.flexMargin.left
-        case .stretch: item.flexFrame!.w = dimensionOfCurrentCross - item.flexMargin.left - item.flexMargin.right
+        case .end: item.flexFrame!.y = cursor.y + dimensionOfCurrentCross - item.flexMargin.bottom - item.flexFrame!.h
+        case .center: item.flexFrame!.y = cursor.y + (dimensionOfCurrentCross - item.flexHeight) * 0.5 + item.flexMargin.top
+        case .stretch: item.flexFrame!.h = dimensionOfCurrentCross - item.flexMargin.top - item.flexMargin.bottom
         case .baseline:break
         }
     }
@@ -148,8 +148,8 @@ extension FlexboxVerticalIntermediate {
     private func measure(_ item: FlexboxItem) {
         var size = FlexboxSize.zero
         if let basis = item.flexBasis {
-            size = item.onMeasure(FlexboxSize(w: 0, h: Float(basis)))
-            size.h = max(size.h, Float(basis))
+            size = item.onMeasure(FlexboxSize(w: Float(basis), h: 0))
+            size.w = max(size.w, Float(basis))
         } else {
             size = item.onMeasure(FlexboxSize.zero)
         }
@@ -160,7 +160,7 @@ extension FlexboxVerticalIntermediate {
         var growValInLine: [Int: Float]? = nil
         var shrinkValInLine: [Int: Float]? = nil
         
-        let lengthToFix = cursor.y - flexContainerDimension.h
+        let lengthToFix = cursor.x - flexContainerDimension.w
         if lengthToFix > 0 {
             let shrinkSum = shrinkOfItemsInCurrentAxis.reduce(0, {$0 + $1.value})
             if shrinkSum > 0 {
@@ -188,13 +188,13 @@ extension FlexboxVerticalIntermediate {
         items.enumerated().forEach { (index, item) in
             switch mFlexJustifyConent {
             case .end:
-                item.flexFrame?.y += flexContainerDimension.h - axisDimension
+                item.flexFrame?.x += flexContainerDimension.w - axisDimension
             case .center:
-                item.flexFrame?.y += (flexContainerDimension.h - axisDimension) * 0.5
+                item.flexFrame?.x += (flexContainerDimension.w - axisDimension) * 0.5
             case .spaceBetween:
-                item.flexFrame?.y += (flexContainerDimension.h - axisDimension) * Float(index) / Float(items.count - 1)
+                item.flexFrame?.x += (flexContainerDimension.w - axisDimension) * Float(index) / Float(items.count - 1)
             case .spaceAround:
-                item.flexFrame?.y += (flexContainerDimension.h - axisDimension) * (Float(index) + 0.5) / Float(items.count)
+                item.flexFrame?.x += (flexContainerDimension.w - axisDimension) * (Float(index) + 0.5) / Float(items.count)
             case .start: break
             }
         }

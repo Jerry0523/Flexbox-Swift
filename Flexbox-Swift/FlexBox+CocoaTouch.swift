@@ -14,13 +14,13 @@ class FlexboxView: UIView, FlexboxDelegate {
     
     override func layoutSubviews() {
         super.layoutSubviews()
-        flexbox.layout(subviews, size: FlexboxSize(w: Float(frame.width - layoutMargins.left - layoutMargins.right), h: Float(frame.height - layoutMargins.top - layoutMargins.bottom)))
+        flexbox.layout(subviews.map{ $0.flexboxItem }, size: FlexboxSize(w: Float(frame.width - layoutMargins.left - layoutMargins.right), h: Float(frame.height - layoutMargins.top - layoutMargins.bottom)))
         mIntrinsicSize = flexbox.intrinsicSize.cgSize
         self.subviews.forEach { $0.frame = $0.flexFrame?.offsetBy(dx: Float(layoutMargins.left), dy: Float(layoutMargins.top)) ?? CGRect.zero }
     }
     
     override func sizeThatFits(_ size: CGSize) -> CGSize {
-        flexbox.layout(self.subviews, size: FlexboxSize(size))
+        flexbox.layout(subviews.map { $0.flexboxItem }, size: FlexboxSize(size))
         mIntrinsicSize = flexbox.intrinsicSize.cgSize
         return CGSize(width: mIntrinsicSize.width + layoutMargins.left + layoutMargins.right, height: mIntrinsicSize.height + layoutMargins.top + layoutMargins.bottom)
     }
@@ -40,109 +40,109 @@ class FlexboxView: UIView, FlexboxDelegate {
     }
 }
 
-extension UIView: FlexboxItem {
+extension UIView {
     
-    func measure(_ size: FlexboxSize) -> FlexboxSize {
-        if constraints.count > 0 {
-            return FlexboxSize(systemLayoutSizeFitting(size.cgSize))
-        } else {
-            return FlexboxSize(sizeThatFits(size.cgSize))
+    var flexboxItem: FlexboxItem {
+        get {
+            var item = objc_getAssociatedObject(self, &UIView.flexboxItemKey) as? FlexboxItem
+            if item == nil {
+                item = FlexboxItem({ [weak self] (size) -> (FlexboxSize) in
+                    if self == nil {
+                        return FlexboxSize.zero
+                    }
+                    
+                    if self!.constraints.count > 0 {
+                        return FlexboxSize(self!.systemLayoutSizeFitting(size.cgSize))
+                    } else {
+                        return FlexboxSize(self!.sizeThatFits(size.cgSize))
+                    }
+                })
+                objc_setAssociatedObject(self, &UIView.flexboxItemKey, item, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+            }
+            return item!
+            
         }
     }
     
     var flex: (flexGrow: Float, flexShrink: Float, flexBasis: Float?) {
         get {
-            return (flexGrow, flexShrink, flexBasis)
+            return flexboxItem.flex
         }
         
         set {
-            flexGrow = newValue.flexGrow
-            flexShrink = newValue.flexShrink
-            flexBasis = newValue.flexBasis
+            flexboxItem.flex = newValue
         }
     }
     
     var flexOrder: Int {
         get {
-            return objc_getAssociatedObject(self, &UIView.flexOrderKey) as? Int ?? 0
+            return flexboxItem.flexOrder
         }
         
         set {
-            objc_setAssociatedObject(self, &UIView.flexOrderKey, newValue, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+            flexboxItem.flexOrder = newValue
         }
     }
     
     var flexGrow: Float {
         get {
-            return objc_getAssociatedObject(self, &UIView.flexGrowKey) as? Float ?? 0
+            return flexboxItem.flexGrow
         }
         
         set {
-            objc_setAssociatedObject(self, &UIView.flexGrowKey, newValue, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+            flexboxItem.flexGrow = newValue
         }
     }
     
     var flexShrink: Float {
         get {
-            return objc_getAssociatedObject(self, &UIView.flexShrinkKey) as? Float ?? 1.0
+            return flexboxItem.flexShrink
         }
         
         set {
-            objc_setAssociatedObject(self, &UIView.flexShrinkKey, newValue, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+            flexboxItem.flexShrink = newValue
         }
     }
     
     var flexBasis: Float? {
         get {
-            return objc_getAssociatedObject(self, &UIView.flexBasisKey) as? Float
+            return flexboxItem.flexBasis
         }
         
         set {
-            objc_setAssociatedObject(self, &UIView.flexBasisKey, newValue, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+            flexboxItem.flexBasis = newValue
         }
     }
     
     var flexMargin: FlexboxInsets {
         get {
-            return objc_getAssociatedObject(self, &UIView.flexMarginKey) as? FlexboxInsets ?? FlexboxInsets.zero
+            return flexboxItem.flexMargin
         }
         set {
-            objc_setAssociatedObject(self, &UIView.flexMarginKey, newValue, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+            flexboxItem.flexMargin = newValue
         }
     }
     
     var flexFrame: FlexboxRect? {
         get {
-            return objc_getAssociatedObject(self, &UIView.flexFrameKey) as? FlexboxRect
+            return flexboxItem.flexFrame
         }
         set {
-            objc_setAssociatedObject(self, &UIView.flexFrameKey, newValue, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+            flexboxItem.flexFrame = newValue
         }
     }
     
     var alignSelf: Flexbox.AlignSelf {
         get {
-            return objc_getAssociatedObject(self, &UIView.alignSelfKey) as? Flexbox.AlignSelf ?? .auto
+            return flexboxItem.alignSelf
         }
         
         set {
-            objc_setAssociatedObject(self, &UIView.alignSelfKey, newValue, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+            flexboxItem.alignSelf = newValue
         }
     }
     
-    private static var flexOrderKey: Void?
-    
-    private static var flexGrowKey: Void?
-    
-    private static var flexShrinkKey: Void?
-    
-    private static var flexBasisKey: Void?
-    
-    private static var flexMarginKey: Void?
-    
-    private static var flexFrameKey: Void?
-    
-    private static var alignSelfKey: Void?
+    private static var flexboxItemKey: Void?
     
 }
 

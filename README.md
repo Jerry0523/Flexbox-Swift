@@ -1,2 +1,2 @@
 # Flexbox-Swift
-flex box in swift and iOS
+flexbox in swift and iOS

@@ -13,20 +13,20 @@ class Flexbox {
     }
     
     private func layoutHorizontally(_ items: [FlexboxItem], size: FlexboxSize) {
-        var intermediate = FlexboxIntermediate(alignItems: alignItems, alignContent:alignContent, wrap: flexWrap, justifyContent: justifyContent, containerSize: size)
+        var intermediate = FlexboxHorizontalIntermediate(alignItems: alignItems, alignContent:alignContent, wrap: flexWrap, justifyContent: justifyContent, containerDimension: size)
         
         items.enumerated().forEach { (idx, item) in
             if intermediate.prepare(item) {
-                intermediate.fix(Array(items[(idx - intermediate.indexInLine)..<idx]))
+                intermediate.fix(Array(items[(idx - intermediate.indexOfItemsInCurrentAxis)..<idx]))
                 intermediate.wrap()
             }
             intermediate.move(item)
-            intermediate.itemsInLineIndex[idx] = intermediate.lineHeights.count
+            intermediate.indexesOfAxisForItems[idx] = intermediate.dimensionsOfCross.count
         }
         
-        intermediate.fix(Array(items[(items.count - 1 - intermediate.indexInLine)...items.count - 1]))
-        intermediate.offsetY += intermediate.lineHeight
-        intrinsicSize = FlexboxSize(w: flexWrap.isWrapEnabled ? size.w : intermediate.offsetX , h: intermediate.offsetY)
+        intermediate.fix(Array(items[(items.count - 1 - intermediate.indexOfItemsInCurrentAxis)...items.count - 1]))
+        intermediate.cursor.y += intermediate.dimensionOfCurrentCross
+        intrinsicSize = FlexboxSize(w: flexWrap.isWrapEnabled ? size.w : intermediate.cursor.x , h: intermediate.cursor.y)
         intermediate.finalize(items)
     }
     
@@ -35,16 +35,16 @@ class Flexbox {
         
         items.enumerated().forEach { (idx, item) in
             if intermediate.prepare(item) {
-                intermediate.fix(Array(items[(idx - intermediate.indexInLine)..<idx]))
+                intermediate.fix(Array(items[(idx - intermediate.indexOfItemsInCurrentAxis)..<idx]))
                 intermediate.wrap()
             }
             intermediate.move(item)
-            intermediate.itemsInLineIndex[idx] = intermediate.lineHeights.count
+            intermediate.indexesOfAxisForItems[idx] = intermediate.dimensionsOfCross.count
         }
         
-        intermediate.fix(Array(items[(items.count - 1 - intermediate.indexInLine)...items.count - 1]))
-        intermediate.offsetX += intermediate.lineHeight
-        intrinsicSize = FlexboxSize(w:intermediate.offsetX, h: flexWrap.isWrapEnabled ? size.h : intermediate.offsetY)
+        intermediate.fix(Array(items[(items.count - 1 - intermediate.indexOfItemsInCurrentAxis)...items.count - 1]))
+        intermediate.cursor.x += intermediate.dimensionOfCurrentCross
+        intrinsicSize = FlexboxSize(w:intermediate.cursor.x, h: flexWrap.isWrapEnabled ? size.h : intermediate.cursor.y)
         intermediate.finalize(items)
     }
     
