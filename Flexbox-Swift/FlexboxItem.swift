@@ -6,57 +6,11 @@
 //  Copyright © 2018年 com.jerry. All rights reserved.
 //
 
-struct FlexboxPoint: Equatable {
-    
-    var x: Float
-    
-    var y: Float
-    
-    static let zero = FlexboxPoint(x: 0, y: 0)
-}
-
-struct FlexboxSize: Equatable {
-    
-    var w: Float
-    
-    var h: Float
-    
-    static let zero = FlexboxSize(w: 0, h: 0)
-}
-
-struct FlexboxRect: Equatable {
-    
-    var x: Float
-    
-    var y: Float
-    
-    var w: Float
-    
-    var h: Float
-    
-    static let zero = FlexboxRect(x: 0, y: 0, w: 0, h: 0)
-}
-
-struct FlexboxInsets: Equatable {
-    
-    var top: Float
-    
-    var left: Float
-    
-    var bottom: Float
-    
-    var right: Float
-    
-    static let zero = FlexboxInsets(top: 0, left: 0, bottom: 0, right: 0)
-}
-
 class FlexboxItem {
     
-    init(_ onMeasure: @escaping (FlexboxSize) -> (FlexboxSize)) {
-        self.onMeasure = onMeasure
+    init(delegate: FlexboxItemDelegate) {
+        self.delegate = delegate
     }
-    
-    let onMeasure: (FlexboxSize) -> (FlexboxSize)
     
     var flex: (flexGrow: Float, flexShrink: Float, flexBasis: Float?) {
         get {
@@ -83,6 +37,8 @@ class FlexboxItem {
     var flexMargin =  FlexboxInsets.zero
     
     var flexFrame: FlexboxRect?
+    
+    weak var delegate: FlexboxItemDelegate?
 
 }
 
@@ -99,4 +55,108 @@ extension FlexboxItem {
             return (flexFrame?.h ?? 0) + flexMargin.top + flexMargin.bottom
         }
     }
+    
+    func onMeasure(direction: Flexbox.Direction) {
+        var size = FlexboxSize.zero
+        if let basis = flexBasis {
+            switch direction {
+            case .row, .rowReverse:
+                size = delegate?.onMeasure(FlexboxSize(w: Float(basis), h: 0)) ?? FlexboxSize.zero
+                size.w = max(size.w, Float(basis))
+            case .column, .columnReverse:
+                size = delegate?.onMeasure(FlexboxSize(w: 0, h: Float(basis))) ?? FlexboxSize.zero
+                size.h = max(size.h, Float(basis))
+            }
+            
+        } else {
+            size = delegate?.onMeasure(FlexboxSize.zero) ?? FlexboxSize.zero
+        }
+        flexFrame = FlexboxRect(x: 0, y: 0, w: size.w, h: size.h)
+    }
+}
+
+extension FlexboxItem {
+    
+    func fixAlignmentInCross(direction: Flexbox.Direction, alignItems: Flexbox.AlignItems, cursor: FlexboxPoint, dimensionOfCross: Float) {
+        let alignment = alignSelf.toAlignItems() ?? alignItems
+        switch direction {
+        case .row, .rowReverse:
+            switch alignment {
+            case .start: break
+            case .end:
+                let offsetY = cursor.y + dimensionOfCross - flexMargin.bottom - (flexFrame?.h ?? 0)
+                flexFrame?.y = offsetY
+            case .center:
+                let offsetY = cursor.y + (dimensionOfCross - flexHeight) * 0.5 + flexMargin.top
+                flexFrame?.y = offsetY
+            case .stretch:
+                let offsetH = dimensionOfCross - flexMargin.top - flexMargin.bottom
+                flexFrame?.h = offsetH
+            case .baseline:break
+            }
+        case .column, .columnReverse:
+            switch alignment {
+            case .start: break
+            case .end:
+                let offsetX = cursor.x + dimensionOfCross - flexMargin.right - (flexFrame?.w ?? 0)
+                flexFrame?.x = offsetX
+            case .center:
+                let offsetX = cursor.x + (dimensionOfCross - flexWidth) * 0.5 + flexMargin.left
+                flexFrame?.x = offsetX
+            case .stretch:
+                let offsetW = dimensionOfCross - flexMargin.left - flexMargin.right
+                flexFrame?.w = offsetW
+            case .baseline:break
+            }
+        }
+    }
+}
+
+extension Array where Element == FlexboxItem {
+    
+    func fixDistributionInAxis(direction: Flexbox.Direction, justifyContent: Flexbox.JustifyContent, containerDimension: FlexboxSize, axisDimension: Float) {
+        if justifyContent == .start {
+            return
+        }
+        
+        var mFlexJustifyConent = justifyContent
+        if count == 1 && (mFlexJustifyConent == .spaceBetween || mFlexJustifyConent == .spaceAround) {
+            mFlexJustifyConent = .center
+        }
+        
+        enumerated().forEach { (index, item) in
+            switch direction {
+            case .row, .rowReverse:
+                switch mFlexJustifyConent {
+                case .end:
+                    item.flexFrame?.x += containerDimension.w - axisDimension
+                case .center:
+                    item.flexFrame?.x += (containerDimension.w - axisDimension) * 0.5
+                case .spaceBetween:
+                    item.flexFrame?.x += (containerDimension.w - axisDimension) * Float(index) / Float(count - 1)
+                case .spaceAround:
+                    item.flexFrame?.x += (containerDimension.w - axisDimension) * (Float(index) + 0.5) / Float(count)
+                case .start: break
+                }
+            case .column, .columnReverse:
+                switch mFlexJustifyConent {
+                case .end:
+                    item.flexFrame?.y += containerDimension.h - axisDimension
+                case .center:
+                    item.flexFrame?.y += (containerDimension.h - axisDimension) * 0.5
+                case .spaceBetween:
+                    item.flexFrame?.y += (containerDimension.h - axisDimension) * Float(index) / Float(count - 1)
+                case .spaceAround:
+                    item.flexFrame?.y += (containerDimension.h - axisDimension) * (Float(index) + 0.5) / Float(count)
+                case .start: break
+                }
+            }
+        }
+    }
+}
+
+protocol FlexboxItemDelegate: class {
+    
+    func onMeasure(_ size: FlexboxSize) -> FlexboxSize
+    
 }

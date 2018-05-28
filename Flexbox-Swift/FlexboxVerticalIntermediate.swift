@@ -42,7 +42,7 @@ struct FlexboxVerticalIntermediate {
     
     mutating func prepare(_ item: FlexboxItem) -> Bool {
         indexOfItemsInCurrentAxis += 1
-        measure(item)
+        item.onMeasure(direction: .column)
         let shouldWrap = flexWrap.isWrapEnabled && cursor.y + item.flexHeight > flexContainerDimension.h
         if shouldWrap {
             dimensionsOfCross.append(dimensionOfCurrentCross)
@@ -80,7 +80,7 @@ struct FlexboxVerticalIntermediate {
         var itemsAxisDimension = Float(0)
         items.enumerated().forEach { (index, item) in
             item.flexFrame?.y += fixedAxisOffset
-            fixCrossAlignmentForItem(item)
+            item.fixAlignmentInCross(direction: .column, alignItems: flexAlignItems, cursor: cursor, dimensionOfCross: dimensionOfCurrentCross)
             if let growOffset = growAndShrinkVal.growValInLine?[index] {
                 item.flexFrame?.h += growOffset
                 fixedAxisOffset += growOffset
@@ -91,12 +91,38 @@ struct FlexboxVerticalIntermediate {
             itemsAxisDimension += item.flexHeight
         }
         if growAndShrinkVal.growValInLine == nil && growAndShrinkVal.shrinkValInLine == nil {
-            fixAxisDistributionForItems(items, axisDimension: itemsAxisDimension)
+            items.fixDistributionInAxis(direction: .column, justifyContent: flexJustifyContent, containerDimension: flexContainerDimension, axisDimension: itemsAxisDimension)
         }
     }
     
     mutating func finalize(_ items: [FlexboxItem]) {
         dimensionsOfCross.append(dimensionOfCurrentCross)
+        fixAxisDistributionInCross(items)
+    }
+}
+
+extension FlexboxVerticalIntermediate {
+    
+    private func calculateGrowAndShrink()  -> (growValInLine: [Int: Float]?, shrinkValInLine: [Int: Float]?){
+        var growValInLine: [Int: Float]? = nil
+        var shrinkValInLine: [Int: Float]? = nil
+        
+        let lengthToFix = cursor.y - flexContainerDimension.h
+        if lengthToFix > 0 {
+            let shrinkSum = shrinkOfItemsInCurrentAxis.reduce(0, {$0 + $1.value})
+            if shrinkSum > 0 {
+                shrinkValInLine = shrinkOfItemsInCurrentAxis.reduce(into: [Int: Float](), { $0[$1.key] = $1.value * lengthToFix / shrinkSum})
+            }
+        } else if lengthToFix < 0 {
+            let growSum = growOfItemsInCurrentAxis.reduce(0, {$0 + $1.value})
+            if growSum > 0 {
+                growValInLine = growOfItemsInCurrentAxis.reduce(into: [Int: Float](), { $0[$1.key] = $1.value * (-lengthToFix) / growSum})
+            }
+        }
+        return (growValInLine, shrinkValInLine)
+    }
+    
+    private func fixAxisDistributionInCross(_ items: [FlexboxItem]) {
         if dimensionsOfCross.count == 1 {
             items.forEach { item in
                 item.flexFrame?.x += (flexContainerDimension.w - dimensionOfCurrentCross) * 0.5
@@ -127,75 +153,6 @@ struct FlexboxVerticalIntermediate {
                         item.flexFrame?.x += (stretchOffsetX * flexContainerDimension.w / contentWidth - stretchOffsetX)
                     }
                 }
-            }
-        }
-    }
-}
-
-extension FlexboxVerticalIntermediate {
-    
-    private func fixCrossAlignmentForItem(_ item: FlexboxItem) {
-        let alignment = item.alignSelf.toAlignItems() ?? flexAlignItems
-        switch alignment {
-        case .start: break
-        case .end: item.flexFrame!.x = cursor.x + dimensionOfCurrentCross - item.flexMargin.right - item.flexFrame!.w
-        case .center: item.flexFrame!.x = cursor.x + (dimensionOfCurrentCross - item.flexWidth) * 0.5 + item.flexMargin.left
-        case .stretch: item.flexFrame!.w = dimensionOfCurrentCross - item.flexMargin.left - item.flexMargin.right
-        case .baseline:break
-        }
-    }
-    
-    private func measure(_ item: FlexboxItem) {
-        var size = FlexboxSize.zero
-        if let basis = item.flexBasis {
-            size = item.onMeasure(FlexboxSize(w: 0, h: Float(basis)))
-            size.h = max(size.h, Float(basis))
-        } else {
-            size = item.onMeasure(FlexboxSize.zero)
-        }
-        item.flexFrame = FlexboxRect(x: 0, y: 0, w: size.w, h: size.h)
-    }
-    
-    private func calculateGrowAndShrink()  -> (growValInLine: [Int: Float]?, shrinkValInLine: [Int: Float]?){
-        var growValInLine: [Int: Float]? = nil
-        var shrinkValInLine: [Int: Float]? = nil
-        
-        let lengthToFix = cursor.y - flexContainerDimension.h
-        if lengthToFix > 0 {
-            let shrinkSum = shrinkOfItemsInCurrentAxis.reduce(0, {$0 + $1.value})
-            if shrinkSum > 0 {
-                shrinkValInLine = shrinkOfItemsInCurrentAxis.reduce(into: [Int: Float](), { $0[$1.key] = $1.value * lengthToFix / shrinkSum})
-            }
-        } else if lengthToFix < 0 {
-            let growSum = growOfItemsInCurrentAxis.reduce(0, {$0 + $1.value})
-            if growSum > 0 {
-                growValInLine = growOfItemsInCurrentAxis.reduce(into: [Int: Float](), { $0[$1.key] = $1.value * (-lengthToFix) / growSum})
-            }
-        }
-        return (growValInLine, shrinkValInLine)
-    }
-    
-    private func fixAxisDistributionForItems(_ items: [FlexboxItem], axisDimension: Float) {
-        if flexJustifyContent == .start {
-            return
-        }
-        
-        var mFlexJustifyConent = flexJustifyContent
-        if items.count == 1 && (mFlexJustifyConent == .spaceBetween || mFlexJustifyConent == .spaceAround) {
-            mFlexJustifyConent = .center
-        }
-        
-        items.enumerated().forEach { (index, item) in
-            switch mFlexJustifyConent {
-            case .end:
-                item.flexFrame?.y += flexContainerDimension.h - axisDimension
-            case .center:
-                item.flexFrame?.y += (flexContainerDimension.h - axisDimension) * 0.5
-            case .spaceBetween:
-                item.flexFrame?.y += (flexContainerDimension.h - axisDimension) * Float(index) / Float(items.count - 1)
-            case .spaceAround:
-                item.flexFrame?.y += (flexContainerDimension.h - axisDimension) * (Float(index) + 0.5) / Float(items.count)
-            case .start: break
             }
         }
     }

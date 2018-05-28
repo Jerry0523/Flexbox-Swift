@@ -46,17 +46,7 @@ extension UIView {
         get {
             var item = objc_getAssociatedObject(self, &UIView.flexboxItemKey) as? FlexboxItem
             if item == nil {
-                item = FlexboxItem({ [weak self] (size) -> (FlexboxSize) in
-                    if self == nil {
-                        return FlexboxSize.zero
-                    }
-                    
-                    if self!.constraints.count > 0 {
-                        return FlexboxSize(self!.systemLayoutSizeFitting(size.cgSize))
-                    } else {
-                        return FlexboxSize(self!.sizeThatFits(size.cgSize))
-                    }
-                })
+                item = FlexboxItem(delegate: self)
                 objc_setAssociatedObject(self, &UIView.flexboxItemKey, item, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
             }
             return item!
@@ -144,6 +134,17 @@ extension UIView {
     
     private static var flexboxItemKey: Void?
     
+}
+
+extension UIView: FlexboxItemDelegate {
+    
+    func onMeasure(_ size: FlexboxSize) -> FlexboxSize {
+        if constraints.count > 0 {
+            return FlexboxSize(systemLayoutSizeFitting(size.cgSize))
+        } else {
+            return FlexboxSize(sizeThatFits(size.cgSize))
+        }
+    }
 }
 
 extension FlexboxRect {
