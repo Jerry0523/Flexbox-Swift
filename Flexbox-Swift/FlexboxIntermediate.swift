@@ -6,8 +6,6 @@
 //  Copyright © 2018年 com.jerry. All rights reserved.
 //
 
-import Foundation
-
 protocol FlexboxIntermediate {
     
     var flexContainerDimension: FlexboxSize { get set }
