@@ -36,6 +36,8 @@ protocol FlexboxIntermediate {
     
     init()
     
+    mutating func intermediateDidLoad()
+    
     mutating func prepare(_ item: FlexboxItem) -> Bool
     
     mutating func wrap()
@@ -56,9 +58,11 @@ extension FlexboxIntermediate {
         flexWrap = wrap
         flexContainerDimension = containerDimension
         flexJustifyContent = justifyContent
+        intermediateDidLoad()
     }
     
     mutating func layout(_ items: [FlexboxItem]) {
+        
         items.enumerated().forEach { (idx, item) in
             if prepare(item) {
                 fixInAxis(Array(items[(idx - indexOfItemsInCurrentAxis)..<idx]))

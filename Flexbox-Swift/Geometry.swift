@@ -49,3 +49,13 @@ struct FlexboxInsets: Equatable {
     
     static let zero = FlexboxInsets(top: 0, left: 0, bottom: 0, right: 0)
 }
+
+struct FlexboxArrangement {
+    
+    var isHorizontal: Bool
+    
+    var isAxisReverse: Bool
+    
+    var isCrossReverse: Bool
+    
+}

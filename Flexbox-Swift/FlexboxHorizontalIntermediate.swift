@@ -18,6 +18,12 @@ struct FlexboxHorizontalIntermediate: FlexboxIntermediate {
     
     var flexJustifyContent = Flexbox.JustifyContent.start
     
+    var flexboxArrangement: FlexboxArrangement {
+        get {
+            return FlexboxArrangement(isHorizontal: true, isAxisReverse: false, isCrossReverse: flexWrap.isReverse)
+        }
+    }
+    
     var cursor = FlexboxPoint.zero
     
     var dimensionOfCurrentCross = Float(0)
@@ -36,6 +42,12 @@ struct FlexboxHorizontalIntermediate: FlexboxIntermediate {
     
     init() {}
     
+    mutating func intermediateDidLoad() {
+        if flexWrap.isReverse {
+            cursor.y = flexContainerDimension.h
+        }
+    }
+    
     mutating func prepare(_ item: FlexboxItem) -> Bool {
         indexOfItemsInCurrentAxis += 1
         item.onMeasure(direction: .row)
@@ -47,7 +59,11 @@ struct FlexboxHorizontalIntermediate: FlexboxIntermediate {
     }
     
     mutating func wrap() {
-        cursor.y += dimensionOfCurrentCross
+        if flexWrap.isReverse {
+            cursor.y -= dimensionOfCurrentCross
+        } else {
+            cursor.y += dimensionOfCurrentCross
+        }
         indexOfItemsInCurrentAxis = 0
         dimensionOfCurrentCross = Float(0)
         cursor.x = Float(0)
@@ -57,7 +73,11 @@ struct FlexboxHorizontalIntermediate: FlexboxIntermediate {
     
     mutating func move(_ item: FlexboxItem) {
         item.flexFrame!.x = cursor.x + item.flexMargin.left
-        item.flexFrame!.y = cursor.y + item.flexMargin.top
+        if flexWrap.isReverse {
+            item.flexFrame!.y = cursor.y - item.flexMargin.bottom - item.flexFrame!.h
+        } else {
+            item.flexFrame!.y = cursor.y + item.flexMargin.top
+        }
         
         cursor.x += item.flexWidth
         dimensionOfCurrentCross = max(dimensionOfCurrentCross, item.flexHeight)
@@ -76,18 +96,24 @@ struct FlexboxHorizontalIntermediate: FlexboxIntermediate {
         var itemsAxisDimension = Float(0)
         items.enumerated().forEach { (index, item) in
             item.flexFrame?.x += fixedAxisOffset
-            item.fixGrowAndShrinkInAxis(direction: .row, growOffset: growAndShrinkVal.growValInLine?[index], shrinkOffset: growAndShrinkVal.shrinkValInLine?[index], fixedAxisOffset: &fixedAxisOffset)
+            item.fixGrowAndShrinkInAxis(arrangement: flexboxArrangement, growOffset: growAndShrinkVal.growValInLine?[index], shrinkOffset: growAndShrinkVal.shrinkValInLine?[index], fixedAxisOffset: &fixedAxisOffset)
             itemsAxisDimension += item.flexWidth
         }
         if growAndShrinkVal.growValInLine == nil && growAndShrinkVal.shrinkValInLine == nil {
-            items.fixDistributionInAxis(direction: .row, justifyContent: flexJustifyContent, containerDimension: flexContainerDimension, axisDimension: itemsAxisDimension)
+            items.fixDistributionInAxis(arrangement: flexboxArrangement, justifyContent: flexJustifyContent, containerDimension: flexContainerDimension, axisDimension: itemsAxisDimension)
         }
     }
     
     mutating func fixInCross(_ items: [FlexboxItem]) {
         dimensionsOfCross.append(dimensionOfCurrentCross)
-        cursor.y += dimensionOfCurrentCross
-        intrinsicSize = FlexboxSize(w: flexWrap.isWrapEnabled ? flexContainerDimension.w : cursor.x , h: cursor.y)
-        items.fixDistributionInCross(direction: .row, alignContent: flexAlignContent, alignItems: flexAlignItems, dimensionsOfCross: dimensionsOfCross, flexContainerDimension: flexContainerDimension, dimensionOfCurrentCross: dimensionOfCurrentCross, indexesOfAxisForItems: indexesOfAxisForItems)
+        if flexWrap.isReverse {
+            cursor.y -= dimensionOfCurrentCross
+            intrinsicSize = FlexboxSize(w: flexWrap.isWrapEnabled ? flexContainerDimension.w : cursor.x , h: cursor.y)
+        } else {
+            cursor.y += dimensionOfCurrentCross
+            intrinsicSize = FlexboxSize(w: flexWrap.isWrapEnabled ? flexContainerDimension.w : cursor.x , h: cursor.y)
+        }
+        
+        items.fixDistributionInCross(arrangement: flexboxArrangement, alignContent: flexAlignContent, alignItems: flexAlignItems, dimensionsOfCross: dimensionsOfCross, flexContainerDimension: flexContainerDimension, dimensionOfCurrentCross: dimensionOfCurrentCross, indexesOfAxisForItems: indexesOfAxisForItems)
     }
 }

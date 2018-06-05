@@ -65,6 +65,8 @@ class PlaygroundViewController: UIViewController {
             flexboxView.flexbox.flexWrap = .nowrap
         case 1:
             flexboxView.flexbox.flexWrap = .wrap
+        case 2:
+            flexboxView.flexbox.flexWrap = .wrapReverse
         default: break
         }
         notifyLayoutAnimated()

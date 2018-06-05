@@ -110,15 +110,19 @@ class Flexbox {
         
         case wrap
         
-        @available(*, unavailable)
         case wrapReverse
         
-        var isWrapEnabled: Bool{
+        var isWrapEnabled: Bool {
             get {
                 return self != .nowrap
             }
         }
         
+        var isReverse: Bool {
+            get {
+                return self == .wrapReverse
+            }
+        }
     }
     
     enum JustifyContent {
