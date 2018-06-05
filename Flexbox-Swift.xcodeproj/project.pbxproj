@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		C449B8AA20C64EA00058C2F8 /* FlexboxIntermediate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C449B8A920C64EA00058C2F8 /* FlexboxIntermediate.swift */; };
 		C4A681AF20B4010F00F3EDD7 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4A681AE20B4010F00F3EDD7 /* AppDelegate.swift */; };
 		C4A681B120B4010F00F3EDD7 /* PlaygroundViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4A681B020B4010F00F3EDD7 /* PlaygroundViewController.swift */; };
 		C4A681B420B4010F00F3EDD7 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C4A681B220B4010F00F3EDD7 /* Main.storyboard */; };
@@ -23,6 +24,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		C449B8A920C64EA00058C2F8 /* FlexboxIntermediate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlexboxIntermediate.swift; sourceTree = "<group>"; };
 		C4A681AB20B4010F00F3EDD7 /* Flexbox-Swift.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Flexbox-Swift.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		C4A681AE20B4010F00F3EDD7 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		C4A681B020B4010F00F3EDD7 /* PlaygroundViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaygroundViewController.swift; sourceTree = "<group>"; };
@@ -89,6 +91,7 @@
 				C4A681C120B40C9000F3EDD7 /* Flexbox.swift */,
 				C4A681C720B687D000F3EDD7 /* FlexboxItem.swift */,
 				C4A681D120BBCF9A00F3EDD7 /* Geometry.swift */,
+				C449B8A920C64EA00058C2F8 /* FlexboxIntermediate.swift */,
 				C4A681C520B686F300F3EDD7 /* FlexboxHorizontalIntermediate.swift */,
 				C4A681CF20B7D25900F3EDD7 /* FlexboxVerticalIntermediate.swift */,
 				C4A681C320B410D800F3EDD7 /* FlexBox+CocoaTouch.swift */,
@@ -177,6 +180,7 @@
 				C4A681C620B686F300F3EDD7 /* FlexboxHorizontalIntermediate.swift in Sources */,
 				C4A681D220BBCF9A00F3EDD7 /* Geometry.swift in Sources */,
 				C4A681C820B687D000F3EDD7 /* FlexboxItem.swift in Sources */,
+				C449B8AA20C64EA00058C2F8 /* FlexboxIntermediate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

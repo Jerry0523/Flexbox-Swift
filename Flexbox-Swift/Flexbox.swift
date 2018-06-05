@@ -12,50 +12,22 @@ class Flexbox {
         self.delegate = delegate
     }
     
-    private func layoutHorizontally(_ items: [FlexboxItem], size: FlexboxSize) {
-        var intermediate = FlexboxHorizontalIntermediate(alignItems: alignItems, alignContent:alignContent, wrap: flexWrap, justifyContent: justifyContent, containerDimension: size)
-        
-        items.enumerated().forEach { (idx, item) in
-            if intermediate.prepare(item) {
-                intermediate.fix(Array(items[(idx - intermediate.indexOfItemsInCurrentAxis)..<idx]))
-                intermediate.wrap()
-            }
-            intermediate.move(item)
-            intermediate.indexesOfAxisForItems[idx] = intermediate.dimensionsOfCross.count
-        }
-        
-        intermediate.fix(Array(items[(items.count - 1 - intermediate.indexOfItemsInCurrentAxis)...items.count - 1]))
-        intermediate.cursor.y += intermediate.dimensionOfCurrentCross
-        intrinsicSize = FlexboxSize(w: flexWrap.isWrapEnabled ? size.w : intermediate.cursor.x , h: intermediate.cursor.y)
-        intermediate.finalize(items)
-    }
-    
-    private func layoutVertically(_ items: [FlexboxItem], size: FlexboxSize) {
-        var intermediate = FlexboxVerticalIntermediate(alignItems: alignItems, alignContent:alignContent, wrap: flexWrap, justifyContent: justifyContent, containerSize: size)
-        
-        items.enumerated().forEach { (idx, item) in
-            if intermediate.prepare(item) {
-                intermediate.fix(Array(items[(idx - intermediate.indexOfItemsInCurrentAxis)..<idx]))
-                intermediate.wrap()
-            }
-            intermediate.move(item)
-            intermediate.indexesOfAxisForItems[idx] = intermediate.dimensionsOfCross.count
-        }
-        
-        intermediate.fix(Array(items[(items.count - 1 - intermediate.indexOfItemsInCurrentAxis)...items.count - 1]))
-        intermediate.cursor.x += intermediate.dimensionOfCurrentCross
-        intrinsicSize = FlexboxSize(w:intermediate.cursor.x, h: flexWrap.isWrapEnabled ? size.h : intermediate.cursor.y)
-        intermediate.finalize(items)
-    }
-    
     func layout(_ items: [FlexboxItem], size: FlexboxSize) {
-        let sortedItems = items.sorted { $0.flexOrder < $1.flexOrder }
-        switch flexDirection {
-        case .row, .rowReverse:
-            layoutHorizontally(sortedItems, size: size)
-        case .column, .columnReverse:
-            layoutVertically(sortedItems, size: size)
+        var intermediate = flexDirection.intermediateType.init(alignItems: alignItems, alignContent:alignContent, wrap: flexWrap, justifyContent: justifyContent, containerDimension: size)
+        
+        items.enumerated().forEach { (idx, item) in
+            if intermediate.prepare(item) {
+                intermediate.fixInAxis(Array(items[(idx - intermediate.indexOfItemsInCurrentAxis)..<idx]))
+                intermediate.wrap()
+            }
+            intermediate.move(item)
+            let axisIndex = intermediate.dimensionsOfCross.count
+            intermediate.indexesOfAxisForItems[idx] = axisIndex
         }
+        
+        intermediate.fixInAxis(Array(items[(items.count - 1 - intermediate.indexOfItemsInCurrentAxis)...items.count - 1]))
+        intermediate.fixInCross(items)
+        intrinsicSize = intermediate.intrinsicSize
     }
     
     var flexFlow:(direction: Direction, wrap: Wrap) {
@@ -130,6 +102,17 @@ class Flexbox {
         
         @available(*, unavailable)
         case columnReverse
+        
+        var intermediateType: FlexboxIntermediate.Type {
+            get {
+                switch self {
+                case .row, .rowReverse:
+                    return FlexboxHorizontalIntermediate.self
+                case .column, .columnReverse:
+                    return FlexboxVerticalIntermediate.self
+                }
+            }
+        }
         
     }
     

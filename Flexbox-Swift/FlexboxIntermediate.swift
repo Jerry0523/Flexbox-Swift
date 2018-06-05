@@ -1,0 +1,82 @@
+//
+//  FlexboxIntermediate.swift
+//  Flexbox-Swift
+//
+//  Created by 王杰 on 2018/6/5.
+//  Copyright © 2018年 com.jerry. All rights reserved.
+//
+
+import Foundation
+
+protocol FlexboxIntermediate {
+    
+    var flexContainerDimension: FlexboxSize { get set }
+    
+    var flexWrap: Flexbox.Wrap { get set }
+    
+    var flexAlignItems: Flexbox.AlignItems { get set }
+    
+    var flexAlignContent: Flexbox.AlignContent { get set }
+    
+    var flexJustifyContent: Flexbox.JustifyContent { get set }
+    
+    var cursor: FlexboxPoint { get set }
+    
+    var dimensionOfCurrentCross: Float { get set }
+    
+    var indexOfItemsInCurrentAxis: Int { get set }
+    
+    var growOfItemsInCurrentAxis: [Int: Float] { get set }
+    
+    var shrinkOfItemsInCurrentAxis: [Int: Float] { get set }
+    
+    var indexesOfAxisForItems: [Int: Int] { get set }
+    
+    var dimensionsOfCross: [Float] { get set }
+    
+    var intrinsicSize: FlexboxSize { get set }
+    
+    init()
+    
+    mutating func prepare(_ item: FlexboxItem) -> Bool
+    
+    mutating func wrap()
+    
+    mutating func move(_ item: FlexboxItem)
+    
+    mutating func fixInCross(_ items: [FlexboxItem])
+    
+    func fixInAxis(_ items: [FlexboxItem])
+}
+
+extension FlexboxIntermediate {
+    
+    init(alignItems: Flexbox.AlignItems, alignContent: Flexbox.AlignContent, wrap: Flexbox.Wrap, justifyContent: Flexbox.JustifyContent, containerDimension: FlexboxSize) {
+        self.init()
+        flexAlignItems = alignItems
+        flexAlignContent = alignContent
+        flexWrap = wrap
+        flexContainerDimension = containerDimension
+        flexJustifyContent = justifyContent
+    }
+    
+    func calculateGrowAndShrink(dimensionToFix: () -> Float)  -> (growValInLine: [Int: Float]?, shrinkValInLine: [Int: Float]?){
+        var growValInLine: [Int: Float]? = nil
+        var shrinkValInLine: [Int: Float]? = nil
+        
+        let lengthToFix = dimensionToFix()
+        if lengthToFix > 0 {
+            let shrinkSum = shrinkOfItemsInCurrentAxis.reduce(0, {$0 + $1.value})
+            if shrinkSum > 0 {
+                shrinkValInLine = shrinkOfItemsInCurrentAxis.reduce(into: [Int: Float](), { $0[$1.key] = $1.value * lengthToFix / shrinkSum})
+            }
+        } else if lengthToFix < 0 {
+            let growSum = growOfItemsInCurrentAxis.reduce(0, {$0 + $1.value})
+            if growSum > 0 {
+                growValInLine = growOfItemsInCurrentAxis.reduce(into: [Int: Float](), { $0[$1.key] = $1.value * (-lengthToFix) / growSum})
+            }
+        }
+        return (growValInLine, shrinkValInLine)
+    }
+    
+}
