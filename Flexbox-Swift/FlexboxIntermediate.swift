@@ -60,6 +60,21 @@ extension FlexboxIntermediate {
         flexJustifyContent = justifyContent
     }
     
+    mutating func layout(_ items: [FlexboxItem]) {
+        items.enumerated().forEach { (idx, item) in
+            if prepare(item) {
+                fixInAxis(Array(items[(idx - indexOfItemsInCurrentAxis)..<idx]))
+                wrap()
+            }
+            move(item)
+            let axisIndex = dimensionsOfCross.count
+            indexesOfAxisForItems[idx] = axisIndex
+        }
+        
+        fixInAxis(Array(items[(items.count - 1 - indexOfItemsInCurrentAxis)...items.count - 1]))
+        fixInCross(items)
+    }
+    
     func calculateGrowAndShrink(dimensionToFix: () -> Float)  -> (growValInLine: [Int: Float]?, shrinkValInLine: [Int: Float]?){
         var growValInLine: [Int: Float]? = nil
         var shrinkValInLine: [Int: Float]? = nil

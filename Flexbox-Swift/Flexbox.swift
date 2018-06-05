@@ -14,19 +14,7 @@ class Flexbox {
     
     func layout(_ items: [FlexboxItem], size: FlexboxSize) {
         var intermediate = flexDirection.intermediateType.init(alignItems: alignItems, alignContent:alignContent, wrap: flexWrap, justifyContent: justifyContent, containerDimension: size)
-        
-        items.enumerated().forEach { (idx, item) in
-            if intermediate.prepare(item) {
-                intermediate.fixInAxis(Array(items[(idx - intermediate.indexOfItemsInCurrentAxis)..<idx]))
-                intermediate.wrap()
-            }
-            intermediate.move(item)
-            let axisIndex = intermediate.dimensionsOfCross.count
-            intermediate.indexesOfAxisForItems[idx] = axisIndex
-        }
-        
-        intermediate.fixInAxis(Array(items[(items.count - 1 - intermediate.indexOfItemsInCurrentAxis)...items.count - 1]))
-        intermediate.fixInCross(items)
+        intermediate.layout(items)
         intrinsicSize = intermediate.intrinsicSize
     }
     
