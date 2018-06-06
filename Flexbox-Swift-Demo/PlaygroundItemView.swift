@@ -66,11 +66,11 @@ class PlaygroundItemView: UIView {
     @IBAction func didChangeBasis(_ sender: UISegmentedControl) {
         switch sender.selectedSegmentIndex {
         case 0:
-            flexBasis = nil
+            flexBasis = .auto
         case 1:
-            flexBasis = 120.0
+            flexBasis = .pixel(120.0)
         case 2:
-            flexBasis = 240.0
+            flexBasis = .pixel(240.0) 
         default: break
         }
         notifyLayoutAnimated()

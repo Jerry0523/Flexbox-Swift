@@ -95,5 +95,4 @@ extension FlexboxIntermediate {
         }
         return (growValInLine, shrinkValInLine)
     }
-    
 }

@@ -50,8 +50,8 @@ struct FlexboxHorizontalIntermediate: FlexboxIntermediate {
     
     mutating func prepare(_ item: FlexboxItem) -> Bool {
         indexOfItemsInCurrentAxis += 1
-        item.onMeasure(direction: .row)
-        let shouldWrap = flexWrap.isWrapEnabled && cursor.x + item.flexWidth > flexContainerDimension.w
+        item.onMeasure(direction: .row, containerDimension: flexContainerDimension)
+        let shouldWrap = flexWrap.isWrapEnabled && cursor.x + item.flexWidth - flexContainerDimension.w > Flexbox.dimensionThreshold
         if shouldWrap {
             dimensionsOfCross.append(dimensionOfCurrentCross)
         }

@@ -12,7 +12,7 @@ class FlexboxItem {
         self.delegate = delegate
     }
     
-    var flex: (flexGrow: Float, flexShrink: Float, flexBasis: Float?) {
+    var flex: (flexGrow: Float, flexShrink: Float, flexBasis: FlexBasis) {
         get {
             return (flexGrow, flexShrink, flexBasis)
         }
@@ -30,7 +30,7 @@ class FlexboxItem {
     
     var flexShrink = Float(1.0)
     
-    var flexBasis: Float?
+    var flexBasis = FlexBasis.auto
     
     var alignSelf = Flexbox.AlignSelf.auto
     
@@ -39,6 +39,15 @@ class FlexboxItem {
     var flexFrame: FlexboxRect?
     
     weak var delegate: FlexboxItemDelegate?
+    
+    enum FlexBasis {
+        
+        case auto
+        
+        case ratio(Float)
+        
+        case pixel(Float)
+    }
 
 }
 
@@ -56,20 +65,31 @@ extension FlexboxItem {
         }
     }
     
-    func onMeasure(direction: Flexbox.Direction) {
+    func onMeasure(direction: Flexbox.Direction, containerDimension: FlexboxSize) {
         var size = FlexboxSize.zero
-        if let basis = flexBasis {
+        switch flexBasis {
+        case .auto:
+            size = delegate?.onMeasure(FlexboxSize.zero) ?? FlexboxSize.zero
+        case .ratio(let val):
             switch direction {
             case .row, .rowReverse:
-                size = delegate?.onMeasure(FlexboxSize(w: Float(basis), h: 0)) ?? FlexboxSize.zero
-                size.w = max(size.w, Float(basis))
+                let reference = val * containerDimension.w
+                size = delegate?.onMeasure(FlexboxSize(w: reference , h: 0)) ?? FlexboxSize.zero
+                size.w = max(size.w, reference)
             case .column, .columnReverse:
-                size = delegate?.onMeasure(FlexboxSize(w: 0, h: Float(basis))) ?? FlexboxSize.zero
-                size.h = max(size.h, Float(basis))
+                let reference = val * containerDimension.h
+                size = delegate?.onMeasure(FlexboxSize(w: 0, h: reference)) ?? FlexboxSize.zero
+                size.h = max(size.h, reference)
             }
-            
-        } else {
-            size = delegate?.onMeasure(FlexboxSize.zero) ?? FlexboxSize.zero
+        case .pixel(let val):
+            switch direction {
+            case .row, .rowReverse:
+                size = delegate?.onMeasure(FlexboxSize(w: val, h: 0)) ?? FlexboxSize.zero
+                size.w = max(size.w, val)
+            case .column, .columnReverse:
+                size = delegate?.onMeasure(FlexboxSize(w: 0, h: val)) ?? FlexboxSize.zero
+                size.h = max(size.h, val)
+            }
         }
         flexFrame = FlexboxRect(x: 0, y: 0, w: size.w, h: size.h)
     }

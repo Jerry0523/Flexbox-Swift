@@ -54,7 +54,7 @@ extension UIView {
         }
     }
     
-    var flex: (flexGrow: Float, flexShrink: Float, flexBasis: Float?) {
+    var flex: (flexGrow: Float, flexShrink: Float, flexBasis: FlexboxItem.FlexBasis) {
         get {
             return flexboxItem.flex
         }
@@ -94,7 +94,7 @@ extension UIView {
         }
     }
     
-    var flexBasis: Float? {
+    var flexBasis: FlexboxItem.FlexBasis {
         get {
             return flexboxItem.flexBasis
         }

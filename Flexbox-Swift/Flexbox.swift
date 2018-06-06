@@ -196,6 +196,8 @@ class Flexbox {
             }
         }
     }
+    
+    static let dimensionThreshold = Float(0.5)
 }
 
 protocol FlexboxDelegate: class {
