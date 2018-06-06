@@ -20,7 +20,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" contentInsetAdjustmentBehavior="never" translatesAutoresizingMaskIntoConstraints="NO" id="6p5-qf-qEn">
-                                <rect key="frame" x="0.0" y="20" width="375" height="375.5"/>
+                                <rect key="frame" x="0.0" y="20" width="375" height="318.5"/>
                                 <subviews>
                                     <view contentMode="scaleToFill" placeholderIntrinsicWidth="375" placeholderIntrinsicHeight="200" translatesAutoresizingMaskIntoConstraints="NO" id="RWc-AA-MjQ" customClass="FlexboxView" customModule="Flexbox_Swift" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="0.0" width="375" height="200"/>
@@ -36,155 +36,127 @@
                                 </constraints>
                             </scrollView>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="mNl-pV-21E">
-                                <rect key="frame" x="0.0" y="395.5" width="375" height="271.5"/>
+                                <rect key="frame" x="0.0" y="338.5" width="375" height="328.5"/>
                                 <subviews>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" adjustsImageWhenHighlighted="NO" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="beV-18-0TW">
+                                        <rect key="frame" x="170" y="0.0" width="35" height="27"/>
+                                        <inset key="contentEdgeInsets" minX="10" minY="5" maxX="10" maxY="0.0"/>
+                                        <state key="normal" image="arrow"/>
+                                        <connections>
+                                            <action selector="didToggleConfigPannel:" destination="BYZ-38-t0r" eventType="touchUpInside" id="qJD-s6-0R4"/>
+                                        </connections>
+                                    </button>
                                     <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="Rpq-xz-Jm4">
-                                        <rect key="frame" x="16" y="16" width="343" height="239.5"/>
+                                        <rect key="frame" x="16" y="28" width="343" height="284.5"/>
                                         <subviews>
-                                            <stackView opaque="NO" contentMode="scaleToFill" distribution="equalSpacing" translatesAutoresizingMaskIntoConstraints="NO" id="qTB-pl-vrl">
-                                                <rect key="frame" x="0.0" y="0.0" width="343" height="28"/>
-                                                <subviews>
-                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Direction" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="OtH-ZQ-Rwz">
-                                                        <rect key="frame" x="0.0" y="0.0" width="51.5" height="28"/>
-                                                        <fontDescription key="fontDescription" type="system" pointSize="12"/>
-                                                        <color key="textColor" red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                                        <nil key="highlightedColor"/>
-                                                    </label>
-                                                    <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="BX9-sd-cY1">
-                                                        <rect key="frame" x="220" y="0.0" width="123" height="29"/>
-                                                        <segments>
-                                                            <segment title="Row"/>
-                                                            <segment title="Column"/>
-                                                        </segments>
-                                                        <color key="tintColor" red="0.99607843137254903" green="0.83137254901960778" blue="0.35686274509803922" alpha="1" colorSpace="calibratedRGB"/>
-                                                        <connections>
-                                                            <action selector="didChangeDirection:" destination="BYZ-38-t0r" eventType="valueChanged" id="xVd-Pd-tLv"/>
-                                                        </connections>
-                                                    </segmentedControl>
-                                                </subviews>
-                                            </stackView>
-                                            <stackView opaque="NO" contentMode="scaleToFill" distribution="equalSpacing" translatesAutoresizingMaskIntoConstraints="NO" id="r5f-mb-VWR">
-                                                <rect key="frame" x="0.0" y="36" width="343" height="28"/>
-                                                <subviews>
-                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="249" verticalHuggingPriority="249" text="Wrap" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="NIF-I4-CrT">
-                                                        <rect key="frame" x="0.0" y="0.0" width="30" height="28"/>
-                                                        <fontDescription key="fontDescription" type="system" pointSize="12"/>
-                                                        <color key="textColor" red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                                        <nil key="highlightedColor"/>
-                                                    </label>
-                                                    <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="ch7-99-zhZ">
-                                                        <rect key="frame" x="152" y="0.0" width="191" height="29"/>
-                                                        <segments>
-                                                            <segment title="No"/>
-                                                            <segment title="Yes"/>
-                                                            <segment title="Reverse"/>
-                                                        </segments>
-                                                        <color key="tintColor" red="0.99607843139999996" green="0.83137254900000002" blue="0.35686274509999999" alpha="1" colorSpace="calibratedRGB"/>
-                                                        <connections>
-                                                            <action selector="didChangeWrap:" destination="BYZ-38-t0r" eventType="valueChanged" id="osP-BM-Br1"/>
-                                                        </connections>
-                                                    </segmentedControl>
-                                                </subviews>
-                                            </stackView>
-                                            <stackView opaque="NO" contentMode="scaleToFill" distribution="equalSpacing" translatesAutoresizingMaskIntoConstraints="NO" id="t1s-4w-Jdk">
-                                                <rect key="frame" x="0.0" y="72" width="343" height="14.5"/>
-                                                <subviews>
-                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Align Items" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="GDo-Rb-gmj">
-                                                        <rect key="frame" x="0.0" y="0.0" width="343" height="14.5"/>
-                                                        <fontDescription key="fontDescription" type="system" pointSize="12"/>
-                                                        <color key="textColor" red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                                        <nil key="highlightedColor"/>
-                                                    </label>
-                                                </subviews>
-                                            </stackView>
-                                            <stackView opaque="NO" contentMode="scaleToFill" distribution="equalSpacing" translatesAutoresizingMaskIntoConstraints="NO" id="Ox4-ZH-x95">
-                                                <rect key="frame" x="0.0" y="94.5" width="343" height="28"/>
-                                                <subviews>
-                                                    <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="3" translatesAutoresizingMaskIntoConstraints="NO" id="2N8-Gm-ZYM">
-                                                        <rect key="frame" x="0.0" y="0.0" width="343" height="29"/>
-                                                        <segments>
-                                                            <segment title="Start"/>
-                                                            <segment title="End"/>
-                                                            <segment title="Center"/>
-                                                            <segment title="Stretch"/>
-                                                        </segments>
-                                                        <color key="tintColor" red="0.99607843139999996" green="0.83137254900000002" blue="0.35686274509999999" alpha="1" colorSpace="calibratedRGB"/>
-                                                        <connections>
-                                                            <action selector="didChangeAlignItems:" destination="BYZ-38-t0r" eventType="valueChanged" id="9mp-gx-DA1"/>
-                                                        </connections>
-                                                    </segmentedControl>
-                                                </subviews>
-                                            </stackView>
-                                            <stackView opaque="NO" contentMode="scaleToFill" distribution="equalSpacing" translatesAutoresizingMaskIntoConstraints="NO" id="992-se-dS9">
-                                                <rect key="frame" x="0.0" y="130.5" width="343" height="14.5"/>
-                                                <subviews>
-                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Align Content" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="LQd-11-RRr">
-                                                        <rect key="frame" x="0.0" y="0.0" width="343" height="14.5"/>
-                                                        <fontDescription key="fontDescription" type="system" pointSize="12"/>
-                                                        <color key="textColor" red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                                        <nil key="highlightedColor"/>
-                                                    </label>
-                                                </subviews>
-                                            </stackView>
-                                            <stackView opaque="NO" contentMode="scaleToFill" distribution="equalSpacing" translatesAutoresizingMaskIntoConstraints="NO" id="jfH-Nf-FQx">
-                                                <rect key="frame" x="0.0" y="153" width="343" height="28"/>
-                                                <subviews>
-                                                    <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="5" translatesAutoresizingMaskIntoConstraints="NO" id="Mdd-c6-wdw">
-                                                        <rect key="frame" x="0.0" y="0.0" width="343" height="29"/>
-                                                        <segments>
-                                                            <segment title="Start"/>
-                                                            <segment title="End"/>
-                                                            <segment title="Center"/>
-                                                            <segment title="Between"/>
-                                                            <segment title="Around"/>
-                                                            <segment title="Stretch"/>
-                                                        </segments>
-                                                        <color key="tintColor" red="0.99607843139999996" green="0.83137254900000002" blue="0.35686274509999999" alpha="1" colorSpace="calibratedRGB"/>
-                                                        <connections>
-                                                            <action selector="didChangeAlignContent:" destination="BYZ-38-t0r" eventType="valueChanged" id="0G9-BH-CHe"/>
-                                                        </connections>
-                                                    </segmentedControl>
-                                                </subviews>
-                                            </stackView>
-                                            <stackView opaque="NO" contentMode="scaleToFill" distribution="equalSpacing" translatesAutoresizingMaskIntoConstraints="NO" id="52S-hB-e2n">
-                                                <rect key="frame" x="0.0" y="189" width="343" height="14.5"/>
-                                                <subviews>
-                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Justify Content" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Ylv-xi-dCy">
-                                                        <rect key="frame" x="0.0" y="0.0" width="343" height="14.5"/>
-                                                        <fontDescription key="fontDescription" type="system" pointSize="12"/>
-                                                        <color key="textColor" red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                                        <nil key="highlightedColor"/>
-                                                    </label>
-                                                </subviews>
-                                            </stackView>
-                                            <stackView opaque="NO" contentMode="scaleToFill" distribution="equalSpacing" translatesAutoresizingMaskIntoConstraints="NO" id="sQ3-xb-k3j">
-                                                <rect key="frame" x="0.0" y="211.5" width="343" height="28"/>
-                                                <subviews>
-                                                    <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="rbD-aa-gYV">
-                                                        <rect key="frame" x="0.0" y="0.0" width="343" height="29"/>
-                                                        <segments>
-                                                            <segment title="Start"/>
-                                                            <segment title="End"/>
-                                                            <segment title="Center"/>
-                                                            <segment title="Between"/>
-                                                            <segment title="Around"/>
-                                                        </segments>
-                                                        <color key="tintColor" red="0.99607843139999996" green="0.83137254900000002" blue="0.35686274509999999" alpha="1" colorSpace="calibratedRGB"/>
-                                                        <connections>
-                                                            <action selector="didChangeJustifyContent:" destination="BYZ-38-t0r" eventType="valueChanged" id="B5L-Ic-m2G"/>
-                                                        </connections>
-                                                    </segmentedControl>
-                                                </subviews>
-                                            </stackView>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Direction" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="gec-Kq-qBR">
+                                                <rect key="frame" x="0.0" y="0.0" width="343" height="14.5"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                                                <color key="textColor" red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                            <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="BX9-sd-cY1">
+                                                <rect key="frame" x="0.0" y="22.5" width="343" height="29"/>
+                                                <segments>
+                                                    <segment title="Row"/>
+                                                    <segment title="RowReverse"/>
+                                                    <segment title="Column"/>
+                                                    <segment title="ColumnReverse"/>
+                                                </segments>
+                                                <color key="tintColor" red="0.99607843137254903" green="0.83137254901960778" blue="0.35686274509803922" alpha="1" colorSpace="calibratedRGB"/>
+                                                <connections>
+                                                    <action selector="didChangeDirection:" destination="BYZ-38-t0r" eventType="valueChanged" id="xVd-Pd-tLv"/>
+                                                </connections>
+                                            </segmentedControl>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="249" verticalHuggingPriority="249" text="Wrap" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="NIF-I4-CrT">
+                                                <rect key="frame" x="0.0" y="58.5" width="343" height="14.5"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                                                <color key="textColor" red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                            <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="04H-kc-Ost">
+                                                <rect key="frame" x="0.0" y="81" width="343" height="29"/>
+                                                <segments>
+                                                    <segment title="No Wrap"/>
+                                                    <segment title="Wrap"/>
+                                                    <segment title="Wrap Reverse"/>
+                                                </segments>
+                                                <color key="tintColor" red="0.99607843139999996" green="0.83137254900000002" blue="0.35686274509999999" alpha="1" colorSpace="calibratedRGB"/>
+                                                <connections>
+                                                    <action selector="didChangeWrap:" destination="BYZ-38-t0r" eventType="valueChanged" id="AHv-TG-Wh6"/>
+                                                </connections>
+                                            </segmentedControl>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Align Items" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="GDo-Rb-gmj">
+                                                <rect key="frame" x="0.0" y="117" width="343" height="14.5"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                                                <color key="textColor" red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                            <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="3" translatesAutoresizingMaskIntoConstraints="NO" id="2N8-Gm-ZYM">
+                                                <rect key="frame" x="0.0" y="139.5" width="343" height="29"/>
+                                                <segments>
+                                                    <segment title="Start"/>
+                                                    <segment title="End"/>
+                                                    <segment title="Center"/>
+                                                    <segment title="Stretch"/>
+                                                </segments>
+                                                <color key="tintColor" red="0.99607843139999996" green="0.83137254900000002" blue="0.35686274509999999" alpha="1" colorSpace="calibratedRGB"/>
+                                                <connections>
+                                                    <action selector="didChangeAlignItems:" destination="BYZ-38-t0r" eventType="valueChanged" id="9mp-gx-DA1"/>
+                                                </connections>
+                                            </segmentedControl>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Align Content" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="LQd-11-RRr">
+                                                <rect key="frame" x="0.0" y="175.5" width="343" height="14.5"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                                                <color key="textColor" red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                            <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="5" translatesAutoresizingMaskIntoConstraints="NO" id="Mdd-c6-wdw">
+                                                <rect key="frame" x="0.0" y="198" width="343" height="29"/>
+                                                <segments>
+                                                    <segment title="Start"/>
+                                                    <segment title="End"/>
+                                                    <segment title="Center"/>
+                                                    <segment title="Between"/>
+                                                    <segment title="Around"/>
+                                                    <segment title="Stretch"/>
+                                                </segments>
+                                                <color key="tintColor" red="0.99607843139999996" green="0.83137254900000002" blue="0.35686274509999999" alpha="1" colorSpace="calibratedRGB"/>
+                                                <connections>
+                                                    <action selector="didChangeAlignContent:" destination="BYZ-38-t0r" eventType="valueChanged" id="0G9-BH-CHe"/>
+                                                </connections>
+                                            </segmentedControl>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Justify Content" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Ylv-xi-dCy">
+                                                <rect key="frame" x="0.0" y="234" width="343" height="14.5"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                                                <color key="textColor" red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                            <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="rbD-aa-gYV">
+                                                <rect key="frame" x="0.0" y="256.5" width="343" height="29"/>
+                                                <segments>
+                                                    <segment title="Start"/>
+                                                    <segment title="End"/>
+                                                    <segment title="Center"/>
+                                                    <segment title="Between"/>
+                                                    <segment title="Around"/>
+                                                </segments>
+                                                <color key="tintColor" red="0.99607843139999996" green="0.83137254900000002" blue="0.35686274509999999" alpha="1" colorSpace="calibratedRGB"/>
+                                                <connections>
+                                                    <action selector="didChangeJustifyContent:" destination="BYZ-38-t0r" eventType="valueChanged" id="B5L-Ic-m2G"/>
+                                                </connections>
+                                            </segmentedControl>
                                         </subviews>
                                     </stackView>
                                 </subviews>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
                                     <constraint firstItem="Rpq-xz-Jm4" firstAttribute="leading" secondItem="mNl-pV-21E" secondAttribute="leadingMargin" constant="8" id="56D-Yn-H6r"/>
+                                    <constraint firstItem="beV-18-0TW" firstAttribute="top" secondItem="mNl-pV-21E" secondAttribute="top" id="Qh1-9k-hsr"/>
+                                    <constraint firstItem="beV-18-0TW" firstAttribute="centerX" secondItem="mNl-pV-21E" secondAttribute="centerX" id="Rnp-iZ-xf1"/>
                                     <constraint firstAttribute="bottomMargin" secondItem="Rpq-xz-Jm4" secondAttribute="bottom" constant="8" id="o5v-fh-h8p"/>
                                     <constraint firstAttribute="trailingMargin" secondItem="Rpq-xz-Jm4" secondAttribute="trailing" constant="8" id="pXQ-MI-bMI"/>
-                                    <constraint firstItem="Rpq-xz-Jm4" firstAttribute="top" secondItem="mNl-pV-21E" secondAttribute="topMargin" constant="8" id="vXu-3N-Vf1"/>
+                                    <constraint firstItem="Rpq-xz-Jm4" firstAttribute="top" secondItem="mNl-pV-21E" secondAttribute="topMargin" constant="20" id="vXu-3N-Vf1"/>
                                 </constraints>
                             </view>
                         </subviews>
@@ -201,6 +173,7 @@
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                     </view>
                     <connections>
+                        <outlet property="flexboxConfigView" destination="mNl-pV-21E" id="2DZ-K4-hwI"/>
                         <outlet property="flexboxView" destination="RWc-AA-MjQ" id="sIk-Ix-TVC"/>
                     </connections>
                 </viewController>
@@ -209,4 +182,7 @@
             <point key="canvasLocation" x="136.80000000000001" y="133.5832083958021"/>
         </scene>
     </scenes>
+    <resources>
+        <image name="arrow" width="15" height="15"/>
+    </resources>
 </document>

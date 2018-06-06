@@ -12,6 +12,8 @@ class PlaygroundViewController: UIViewController {
 
     @IBOutlet weak var flexboxView: FlexboxView!
     
+    @IBOutlet weak var flexboxConfigView: UIView!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -52,11 +54,28 @@ class PlaygroundViewController: UIViewController {
         switch sender.selectedSegmentIndex {
         case 0:
             flexboxView.flexbox.flexDirection = .row
-        case 1:
+        case 1: break
+//            flexboxView.flexbox.flexDirection = .rowReverse
+        case 2:
             flexboxView.flexbox.flexDirection = .column
+        case 3: break
+//            flexboxView.flexbox.flexDirection = .columnReverse
         default: break
         }
         notifyLayoutAnimated()
+    }
+    
+    @IBAction func didToggleConfigPannel(_ sender: UIButton) {
+        sender.isSelected = !sender.isSelected
+        UIView.animate(withDuration: 0.25) {
+            if sender.isSelected {
+                sender.imageView?.transform = CGAffineTransform(rotationAngle: CGFloat(Double.pi))
+                self.flexboxConfigView.transform = CGAffineTransform(translationX: 0 , y: self.flexboxConfigView.frame.height - 30.0)
+            } else {
+                sender.imageView?.transform = CGAffineTransform.identity
+                self.flexboxConfigView.transform = CGAffineTransform.identity
+            }
+        }
     }
     
     @IBAction func didChangeWrap(_ sender: UISegmentedControl) {
