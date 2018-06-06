@@ -58,4 +58,14 @@ struct FlexboxArrangement {
     
     var isCrossReverse: Bool
     
+    var crossRatio: Float {
+        get {
+            if isCrossReverse {
+                return -1.0
+            } else {
+                return 1.0
+            }
+        }
+    }
+    
 }

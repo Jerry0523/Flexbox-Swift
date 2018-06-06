@@ -59,11 +59,7 @@ struct FlexboxHorizontalIntermediate: FlexboxIntermediate {
     }
     
     mutating func wrap() {
-        if flexWrap.isReverse {
-            cursor.y -= dimensionOfCurrentCross
-        } else {
-            cursor.y += dimensionOfCurrentCross
-        }
+        cursor.y += flexboxArrangement.crossRatio * dimensionOfCurrentCross
         indexOfItemsInCurrentAxis = 0
         dimensionOfCurrentCross = Float(0)
         cursor.x = Float(0)
@@ -106,14 +102,19 @@ struct FlexboxHorizontalIntermediate: FlexboxIntermediate {
     
     mutating func fixInCross(_ items: [FlexboxItem]) {
         dimensionsOfCross.append(dimensionOfCurrentCross)
+        cursor.y += flexboxArrangement.crossRatio * dimensionOfCurrentCross
         if flexWrap.isReverse {
-            cursor.y -= dimensionOfCurrentCross
-            intrinsicSize = FlexboxSize(w: flexWrap.isWrapEnabled ? flexContainerDimension.w : cursor.x , h: cursor.y)
+            if  let firstItem = items.first,
+                let firstItemFrame = firstItem.flexFrame,
+                let firstCrossDimension = dimensionsOfCross.first{
+                intrinsicSize = FlexboxSize(w: flexWrap.isWrapEnabled ? flexContainerDimension.w : cursor.x , h: firstItemFrame.y - firstItem.flexMargin.top + firstCrossDimension - cursor.y)
+            } else {
+                intrinsicSize = FlexboxSize.zero
+            }
+            
         } else {
-            cursor.y += dimensionOfCurrentCross
             intrinsicSize = FlexboxSize(w: flexWrap.isWrapEnabled ? flexContainerDimension.w : cursor.x , h: cursor.y)
         }
-        
         items.fixDistributionInCross(arrangement: flexboxArrangement, alignContent: flexAlignContent, alignItems: flexAlignItems, dimensionsOfCross: dimensionsOfCross, flexContainerDimension: flexContainerDimension, dimensionOfCurrentCross: dimensionOfCurrentCross, indexesOfAxisForItems: indexesOfAxisForItems)
     }
 }
