@@ -109,18 +109,30 @@ extension FlexboxItem {
         if arrangement.isHorizontal {
             if let growOffset = growOffset {
                 flexFrame?.w += growOffset
-                fixedAxisOffset += growOffset
+                if arrangement.isAxisReverse {
+                    flexFrame?.x -= growOffset
+                }
+                fixedAxisOffset += arrangement.axisRatio * growOffset
             } else if let shrinkOffset = shrinkOffset {
                 flexFrame?.w -= shrinkOffset
-                fixedAxisOffset -= shrinkOffset
+                if arrangement.isAxisReverse {
+                    flexFrame?.x += shrinkOffset
+                }
+                fixedAxisOffset -= arrangement.axisRatio * shrinkOffset
             }
         } else {
             if let growOffset = growOffset {
                 flexFrame?.h += growOffset
-                fixedAxisOffset += growOffset
+                if arrangement.isAxisReverse {
+                    flexFrame?.y -= growOffset
+                }
+                fixedAxisOffset += arrangement.axisRatio * growOffset
             } else if let shrinkOffset = shrinkOffset {
                 flexFrame?.h -= shrinkOffset
-                fixedAxisOffset -= shrinkOffset
+                if arrangement.isAxisReverse {
+                    flexFrame?.y += shrinkOffset
+                }
+                fixedAxisOffset -= arrangement.axisRatio * shrinkOffset
             }
         }
     }
@@ -182,30 +194,30 @@ extension FlexboxItem {
         }
     }
     
-    fileprivate func fixHorizontalDistributionInAxis(justifyContent: Flexbox.JustifyContent, axisDimension: Float, containerDimension: FlexboxSize, itemIndex: Int, itemCount: Int) {
+    fileprivate func fixHorizontalDistributionInAxis(justifyContent: Flexbox.JustifyContent, axisDimension: Float, containerDimension: FlexboxSize, itemIndex: Int, itemCount: Int, arrangement: FlexboxArrangement) {
         switch justifyContent {
         case .end:
-            flexFrame?.x += containerDimension.w - axisDimension
+            flexFrame?.x += arrangement.axisRatio * (containerDimension.w - axisDimension)
         case .center:
-            flexFrame?.x += (containerDimension.w - axisDimension) * 0.5
+            flexFrame?.x += arrangement.axisRatio * (containerDimension.w - axisDimension) * 0.5
         case .spaceBetween:
-            flexFrame?.x += (containerDimension.w - axisDimension) * Float(itemIndex) / Float(itemCount - 1)
+            flexFrame?.x += arrangement.axisRatio * ((containerDimension.w - axisDimension) * Float(itemIndex) / Float(itemCount - 1))
         case .spaceAround:
-            flexFrame?.x += (containerDimension.w - axisDimension) * (Float(itemIndex) + 0.5) / Float(itemCount)
+            flexFrame?.x += arrangement.axisRatio * ((containerDimension.w - axisDimension) * (Float(itemIndex) + 0.5) / Float(itemCount))
         case .start: break
         }
     }
     
-    fileprivate func fixVerticalDistributionInAxis(justifyContent: Flexbox.JustifyContent, axisDimension: Float, containerDimension: FlexboxSize, itemIndex: Int, itemCount: Int) {
+    fileprivate func fixVerticalDistributionInAxis(justifyContent: Flexbox.JustifyContent, axisDimension: Float, containerDimension: FlexboxSize, itemIndex: Int, itemCount: Int, arrangement: FlexboxArrangement) {
         switch justifyContent {
         case .end:
-            flexFrame?.y += containerDimension.h - axisDimension
+            flexFrame?.y += arrangement.axisRatio * (containerDimension.h - axisDimension)
         case .center:
-            flexFrame?.y += (containerDimension.h - axisDimension) * 0.5
+            flexFrame?.y += arrangement.axisRatio * (containerDimension.h - axisDimension) * 0.5
         case .spaceBetween:
-            flexFrame?.y += (containerDimension.h - axisDimension) * Float(itemIndex) / Float(itemCount - 1)
+            flexFrame?.y += arrangement.axisRatio * ((containerDimension.h - axisDimension) * Float(itemIndex) / Float(itemCount - 1))
         case .spaceAround:
-            flexFrame?.y += (containerDimension.h - axisDimension) * (Float(itemIndex) + 0.5) / Float(itemCount)
+            flexFrame?.y += arrangement.axisRatio * ((containerDimension.h - axisDimension) * (Float(itemIndex) + 0.5) / Float(itemCount))
         case .start: break
         }
     }
@@ -233,9 +245,9 @@ extension Array where Element == FlexboxItem {
         
         enumerated().forEach { (index, item) in
             if arrangement.isHorizontal {
-                item.fixHorizontalDistributionInAxis(justifyContent: mFlexJustifyConent, axisDimension: axisDimension, containerDimension: containerDimension, itemIndex: index, itemCount: count)
+                item.fixHorizontalDistributionInAxis(justifyContent: mFlexJustifyConent, axisDimension: axisDimension, containerDimension: containerDimension, itemIndex: index, itemCount: count, arrangement: arrangement)
             } else {
-                item.fixVerticalDistributionInAxis(justifyContent: mFlexJustifyConent, axisDimension: axisDimension, containerDimension: containerDimension, itemIndex: index, itemCount: count)
+                item.fixVerticalDistributionInAxis(justifyContent: mFlexJustifyConent, axisDimension: axisDimension, containerDimension: containerDimension, itemIndex: index, itemCount: count, arrangement: arrangement)
             }
         }
     }
@@ -324,5 +336,4 @@ extension Array where Element == FlexboxItem {
 protocol FlexboxItemDelegate: class {
     
     func onMeasure(_ size: FlexboxSize) -> FlexboxSize
-    
 }

@@ -13,7 +13,7 @@ class Flexbox {
     }
     
     func layout(_ items: [FlexboxItem], size: FlexboxSize) {
-        var intermediate = flexDirection.intermediateType.init(alignItems: alignItems, alignContent:alignContent, wrap: flexWrap, justifyContent: justifyContent, containerDimension: size)
+        var intermediate = flexDirection.intermediateType.init(direction: flexDirection, alignItems: alignItems, alignContent:alignContent, wrap: flexWrap, justifyContent: justifyContent, containerDimension: size)
         intermediate.layout(items)
         intrinsicSize = intermediate.intrinsicSize
     }
@@ -83,12 +83,10 @@ class Flexbox {
         
         case row
         
-        @available(*, unavailable)
         case rowReverse
         
         case column
         
-        @available(*, unavailable)
         case columnReverse
         
         var intermediateType: FlexboxIntermediate.Type {
@@ -101,7 +99,6 @@ class Flexbox {
                 }
             }
         }
-        
     }
     
     enum Wrap {
@@ -115,12 +112,6 @@ class Flexbox {
         var isWrapEnabled: Bool {
             get {
                 return self != .nowrap
-            }
-        }
-        
-        var isReverse: Bool {
-            get {
-                return self == .wrapReverse
             }
         }
     }
@@ -205,5 +196,4 @@ protocol FlexboxDelegate: class {
     func setNeedsLayout()
     
     func invalidateIntrinsicContentSize()
-    
 }

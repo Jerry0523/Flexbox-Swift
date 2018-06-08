@@ -54,12 +54,12 @@ class PlaygroundViewController: UIViewController {
         switch sender.selectedSegmentIndex {
         case 0:
             flexboxView.flexbox.flexDirection = .row
-        case 1: break
-//            flexboxView.flexbox.flexDirection = .rowReverse
+        case 1:
+            flexboxView.flexbox.flexDirection = .rowReverse
         case 2:
             flexboxView.flexbox.flexDirection = .column
-        case 3: break
-//            flexboxView.flexbox.flexDirection = .columnReverse
+        case 3:
+            flexboxView.flexbox.flexDirection = .columnReverse
         default: break
         }
         notifyLayoutAnimated()

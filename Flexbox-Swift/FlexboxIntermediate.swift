@@ -8,6 +8,8 @@
 
 protocol FlexboxIntermediate {
     
+    var flexDirection: Flexbox.Direction { get set }
+    
     var flexContainerDimension: FlexboxSize { get set }
     
     var flexWrap: Flexbox.Wrap { get set }
@@ -51,8 +53,9 @@ protocol FlexboxIntermediate {
 
 extension FlexboxIntermediate {
     
-    init(alignItems: Flexbox.AlignItems, alignContent: Flexbox.AlignContent, wrap: Flexbox.Wrap, justifyContent: Flexbox.JustifyContent, containerDimension: FlexboxSize) {
+    init(direction: Flexbox.Direction, alignItems: Flexbox.AlignItems, alignContent: Flexbox.AlignContent, wrap: Flexbox.Wrap, justifyContent: Flexbox.JustifyContent, containerDimension: FlexboxSize) {
         self.init()
+        flexDirection = direction
         flexAlignItems = alignItems
         flexAlignContent = alignContent
         flexWrap = wrap

@@ -8,6 +8,8 @@
 
 struct FlexboxVerticalIntermediate: FlexboxIntermediate {
     
+    var flexDirection = Flexbox.Direction.column
+    
     var flexContainerDimension = FlexboxSize.zero
     
     var flexWrap = Flexbox.Wrap.nowrap
@@ -34,7 +36,7 @@ struct FlexboxVerticalIntermediate: FlexboxIntermediate {
     
     var flexboxArrangement: FlexboxArrangement {
         get {
-            return FlexboxArrangement(isHorizontal: false, isAxisReverse: false, isCrossReverse: flexWrap.isReverse)
+            return FlexboxArrangement(isHorizontal: false, isAxisReverse: flexDirection == .columnReverse, isCrossReverse: flexWrap == .wrapReverse)
         }
     }
     
@@ -43,15 +45,24 @@ struct FlexboxVerticalIntermediate: FlexboxIntermediate {
     init() {}
     
     mutating func intermediateDidLoad() {
-        if flexWrap.isReverse {
+        if flexboxArrangement.isCrossReverse {
             cursor.x = flexContainerDimension.w
+        }
+        if flexboxArrangement.isAxisReverse {
+            cursor.y = flexContainerDimension.h
         }
     }
     
     mutating func prepare(_ item: FlexboxItem) -> Bool {
         indexOfItemsInCurrentAxis += 1
         item.onMeasure(direction: .column, containerDimension: flexContainerDimension)
-        let shouldWrap = flexWrap.isWrapEnabled && cursor.y + item.flexHeight - flexContainerDimension.h > Flexbox.dimensionThreshold
+        var shouldWrap = flexWrap.isWrapEnabled
+        if flexboxArrangement.isAxisReverse {
+            shouldWrap = shouldWrap && cursor.y - item.flexHeight < Flexbox.dimensionThreshold
+        } else {
+            shouldWrap = shouldWrap && cursor.y + item.flexHeight - flexContainerDimension.h > Flexbox.dimensionThreshold
+        }
+        
         if shouldWrap {
             dimensionsOfCross.append(dimensionOfCurrentCross)
         }
@@ -62,20 +73,27 @@ struct FlexboxVerticalIntermediate: FlexboxIntermediate {
         cursor.x += flexboxArrangement.crossRatio * dimensionOfCurrentCross
         indexOfItemsInCurrentAxis = 0
         dimensionOfCurrentCross = Float(0)
-        cursor.y = Float(0)
+        if flexboxArrangement.isAxisReverse {
+            cursor.y = flexContainerDimension.h
+        } else {
+            cursor.y = Float(0)
+        }
         growOfItemsInCurrentAxis.removeAll()
         shrinkOfItemsInCurrentAxis.removeAll()
     }
     
     mutating func move(_ item: FlexboxItem) {
-        if flexWrap.isReverse {
+        if flexboxArrangement.isCrossReverse {
             item.flexFrame!.x = cursor.x - item.flexMargin.right - item.flexFrame!.w
         } else {
             item.flexFrame!.x = cursor.x + item.flexMargin.left
         }
-        item.flexFrame!.y = cursor.y + item.flexMargin.top
-        
-        cursor.y += item.flexHeight
+        if flexboxArrangement.isAxisReverse {
+            item.flexFrame!.y = cursor.y + item.flexMargin.bottom - item.flexFrame!.h
+        } else {
+            item.flexFrame!.y = cursor.y + item.flexMargin.top
+        }
+        cursor.y += flexboxArrangement.axisRatio * item.flexHeight
         dimensionOfCurrentCross = max(dimensionOfCurrentCross, item.flexWidth)
         
         if item.flexGrow > 0 {
@@ -87,7 +105,7 @@ struct FlexboxVerticalIntermediate: FlexboxIntermediate {
     }
     
     func fixInAxis(_ items: [FlexboxItem]) {
-        let growAndShrinkVal = calculateGrowAndShrink(dimensionToFix: { cursor.y - flexContainerDimension.h })
+        let growAndShrinkVal = calculateGrowAndShrink(dimensionToFix: { flexboxArrangement.isAxisReverse ? (-cursor.y) : (cursor.y - flexContainerDimension.h) })
         var fixedAxisOffset = Float(0)
         var itemsAxisDimension = Float(0)
         items.enumerated().forEach { (index, item) in
@@ -103,7 +121,7 @@ struct FlexboxVerticalIntermediate: FlexboxIntermediate {
     mutating func fixInCross(_ items: [FlexboxItem]) {
         dimensionsOfCross.append(dimensionOfCurrentCross)
         cursor.x += flexboxArrangement.crossRatio * dimensionOfCurrentCross
-        if flexWrap.isReverse {
+        if flexboxArrangement.isCrossReverse {
             if  let firstItem = items.first,
                 let firstItemFrame = firstItem.flexFrame,
                 let firstCrossDimension = dimensionsOfCross.first {
