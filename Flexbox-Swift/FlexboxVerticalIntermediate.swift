@@ -104,7 +104,7 @@ struct FlexboxVerticalIntermediate: FlexboxIntermediate {
         }
     }
     
-    func fixInAxis(_ items: [FlexboxItem]) {
+    mutating func fixInAxis(_ items: [FlexboxItem]) {
         let growAndShrinkVal = calculateGrowAndShrink(dimensionToFix: { flexboxArrangement.isAxisReverse ? (-cursor.y) : (cursor.y - flexContainerDimension.h) })
         var fixedAxisOffset = Float(0)
         var itemsAxisDimension = Float(0)
@@ -113,6 +113,7 @@ struct FlexboxVerticalIntermediate: FlexboxIntermediate {
             item.fixGrowAndShrinkInAxis(arrangement: flexboxArrangement, growOffset: growAndShrinkVal.growValInLine?[index], shrinkOffset: growAndShrinkVal.shrinkValInLine?[index], fixedAxisOffset: &fixedAxisOffset)
             itemsAxisDimension += item.flexHeight
         }
+        intrinsicSize.h = max(intrinsicSize.h, itemsAxisDimension)
         if growAndShrinkVal.growValInLine == nil && growAndShrinkVal.shrinkValInLine == nil {
             items.fixDistributionInAxis(arrangement: flexboxArrangement, justifyContent: flexJustifyContent, containerDimension: flexContainerDimension, axisDimension: itemsAxisDimension)
         }
@@ -125,12 +126,12 @@ struct FlexboxVerticalIntermediate: FlexboxIntermediate {
             if  let firstItem = items.first,
                 let firstItemFrame = firstItem.flexFrame,
                 let firstCrossDimension = dimensionsOfCross.first {
-                intrinsicSize = FlexboxSize(w:firstItemFrame.x - firstItem.flexMargin.left + firstCrossDimension - cursor.x, h: flexWrap.isWrapEnabled ? flexContainerDimension.h : cursor.y)
+                intrinsicSize.w = firstItemFrame.x - firstItem.flexMargin.left + firstCrossDimension - cursor.x
             } else {
-                intrinsicSize = FlexboxSize.zero
+                intrinsicSize.w = 0
             }
         } else {
-            intrinsicSize = FlexboxSize(w:cursor.x, h: flexWrap.isWrapEnabled ? flexContainerDimension.h : cursor.y)
+            intrinsicSize.w = cursor.x
         }
         items.fixDistributionInCross(arrangement: flexboxArrangement, alignContent: flexAlignContent, alignItems: flexAlignItems, dimensionsOfCross: dimensionsOfCross, flexContainerDimension: flexContainerDimension, dimensionOfCurrentCross: dimensionOfCurrentCross, indexesOfAxisForItems: indexesOfAxisForItems)
     }

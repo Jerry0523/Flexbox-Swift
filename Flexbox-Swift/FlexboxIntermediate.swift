@@ -48,7 +48,7 @@ protocol FlexboxIntermediate {
     
     mutating func fixInCross(_ items: [FlexboxItem])
     
-    func fixInAxis(_ items: [FlexboxItem])
+    mutating func fixInAxis(_ items: [FlexboxItem])
 }
 
 extension FlexboxIntermediate {
