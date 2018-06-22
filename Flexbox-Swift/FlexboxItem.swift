@@ -253,11 +253,7 @@ extension Array where Element == FlexboxItem {
     }
     
     private func fixHorizontalDistributionInCross(arrangement: FlexboxArrangement, alignContent: Flexbox.AlignContent, alignItems: Flexbox.AlignItems, dimensionsOfCross: [Float], flexContainerDimension: FlexboxSize, dimensionOfCurrentCross: Float, indexesOfAxisForItems: [Int: Int]) {
-        var mAlignContent = alignContent
-        if dimensionsOfCross.count == 1 {
-            mAlignContent = .center
-        }
-        if !(mAlignContent == .start && alignItems == .start) {
+        if !(alignContent == .start && alignItems == .start) {
             let contentHeight = dimensionsOfCross.reduce(0, +)
             enumerated().forEach { (offset, item) in
                 guard let lineIndex = indexesOfAxisForItems[offset] else {
@@ -269,7 +265,7 @@ extension Array where Element == FlexboxItem {
                     item.flexFrame?.y -= reverseOffsetY
                 }
                 
-                switch mAlignContent {
+                switch alignContent {
                 case .start: break
                 case .end:
                     item.flexFrame?.y += arrangement.crossRatio * (flexContainerDimension.h - contentHeight)
@@ -293,11 +289,7 @@ extension Array where Element == FlexboxItem {
     }
     
     private func fixVerticalDistributionInCross(arrangement: FlexboxArrangement, alignContent: Flexbox.AlignContent, alignItems: Flexbox.AlignItems, dimensionsOfCross: [Float], flexContainerDimension: FlexboxSize, dimensionOfCurrentCross: Float, indexesOfAxisForItems: [Int: Int]) {
-        var mAlignContent = alignContent
-        if dimensionsOfCross.count == 1 {
-            mAlignContent = .center
-        }
-        if !(mAlignContent == .start && alignItems == .start) {
+        if !(alignContent == .start && alignItems == .start) {
             let contentWidth = dimensionsOfCross.reduce(0, +)
             enumerated().forEach { (offset, item) in
                 guard let lineIndex = indexesOfAxisForItems[offset] else {
@@ -309,7 +301,7 @@ extension Array where Element == FlexboxItem {
                     item.flexFrame?.x -= reverseOffsetX
                 }
                 
-                switch mAlignContent {
+                switch alignContent {
                 case .start: break
                 case .end:
                     item.flexFrame?.x += arrangement.crossRatio * (flexContainerDimension.w - contentWidth)

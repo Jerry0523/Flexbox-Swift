@@ -12,6 +12,16 @@ class FlexboxView: UIView, FlexboxDelegate {
     
     private(set) lazy var flexbox = Flexbox(delegate: self)
     
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        layoutMargins = UIEdgeInsets.zero
+//        preservesSuperviewLayoutMargins = true
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
+    }
+    
     override func layoutSubviews() {
         super.layoutSubviews()
         flexbox.layout(subviews.map{ $0.flexboxItem }, size: FlexboxSize(w: Float(frame.width - layoutMargins.left - layoutMargins.right), h: Float(frame.height - layoutMargins.top - layoutMargins.bottom)))
@@ -35,6 +45,37 @@ class FlexboxView: UIView, FlexboxDelegate {
         didSet {
             if mIntrinsicSize != oldValue {
                 invalidateIntrinsicContentSize()
+            }
+        }
+    }
+}
+
+class FlexboxTransformView: FlexboxView {
+    
+    override class var layerClass: Swift.AnyClass {
+        get {
+            return TransformLayer.self
+        }
+    }
+    
+    class TransformLayer: CATransformLayer {
+        override var isOpaque: Bool {
+            set {
+                
+            }
+            
+            get {
+                return false
+            }
+        }
+        
+        override var backgroundColor: CGColor? {
+            set {
+                
+            }
+            
+            get {
+                return nil
             }
         }
     }

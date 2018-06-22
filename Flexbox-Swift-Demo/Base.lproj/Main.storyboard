@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14109" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14113" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
@@ -29,13 +29,23 @@
                                             <constraint firstAttribute="height" constant="220" id="nMS-7u-a9I"/>
                                         </constraints>
                                     </view>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="VSd-VK-sKW">
+                                        <rect key="frame" x="15" y="235" width="345" height="30"/>
+                                        <state key="normal" title="Timeline"/>
+                                        <connections>
+                                            <segue destination="XdL-9o-6wi" kind="show" id="lTN-aL-E2F"/>
+                                        </connections>
+                                    </button>
                                 </subviews>
                                 <constraints>
+                                    <constraint firstItem="VSd-VK-sKW" firstAttribute="leading" secondItem="6p5-qf-qEn" secondAttribute="leading" constant="15" id="7HP-Tb-j6M"/>
                                     <constraint firstItem="RWc-AA-MjQ" firstAttribute="top" secondItem="6p5-qf-qEn" secondAttribute="top" id="Daz-Ja-YyT"/>
+                                    <constraint firstAttribute="bottom" secondItem="VSd-VK-sKW" secondAttribute="bottom" constant="15" id="JK2-4f-QQt"/>
                                     <constraint firstItem="RWc-AA-MjQ" firstAttribute="leading" secondItem="6p5-qf-qEn" secondAttribute="leading" id="NFX-Jb-OGy"/>
                                     <constraint firstAttribute="trailing" secondItem="RWc-AA-MjQ" secondAttribute="trailing" id="T82-p2-qCe"/>
                                     <constraint firstItem="RWc-AA-MjQ" firstAttribute="centerX" secondItem="6p5-qf-qEn" secondAttribute="centerX" id="aFh-ls-RYK"/>
-                                    <constraint firstAttribute="bottom" secondItem="RWc-AA-MjQ" secondAttribute="bottom" id="nwx-Q8-jml"/>
+                                    <constraint firstAttribute="trailing" secondItem="VSd-VK-sKW" secondAttribute="trailing" constant="15" id="nb0-5p-NNf"/>
+                                    <constraint firstItem="VSd-VK-sKW" firstAttribute="top" secondItem="RWc-AA-MjQ" secondAttribute="bottom" constant="15" id="vMx-Vy-08I"/>
                                 </constraints>
                             </scrollView>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="mNl-pV-21E">
@@ -183,6 +193,24 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="136.80000000000001" y="133.5832083958021"/>
+        </scene>
+        <!--Timeline View Controller-->
+        <scene sceneID="YCJ-0w-JO2">
+            <objects>
+                <tableViewController id="XdL-9o-6wi" customClass="TimelineViewController" customModule="Flexbox_Swift" customModuleProvider="target" sceneMemberID="viewController">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="-1" estimatedSectionHeaderHeight="-1" sectionFooterHeight="-1" estimatedSectionFooterHeight="-1" id="lLa-Mu-JP3">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <connections>
+                            <outlet property="dataSource" destination="XdL-9o-6wi" id="cnY-hG-aW3"/>
+                            <outlet property="delegate" destination="XdL-9o-6wi" id="59s-hy-Cvi"/>
+                        </connections>
+                    </tableView>
+                </tableViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="8Lp-b7-9dD" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="941.60000000000002" y="133.5832083958021"/>
         </scene>
     </scenes>
     <resources>
