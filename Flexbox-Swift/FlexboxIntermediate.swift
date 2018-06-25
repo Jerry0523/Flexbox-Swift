@@ -36,7 +36,7 @@ protocol FlexboxIntermediate {
     
     var intrinsicSize: FlexboxSize { get set }
     
-    var flexDebuggable: Bool { get set }
+    var flexDebugTag: String? { get set }
     
     init()
     
@@ -55,7 +55,7 @@ protocol FlexboxIntermediate {
 
 extension FlexboxIntermediate {
     
-    init(direction: Flexbox.Direction, alignItems: Flexbox.AlignItems, alignContent: Flexbox.AlignContent, wrap: Flexbox.Wrap, justifyContent: Flexbox.JustifyContent, containerDimension: FlexboxSize, debuggable: Bool) {
+    init(direction: Flexbox.Direction, alignItems: Flexbox.AlignItems, alignContent: Flexbox.AlignContent, wrap: Flexbox.Wrap, justifyContent: Flexbox.JustifyContent, containerDimension: FlexboxSize, debugTag: String?) {
         self.init()
         flexDirection = direction
         flexAlignItems = alignItems
@@ -63,7 +63,7 @@ extension FlexboxIntermediate {
         flexWrap = wrap
         flexContainerDimension = containerDimension
         flexJustifyContent = justifyContent
-        flexDebuggable = debuggable
+        flexDebugTag = debugTag
         intermediateDidLoad()
     }
     

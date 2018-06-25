@@ -23,13 +23,16 @@ class FlexboxView: UIView, FlexboxDelegate {
     
     override func layoutSubviews() {
         super.layoutSubviews()
+        if frame == CGRect.zero {
+            return
+        }
         flexbox.layout(subviews.map{ $0.flexboxItem }, size: FlexboxSize(w: Float(frame.width - layoutMargins.left - layoutMargins.right), h: Float(frame.height - layoutMargins.top - layoutMargins.bottom)))
         mIntrinsicSize = flexbox.intrinsicSize.cgSize
         self.subviews.forEach { $0.frame = $0.flexFrame?.offsetBy(dx: Float(layoutMargins.left), dy: Float(layoutMargins.top)) ?? CGRect.zero }
     }
     
     override func sizeThatFits(_ size: CGSize) -> CGSize {
-        flexbox.layout(subviews.map { $0.flexboxItem }, size: FlexboxSize(size))
+        flexbox.layout(subviews.map { $0.flexboxItem }, size: FlexboxSize(CGSize(width: size.width - layoutMargins.left - layoutMargins.right, height: size.height - layoutMargins.top - layoutMargins.bottom)))
         mIntrinsicSize = flexbox.intrinsicSize.cgSize
         return CGSize(width: mIntrinsicSize.width + layoutMargins.left + layoutMargins.right, height: mIntrinsicSize.height + layoutMargins.top + layoutMargins.bottom)
     }
@@ -197,7 +200,7 @@ extension FlexboxRect {
     }
     
     var cgRect: CGRect {
-        return CGRect(x: Int(ceil(x)), y: Int(ceil(y)), width: Int(ceil(w)), height: Int(ceil(h)))
+        return CGRect(x: CGFloat(ceil(x)), y: CGFloat(ceil(y)), width: CGFloat(ceil(w)), height: CGFloat(ceil(h)))
     }
 }
 
@@ -209,6 +212,6 @@ extension FlexboxSize {
     }
     
     var cgSize: CGSize {
-        return CGSize(width: Int(ceil(w)), height: Int(ceil(h)))
+        return CGSize(width: CGFloat(ceil(w)), height: CGFloat(ceil(h)))
     }
 }

@@ -71,9 +71,9 @@ extension FlexboxItem {
         case .auto:
             switch direction {
             case .row, .rowReverse:
-                size = delegate?.onMeasure(FlexboxSize(w: containerDimension.w, h: 0)) ?? FlexboxSize.zero
+                size = delegate?.onMeasure(containerDimension) ?? FlexboxSize.zero
             case .column, .columnReverse:
-                size = delegate?.onMeasure(FlexboxSize(w: 0, h: containerDimension.h)) ?? FlexboxSize.zero
+                size = delegate?.onMeasure(containerDimension) ?? FlexboxSize.zero
             }
         case .ratio(let val):
             switch direction {
@@ -100,14 +100,16 @@ extension FlexboxItem {
     }
     
     func reMeasure(direction: Flexbox.Direction) {
-        var size = FlexboxSize.zero
+        var size: FlexboxSize?
         switch direction {
         case .row, .rowReverse:
-            size = delegate?.onMeasure(FlexboxSize(w: flexFrame?.w ?? 0, h: 0)) ?? FlexboxSize.zero
+            size = delegate?.onMeasure(flexFrame?.size ?? FlexboxSize.zero)
         case .column, .columnReverse:
-            size = delegate?.onMeasure(FlexboxSize(w: 0, h: flexFrame?.h ?? 0)) ?? FlexboxSize.zero
+            size = delegate?.onMeasure(flexFrame?.size ?? FlexboxSize.zero)
         }
-        flexFrame?.size = size
+        if let size = size {
+            flexFrame?.size = size
+        }
     }
 }
 
@@ -121,7 +123,7 @@ extension FlexboxItem: CustomDebugStringConvertible {
 
 extension FlexboxItem {
     
-    func fixGrowAndShrinkInAxis(arrangement: FlexboxArrangement, growOffset: Float?, shrinkOffset: Float?, fixedAxisOffset: inout Float) {
+    func fixGrowAndShrinkInAxis(arrangement: FlexboxArrangement, growOffset: Float?, shrinkOffset: Float?, fixedAxisOffset: inout Float, fixedCrossDimension: inout Float) {
         if arrangement.isHorizontal {
             if let growOffset = growOffset {
                 flexFrame?.w += growOffset
@@ -132,6 +134,7 @@ extension FlexboxItem {
             } else if let shrinkOffset = shrinkOffset {
                 flexFrame?.w -= shrinkOffset
                 reMeasure(direction: arrangement.flexDirection)
+                fixedCrossDimension = max(fixedCrossDimension, flexFrame?.h ?? 0)
                 if arrangement.isAxisReverse {
                     flexFrame?.x += shrinkOffset
                 }
@@ -147,6 +150,7 @@ extension FlexboxItem {
             } else if let shrinkOffset = shrinkOffset {
                 flexFrame?.h -= shrinkOffset
                 reMeasure(direction: arrangement.flexDirection)
+                fixedCrossDimension = max(fixedCrossDimension, flexFrame?.w ?? 0)
                 if arrangement.isAxisReverse {
                     flexFrame?.y += shrinkOffset
                 }

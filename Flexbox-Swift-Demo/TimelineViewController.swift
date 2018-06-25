@@ -10,6 +10,10 @@ import UIKit
 
 class TimelineViewController: UITableViewController {
 
+    @IBAction func didClickCloseItem(_ sender: UIBarButtonItem) {
+        dismiss(animated: true, completion: nil)
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         tableView.register(SimpleTextMsgCell.self, forCellReuseIdentifier: "simple")
@@ -22,6 +26,10 @@ class TimelineViewController: UITableViewController {
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "simple", for: indexPath)
         return cell
+    }
+    
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath, animated: true)
     }
 
     override func didReceiveMemoryWarning() {

@@ -33,7 +33,7 @@
                                         <rect key="frame" x="15" y="235" width="345" height="30"/>
                                         <state key="normal" title="Timeline"/>
                                         <connections>
-                                            <segue destination="XdL-9o-6wi" kind="show" id="lTN-aL-E2F"/>
+                                            <segue destination="UOW-1e-Z6Q" kind="show" id="q9a-4z-r6D"/>
                                         </connections>
                                     </button>
                                 </subviews>
@@ -194,6 +194,22 @@
             </objects>
             <point key="canvasLocation" x="136.80000000000001" y="133.5832083958021"/>
         </scene>
+        <!--Navigation Controller-->
+        <scene sceneID="I2D-NY-N8G">
+            <objects>
+                <navigationController id="UOW-1e-Z6Q" sceneMemberID="viewController">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="DrU-0V-yY0">
+                        <rect key="frame" x="0.0" y="20" width="375" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <connections>
+                        <segue destination="XdL-9o-6wi" kind="relationship" relationship="rootViewController" id="D4G-Zr-tTX"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="AbP-pF-oWF" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="881" y="134"/>
+        </scene>
         <!--Timeline View Controller-->
         <scene sceneID="YCJ-0w-JO2">
             <objects>
@@ -207,10 +223,17 @@
                             <outlet property="delegate" destination="XdL-9o-6wi" id="59s-hy-Cvi"/>
                         </connections>
                     </tableView>
+                    <navigationItem key="navigationItem" id="YBJ-dJ-hnh">
+                        <barButtonItem key="leftBarButtonItem" title="Close" id="Z3w-FZ-wYG">
+                            <connections>
+                                <action selector="didClickCloseItem:" destination="XdL-9o-6wi" id="Ib3-K5-qoC"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="8Lp-b7-9dD" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="941.60000000000002" y="133.5832083958021"/>
+            <point key="canvasLocation" x="1615" y="134"/>
         </scene>
     </scenes>
     <resources>

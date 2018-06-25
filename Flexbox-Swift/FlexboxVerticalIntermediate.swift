@@ -42,7 +42,7 @@ struct FlexboxVerticalIntermediate: FlexboxIntermediate {
     
     var intrinsicSize = FlexboxSize.zero
     
-    var flexDebuggable = false
+    var flexDebugTag: String?
     
     init() {}
     
@@ -112,10 +112,13 @@ struct FlexboxVerticalIntermediate: FlexboxIntermediate {
         var itemsAxisDimension = Float(0)
         items.enumerated().forEach { (index, item) in
             item.flexFrame?.y += fixedAxisOffset
-            item.fixGrowAndShrinkInAxis(arrangement: flexboxArrangement, growOffset: growAndShrinkVal.growValInLine?[index], shrinkOffset: growAndShrinkVal.shrinkValInLine?[index], fixedAxisOffset: &fixedAxisOffset)
+            item.fixGrowAndShrinkInAxis(arrangement: flexboxArrangement, growOffset: growAndShrinkVal.growValInLine?[index], shrinkOffset: growAndShrinkVal.shrinkValInLine?[index], fixedAxisOffset: &fixedAxisOffset, fixedCrossDimension: &dimensionOfCurrentCross)
             itemsAxisDimension += item.flexHeight
         }
         if shouldAppendAxisDimension {
+            dimensionsOfCross.append(dimensionOfCurrentCross)
+        } else {
+            dimensionsOfCross.removeLast()
             dimensionsOfCross.append(dimensionOfCurrentCross)
         }
         intrinsicSize.h = max(intrinsicSize.h, itemsAxisDimension)

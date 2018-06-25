@@ -39,6 +39,8 @@ class SimpleTextMsgCell: UITableViewCell {
     let contentLabel = { () -> UILabel in
         let label = UILabel()
         label.numberOfLines = 0
+        label.flexShrink = 0
+        label.flexMargin = FlexboxInsets(top: 5, left: 0, bottom: 0, right: 0)
         label.text = "Officials are searching for 12 teenage soccer players and their coach who are thought to be trapped in a cave in Thailand after rising waters blocked the cave's path"
         return label
     }()
@@ -49,11 +51,12 @@ class SimpleTextMsgCell: UITableViewCell {
         let titleBox = FlexboxTransformView()
         titleBox.addSubview(nameLabel)
         titleBox.addSubview(dateLabel)
+        titleBox.flexShrink = 0
         
         let infoBox = FlexboxTransformView()
         infoBox.addSubview(titleBox)
         infoBox.addSubview(contentLabel)
-        contentLabel.flexMargin = FlexboxInsets(top: 5, left: 0, bottom: 0, right: 0)
+        infoBox.flexbox.debugTag = "info"
         
         infoBox.flexbox.flexDirection = .column
         infoBox.flexbox.justifyContent = .center
@@ -64,11 +67,11 @@ class SimpleTextMsgCell: UITableViewCell {
         contentBox.addSubview(avatarImageView)
         contentBox.addSubview(infoBox)
         contentBox.layoutMargins = UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
-        contentBox.translatesAutoresizingMaskIntoConstraints = false
         contentBox.flexbox.alignItems = .center
-        contentBox.flexbox.debuggable = true
+        contentBox.flexbox.debugTag = "content"
         contentView.addSubview(contentBox)
         
+        contentBox.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([contentBox.leftAnchor.constraint(equalTo: contentView.leftAnchor),
                                      contentBox.rightAnchor.constraint(equalTo: contentView.rightAnchor),
                                      contentBox.topAnchor.constraint(equalTo: contentView.topAnchor),
