@@ -42,6 +42,8 @@ struct FlexboxVerticalIntermediate: FlexboxIntermediate {
     
     var intrinsicSize = FlexboxSize.zero
     
+    var flexDebuggable = false
+    
     init() {}
     
     mutating func intermediateDidLoad() {
@@ -104,7 +106,7 @@ struct FlexboxVerticalIntermediate: FlexboxIntermediate {
         }
     }
     
-    mutating func fixInAxis(_ items: [FlexboxItem]) {
+    mutating func fixInAxis(_ items: [FlexboxItem], shouldAppendAxisDimension: Bool) {
         let growAndShrinkVal = calculateGrowAndShrink(dimensionToFix: { flexboxArrangement.isAxisReverse ? (-cursor.y) : (cursor.y - flexContainerDimension.h) })
         var fixedAxisOffset = Float(0)
         var itemsAxisDimension = Float(0)
@@ -113,6 +115,9 @@ struct FlexboxVerticalIntermediate: FlexboxIntermediate {
             item.fixGrowAndShrinkInAxis(arrangement: flexboxArrangement, growOffset: growAndShrinkVal.growValInLine?[index], shrinkOffset: growAndShrinkVal.shrinkValInLine?[index], fixedAxisOffset: &fixedAxisOffset)
             itemsAxisDimension += item.flexHeight
         }
+        if shouldAppendAxisDimension {
+            dimensionsOfCross.append(dimensionOfCurrentCross)
+        }
         intrinsicSize.h = max(intrinsicSize.h, itemsAxisDimension)
         if growAndShrinkVal.growValInLine == nil && growAndShrinkVal.shrinkValInLine == nil {
             items.fixDistributionInAxis(arrangement: flexboxArrangement, justifyContent: flexJustifyContent, containerDimension: flexContainerDimension, axisDimension: itemsAxisDimension)
@@ -120,7 +125,6 @@ struct FlexboxVerticalIntermediate: FlexboxIntermediate {
     }
     
     mutating func fixInCross(_ items: [FlexboxItem]) {
-        dimensionsOfCross.append(dimensionOfCurrentCross)
         cursor.x += flexboxArrangement.crossRatio * dimensionOfCurrentCross
         if flexboxArrangement.isCrossReverse {
             if  let firstItem = items.first,

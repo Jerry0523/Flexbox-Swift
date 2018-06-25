@@ -36,6 +36,8 @@ protocol FlexboxIntermediate {
     
     var intrinsicSize: FlexboxSize { get set }
     
+    var flexDebuggable: Bool { get set }
+    
     init()
     
     mutating func intermediateDidLoad()
@@ -48,12 +50,12 @@ protocol FlexboxIntermediate {
     
     mutating func fixInCross(_ items: [FlexboxItem])
     
-    mutating func fixInAxis(_ items: [FlexboxItem])
+    mutating func fixInAxis(_ items: [FlexboxItem], shouldAppendAxisDimension: Bool)
 }
 
 extension FlexboxIntermediate {
     
-    init(direction: Flexbox.Direction, alignItems: Flexbox.AlignItems, alignContent: Flexbox.AlignContent, wrap: Flexbox.Wrap, justifyContent: Flexbox.JustifyContent, containerDimension: FlexboxSize) {
+    init(direction: Flexbox.Direction, alignItems: Flexbox.AlignItems, alignContent: Flexbox.AlignContent, wrap: Flexbox.Wrap, justifyContent: Flexbox.JustifyContent, containerDimension: FlexboxSize, debuggable: Bool) {
         self.init()
         flexDirection = direction
         flexAlignItems = alignItems
@@ -61,6 +63,7 @@ extension FlexboxIntermediate {
         flexWrap = wrap
         flexContainerDimension = containerDimension
         flexJustifyContent = justifyContent
+        flexDebuggable = debuggable
         intermediateDidLoad()
     }
     
@@ -68,7 +71,7 @@ extension FlexboxIntermediate {
         
         items.enumerated().forEach { (idx, item) in
             if prepare(item) {
-                fixInAxis(Array(items[(idx - indexOfItemsInCurrentAxis)..<idx]))
+                fixInAxis(Array(items[(idx - indexOfItemsInCurrentAxis)..<idx]), shouldAppendAxisDimension: false)
                 wrap()
             }
             move(item)
@@ -76,7 +79,7 @@ extension FlexboxIntermediate {
             indexesOfAxisForItems[idx] = axisIndex
         }
         
-        fixInAxis(Array(items[(items.count - 1 - indexOfItemsInCurrentAxis)...items.count - 1]))
+        fixInAxis(Array(items[(items.count - 1 - indexOfItemsInCurrentAxis)...items.count - 1]), shouldAppendAxisDimension: true)
         fixInCross(items)
     }
     

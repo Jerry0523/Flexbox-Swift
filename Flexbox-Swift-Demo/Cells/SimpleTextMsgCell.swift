@@ -13,6 +13,7 @@ class SimpleTextMsgCell: UITableViewCell {
     let avatarImageView = { () -> UIImageView in
         let imageView = UIImageView(image: UIImage(named: "avator"))
         imageView.flexBasis = .pixel(50)
+        imageView.flexShrink = 0
         imageView.layer.masksToBounds = true
         imageView.layer.cornerRadius = 25.0
         return imageView
@@ -38,7 +39,7 @@ class SimpleTextMsgCell: UITableViewCell {
     let contentLabel = { () -> UILabel in
         let label = UILabel()
         label.numberOfLines = 0
-        label.text = "Hello world.\n Tomorrow is another day."
+        label.text = "Officials are searching for 12 teenage soccer players and their coach who are thought to be trapped in a cave in Thailand after rising waters blocked the cave's path"
         return label
     }()
     
@@ -62,9 +63,11 @@ class SimpleTextMsgCell: UITableViewCell {
         let contentBox = FlexboxTransformView()
         contentBox.addSubview(avatarImageView)
         contentBox.addSubview(infoBox)
-        contentView.addSubview(contentBox)
         contentBox.layoutMargins = UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
         contentBox.translatesAutoresizingMaskIntoConstraints = false
+        contentBox.flexbox.alignItems = .center
+        contentBox.flexbox.debuggable = true
+        contentView.addSubview(contentBox)
         
         NSLayoutConstraint.activate([contentBox.leftAnchor.constraint(equalTo: contentView.leftAnchor),
                                      contentBox.rightAnchor.constraint(equalTo: contentView.rightAnchor),

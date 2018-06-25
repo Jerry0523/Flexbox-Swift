@@ -69,7 +69,12 @@ extension FlexboxItem {
         var size = FlexboxSize.zero
         switch flexBasis {
         case .auto:
-            size = delegate?.onMeasure(FlexboxSize.zero) ?? FlexboxSize.zero
+            switch direction {
+            case .row, .rowReverse:
+                size = delegate?.onMeasure(FlexboxSize(w: containerDimension.w, h: 0)) ?? FlexboxSize.zero
+            case .column, .columnReverse:
+                size = delegate?.onMeasure(FlexboxSize(w: 0, h: containerDimension.h)) ?? FlexboxSize.zero
+            }
         case .ratio(let val):
             switch direction {
             case .row, .rowReverse:
@@ -93,6 +98,17 @@ extension FlexboxItem {
         }
         flexFrame = FlexboxRect(x: 0, y: 0, w: size.w, h: size.h)
     }
+    
+    func reMeasure(direction: Flexbox.Direction) {
+        var size = FlexboxSize.zero
+        switch direction {
+        case .row, .rowReverse:
+            size = delegate?.onMeasure(FlexboxSize(w: flexFrame?.w ?? 0, h: 0)) ?? FlexboxSize.zero
+        case .column, .columnReverse:
+            size = delegate?.onMeasure(FlexboxSize(w: 0, h: flexFrame?.h ?? 0)) ?? FlexboxSize.zero
+        }
+        flexFrame?.size = size
+    }
 }
 
 extension FlexboxItem: CustomDebugStringConvertible {
@@ -115,6 +131,7 @@ extension FlexboxItem {
                 fixedAxisOffset += arrangement.axisRatio * growOffset
             } else if let shrinkOffset = shrinkOffset {
                 flexFrame?.w -= shrinkOffset
+                reMeasure(direction: arrangement.flexDirection)
                 if arrangement.isAxisReverse {
                     flexFrame?.x += shrinkOffset
                 }
@@ -129,6 +146,7 @@ extension FlexboxItem {
                 fixedAxisOffset += arrangement.axisRatio * growOffset
             } else if let shrinkOffset = shrinkOffset {
                 flexFrame?.h -= shrinkOffset
+                reMeasure(direction: arrangement.flexDirection)
                 if arrangement.isAxisReverse {
                     flexFrame?.y += shrinkOffset
                 }

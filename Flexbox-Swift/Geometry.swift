@@ -34,6 +34,17 @@ struct FlexboxRect: Equatable {
     
     var h: Float
     
+    var size: FlexboxSize {
+        get {
+            return FlexboxSize(w: w, h: h)
+        }
+        
+        set {
+            self.w = newValue.w
+            self.h = newValue.h
+        }
+    }
+    
     static let zero = FlexboxRect(x: 0, y: 0, w: 0, h: 0)
 }
 
@@ -74,6 +85,22 @@ struct FlexboxArrangement {
                 return -1.0
             } else {
                 return 1.0
+            }
+        }
+    }
+    
+    var flexDirection: Flexbox.Direction {
+        if isHorizontal {
+            if isAxisReverse {
+                return .rowReverse
+            } else {
+                return .row
+            }
+        } else {
+            if isAxisReverse {
+                return .columnReverse
+            } else {
+                return .column
             }
         }
     }

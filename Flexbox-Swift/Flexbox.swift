@@ -8,12 +8,14 @@
 
 class Flexbox {
     
+    var debuggable = false
+    
     init(delegate: FlexboxDelegate) {
         self.delegate = delegate
     }
     
     func layout(_ items: [FlexboxItem], size: FlexboxSize) {
-        var intermediate = flexDirection.intermediateType.init(direction: flexDirection, alignItems: alignItems, alignContent:alignContent, wrap: flexWrap, justifyContent: justifyContent, containerDimension: size)
+        var intermediate = flexDirection.intermediateType.init(direction: flexDirection, alignItems: alignItems, alignContent:alignContent, wrap: flexWrap, justifyContent: justifyContent, containerDimension: size, debuggable: debuggable)
         intermediate.layout(items)
         intrinsicSize = intermediate.intrinsicSize
     }

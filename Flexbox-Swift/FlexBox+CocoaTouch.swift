@@ -15,7 +15,6 @@ class FlexboxView: UIView, FlexboxDelegate {
     override init(frame: CGRect) {
         super.init(frame: frame)
         layoutMargins = UIEdgeInsets.zero
-//        preservesSuperviewLayoutMargins = true
     }
     
     required init?(coder aDecoder: NSCoder) {
