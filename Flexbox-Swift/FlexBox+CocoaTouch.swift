@@ -39,7 +39,13 @@ class FlexboxView: UIView, FlexboxDelegate {
     
     override var intrinsicContentSize: CGSize {
         get {
-            return sizeThatFits(frame.size)
+            var size = frame.size
+            var mSuperView = superview
+            while size == CGSize.zero && mSuperView != nil {
+                size = mSuperView!.frame.size
+                mSuperView = mSuperView?.superview
+            }
+            return sizeThatFits(size)
         }
     }
     

@@ -132,13 +132,14 @@ extension FlexboxItem {
                 }
                 fixedAxisOffset += arrangement.axisRatio * growOffset
             } else if let shrinkOffset = shrinkOffset {
+                let ow = flexFrame?.w ?? 0
                 flexFrame?.w -= shrinkOffset
                 reMeasure(direction: arrangement.flexDirection)
                 fixedCrossDimension = max(fixedCrossDimension, flexFrame?.h ?? 0)
                 if arrangement.isAxisReverse {
                     flexFrame?.x += shrinkOffset
                 }
-                fixedAxisOffset -= arrangement.axisRatio * shrinkOffset
+                fixedAxisOffset -= arrangement.axisRatio * (ow - (flexFrame?.w ?? 0))
             }
         } else {
             if let growOffset = growOffset {
@@ -148,13 +149,14 @@ extension FlexboxItem {
                 }
                 fixedAxisOffset += arrangement.axisRatio * growOffset
             } else if let shrinkOffset = shrinkOffset {
+                let oh = flexFrame?.h ?? 0
                 flexFrame?.h -= shrinkOffset
                 reMeasure(direction: arrangement.flexDirection)
                 fixedCrossDimension = max(fixedCrossDimension, flexFrame?.w ?? 0)
                 if arrangement.isAxisReverse {
                     flexFrame?.y += shrinkOffset
                 }
-                fixedAxisOffset -= arrangement.axisRatio * shrinkOffset
+                fixedAxisOffset -= arrangement.axisRatio * (oh - (flexFrame?.h ?? 0))
             }
         }
     }
@@ -276,6 +278,10 @@ extension Array where Element == FlexboxItem {
     
     private func fixHorizontalDistributionInCross(arrangement: FlexboxArrangement, alignContent: Flexbox.AlignContent, alignItems: Flexbox.AlignItems, dimensionsOfCross: [Float], flexContainerDimension: FlexboxSize, dimensionOfCurrentCross: Float, indexesOfAxisForItems: [Int: Int]) {
         if !(alignContent == .start && alignItems == .start) {
+            var mAlignContent = alignContent
+            if (mAlignContent == .spaceBetween || mAlignContent == .spaceAround) && dimensionsOfCross.count == 1 {
+                mAlignContent = .center
+            }
             let contentHeight = dimensionsOfCross.reduce(0, +)
             enumerated().forEach { (offset, item) in
                 guard let lineIndex = indexesOfAxisForItems[offset] else {
@@ -287,7 +293,7 @@ extension Array where Element == FlexboxItem {
                     item.flexFrame?.y -= reverseOffsetY
                 }
                 
-                switch alignContent {
+                switch mAlignContent {
                 case .start: break
                 case .end:
                     item.flexFrame?.y += arrangement.crossRatio * (flexContainerDimension.h - contentHeight)
@@ -312,6 +318,10 @@ extension Array where Element == FlexboxItem {
     
     private func fixVerticalDistributionInCross(arrangement: FlexboxArrangement, alignContent: Flexbox.AlignContent, alignItems: Flexbox.AlignItems, dimensionsOfCross: [Float], flexContainerDimension: FlexboxSize, dimensionOfCurrentCross: Float, indexesOfAxisForItems: [Int: Int]) {
         if !(alignContent == .start && alignItems == .start) {
+            var mAlignContent = alignContent
+            if (mAlignContent == .spaceBetween || mAlignContent == .spaceAround) && dimensionsOfCross.count == 1 {
+                mAlignContent = .center
+            }
             let contentWidth = dimensionsOfCross.reduce(0, +)
             enumerated().forEach { (offset, item) in
                 guard let lineIndex = indexesOfAxisForItems[offset] else {
@@ -323,7 +333,7 @@ extension Array where Element == FlexboxItem {
                     item.flexFrame?.x -= reverseOffsetX
                 }
                 
-                switch alignContent {
+                switch mAlignContent {
                 case .start: break
                 case .end:
                     item.flexFrame?.x += arrangement.crossRatio * (flexContainerDimension.w - contentWidth)

@@ -45,6 +45,17 @@ struct FlexboxRect: Equatable {
         }
     }
     
+    var origin: FlexboxPoint {
+        get {
+            return FlexboxPoint(x: x, y: y)
+        }
+        
+        set {
+            self.x = newValue.x
+            self.y = newValue.y
+        }
+    }
+    
     static let zero = FlexboxRect(x: 0, y: 0, w: 0, h: 0)
 }
 
