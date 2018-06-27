@@ -10,6 +10,11 @@
 		C449B8AA20C64EA00058C2F8 /* FlexboxIntermediate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C449B8A920C64EA00058C2F8 /* FlexboxIntermediate.swift */; };
 		C46DCA4920DCE6E000E8D2AA /* TimelineViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C46DCA4820DCE6E000E8D2AA /* TimelineViewController.swift */; };
 		C46DCA4C20DD0BE800E8D2AA /* SimpleTextMsgCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C46DCA4B20DD0BE800E8D2AA /* SimpleTextMsgCell.swift */; };
+		C46DCA4F20E216A300E8D2AA /* MsgBottomToolbar.swift in Sources */ = {isa = PBXBuildFile; fileRef = C46DCA4E20E216A300E8D2AA /* MsgBottomToolbar.swift */; };
+		C46DCA5120E21E6700E8D2AA /* AbstractMsgCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C46DCA5020E21E6700E8D2AA /* AbstractMsgCell.swift */; };
+		C46DCA5320E2237300E8D2AA /* SimpleImageMsgCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C46DCA5220E2237300E8D2AA /* SimpleImageMsgCell.swift */; };
+		C46DCA5520E233D700E8D2AA /* SimpleLinkMsgCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C46DCA5420E233D700E8D2AA /* SimpleLinkMsgCell.swift */; };
+		C46DCA5720E25B9400E8D2AA /* data.plist in Resources */ = {isa = PBXBuildFile; fileRef = C46DCA5620E25B9400E8D2AA /* data.plist */; };
 		C4A681AF20B4010F00F3EDD7 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4A681AE20B4010F00F3EDD7 /* AppDelegate.swift */; };
 		C4A681B120B4010F00F3EDD7 /* PlaygroundViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4A681B020B4010F00F3EDD7 /* PlaygroundViewController.swift */; };
 		C4A681B420B4010F00F3EDD7 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C4A681B220B4010F00F3EDD7 /* Main.storyboard */; };
@@ -29,6 +34,11 @@
 		C449B8A920C64EA00058C2F8 /* FlexboxIntermediate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlexboxIntermediate.swift; sourceTree = "<group>"; };
 		C46DCA4820DCE6E000E8D2AA /* TimelineViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimelineViewController.swift; sourceTree = "<group>"; };
 		C46DCA4B20DD0BE800E8D2AA /* SimpleTextMsgCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SimpleTextMsgCell.swift; sourceTree = "<group>"; };
+		C46DCA4E20E216A300E8D2AA /* MsgBottomToolbar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MsgBottomToolbar.swift; sourceTree = "<group>"; };
+		C46DCA5020E21E6700E8D2AA /* AbstractMsgCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AbstractMsgCell.swift; sourceTree = "<group>"; };
+		C46DCA5220E2237300E8D2AA /* SimpleImageMsgCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SimpleImageMsgCell.swift; sourceTree = "<group>"; };
+		C46DCA5420E233D700E8D2AA /* SimpleLinkMsgCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SimpleLinkMsgCell.swift; sourceTree = "<group>"; };
+		C46DCA5620E25B9400E8D2AA /* data.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = data.plist; sourceTree = "<group>"; };
 		C4A681AB20B4010F00F3EDD7 /* Flexbox-Swift.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Flexbox-Swift.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		C4A681AE20B4010F00F3EDD7 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		C4A681B020B4010F00F3EDD7 /* PlaygroundViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaygroundViewController.swift; sourceTree = "<group>"; };
@@ -60,9 +70,20 @@
 		C46DCA4A20DD08EA00E8D2AA /* Cells */ = {
 			isa = PBXGroup;
 			children = (
+				C46DCA5020E21E6700E8D2AA /* AbstractMsgCell.swift */,
 				C46DCA4B20DD0BE800E8D2AA /* SimpleTextMsgCell.swift */,
+				C46DCA5220E2237300E8D2AA /* SimpleImageMsgCell.swift */,
+				C46DCA5420E233D700E8D2AA /* SimpleLinkMsgCell.swift */,
 			);
 			path = Cells;
+			sourceTree = "<group>";
+		};
+		C46DCA4D20E2166800E8D2AA /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				C46DCA4E20E216A300E8D2AA /* MsgBottomToolbar.swift */,
+			);
+			path = Views;
 			sourceTree = "<group>";
 		};
 		C4A681A220B4010F00F3EDD7 = {
@@ -90,11 +111,13 @@
 				C4A681CB20B69DA300F3EDD7 /* PlaygroundItemView.xib */,
 				C4A681B020B4010F00F3EDD7 /* PlaygroundViewController.swift */,
 				C46DCA4820DCE6E000E8D2AA /* TimelineViewController.swift */,
+				C46DCA4D20E2166800E8D2AA /* Views */,
 				C46DCA4A20DD08EA00E8D2AA /* Cells */,
 				C4A681B220B4010F00F3EDD7 /* Main.storyboard */,
 				C4A681B520B4011000F3EDD7 /* Assets.xcassets */,
 				C4A681B720B4011000F3EDD7 /* LaunchScreen.storyboard */,
 				C4A681BA20B4011000F3EDD7 /* Info.plist */,
+				C46DCA5620E25B9400E8D2AA /* data.plist */,
 			);
 			path = "Flexbox-Swift-Demo";
 			sourceTree = "<group>";
@@ -174,6 +197,7 @@
 				C4A681B920B4011000F3EDD7 /* LaunchScreen.storyboard in Resources */,
 				C4A681B620B4011000F3EDD7 /* Assets.xcassets in Resources */,
 				C4A681CC20B69DA300F3EDD7 /* PlaygroundItemView.xib in Resources */,
+				C46DCA5720E25B9400E8D2AA /* data.plist in Resources */,
 				C4A681B420B4010F00F3EDD7 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -186,13 +210,17 @@
 			buildActionMask = 2147483647;
 			files = (
 				C4A681CA20B69CC400F3EDD7 /* PlaygroundItemView.swift in Sources */,
+				C46DCA5520E233D700E8D2AA /* SimpleLinkMsgCell.swift in Sources */,
 				C46DCA4920DCE6E000E8D2AA /* TimelineViewController.swift in Sources */,
 				C4A681C220B40C9000F3EDD7 /* Flexbox.swift in Sources */,
 				C4A681B120B4010F00F3EDD7 /* PlaygroundViewController.swift in Sources */,
+				C46DCA4F20E216A300E8D2AA /* MsgBottomToolbar.swift in Sources */,
 				C4A681D020B7D25900F3EDD7 /* FlexboxVerticalIntermediate.swift in Sources */,
 				C4A681AF20B4010F00F3EDD7 /* AppDelegate.swift in Sources */,
 				C4A681C420B410D800F3EDD7 /* FlexBox+CocoaTouch.swift in Sources */,
 				C4A681C620B686F300F3EDD7 /* FlexboxHorizontalIntermediate.swift in Sources */,
+				C46DCA5120E21E6700E8D2AA /* AbstractMsgCell.swift in Sources */,
+				C46DCA5320E2237300E8D2AA /* SimpleImageMsgCell.swift in Sources */,
 				C46DCA4C20DD0BE800E8D2AA /* SimpleTextMsgCell.swift in Sources */,
 				C4A681D220BBCF9A00F3EDD7 /* Geometry.swift in Sources */,
 				C4A681C820B687D000F3EDD7 /* FlexboxItem.swift in Sources */,

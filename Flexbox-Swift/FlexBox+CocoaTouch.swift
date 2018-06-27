@@ -12,6 +12,12 @@ class FlexboxView: UIView, FlexboxDelegate {
     
     private(set) lazy var flexbox = Flexbox(delegate: self)
     
+    var visibleSubViews: [UIView] {
+        get {
+            return subviews.compactMap { $0.isHidden ? nil : $0 }
+        }
+    }
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
         layoutMargins = UIEdgeInsets.zero
@@ -26,13 +32,13 @@ class FlexboxView: UIView, FlexboxDelegate {
         if frame == CGRect.zero {
             return
         }
-        flexbox.layout(subviews.map{ $0.flexboxItem }, size: FlexboxSize(w: Float(frame.width - layoutMargins.left - layoutMargins.right), h: Float(frame.height - layoutMargins.top - layoutMargins.bottom)))
+        flexbox.layout(visibleSubViews.map{ $0.flexboxItem }, size: FlexboxSize(w: Float(frame.width - layoutMargins.left - layoutMargins.right), h: Float(frame.height - layoutMargins.top - layoutMargins.bottom)))
         mIntrinsicSize = flexbox.intrinsicSize.cgSize
-        self.subviews.forEach { $0.frame = $0.flexFrame?.offsetBy(dx: Float(layoutMargins.left), dy: Float(layoutMargins.top)) ?? CGRect.zero }
+        visibleSubViews.forEach { $0.frame = $0.flexFrame?.offsetBy(dx: Float(layoutMargins.left), dy: Float(layoutMargins.top)) ?? CGRect.zero }
     }
     
     override func sizeThatFits(_ size: CGSize) -> CGSize {
-        flexbox.layout(subviews.map { $0.flexboxItem }, size: FlexboxSize(CGSize(width: size.width - layoutMargins.left - layoutMargins.right, height: size.height - layoutMargins.top - layoutMargins.bottom)))
+        flexbox.layout(visibleSubViews.map { $0.flexboxItem }, size: FlexboxSize(CGSize(width: size.width - layoutMargins.left - layoutMargins.right, height: size.height - layoutMargins.top - layoutMargins.bottom)), isMeasuring: true)
         mIntrinsicSize = flexbox.intrinsicSize.cgSize
         return CGSize(width: mIntrinsicSize.width + layoutMargins.left + layoutMargins.right, height: mIntrinsicSize.height + layoutMargins.top + layoutMargins.bottom)
     }

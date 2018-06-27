@@ -38,6 +38,8 @@ protocol FlexboxIntermediate {
     
     var flexDebugTag: String? { get set }
     
+    var flexIsMeasuring: Bool { get set }
+    
     init()
     
     mutating func intermediateDidLoad()
@@ -55,7 +57,7 @@ protocol FlexboxIntermediate {
 
 extension FlexboxIntermediate {
     
-    init(direction: Flexbox.Direction, alignItems: Flexbox.AlignItems, alignContent: Flexbox.AlignContent, wrap: Flexbox.Wrap, justifyContent: Flexbox.JustifyContent, containerDimension: FlexboxSize, debugTag: String?) {
+    init(direction: Flexbox.Direction, alignItems: Flexbox.AlignItems, alignContent: Flexbox.AlignContent, wrap: Flexbox.Wrap, justifyContent: Flexbox.JustifyContent, containerDimension: FlexboxSize, debugTag: String?, isMeasuring: Bool) {
         self.init()
         flexDirection = direction
         flexAlignItems = alignItems
@@ -64,6 +66,7 @@ extension FlexboxIntermediate {
         flexContainerDimension = containerDimension
         flexJustifyContent = justifyContent
         flexDebugTag = debugTag
+        flexIsMeasuring = isMeasuring
         intermediateDidLoad()
     }
     
@@ -86,7 +89,7 @@ extension FlexboxIntermediate {
     func calculateGrowAndShrink(dimensionToFix: () -> Float)  -> (growValInLine: [Int: Float]?, shrinkValInLine: [Int: Float]?){
         var growValInLine: [Int: Float]? = nil
         var shrinkValInLine: [Int: Float]? = nil
-        
+    
         let lengthToFix = dimensionToFix()
         if lengthToFix > 0 {
             let shrinkSum = shrinkOfItemsInCurrentAxis.reduce(0, {$0 + $1.value})

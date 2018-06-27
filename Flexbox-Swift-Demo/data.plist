@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<array>
+	<dict>
+		<key>avatarImageName</key>
+		<string>avatar0</string>
+		<key>author</key>
+		<string>Jerry Wong</string>
+		<key>content</key>
+		<string>Officials are searching for 12 teenage soccer players and their coach who are thought to be trapped in a cave in Thailand after rising waters blocked the cave&apos;s path</string>
+		<key>date</key>
+		<string>2018-06-22</string>
+		<key>type</key>
+		<integer>0</integer>
+	</dict>
+    
+    <dict>
+        <key>avatarImageName</key>
+        <string>avatar1</string>
+        <key>author</key>
+        <string>Adele</string>
+        <key>content</key>
+        <string>Brandy is a spirit produced by distilling wine.</string>
+        <key>date</key>
+        <string>2018-06-23</string>
+        <key>images</key>
+        <array>
+            <string>pic0</string>
+            <string>pic1</string>
+            <string>pic2</string>
+            <string>pic0</string>
+            <string>pic1</string>
+            <string>pic2</string>
+        </array>
+        <key>type</key>
+        <integer>1</integer>
+    </dict>
+    
+    <dict>
+        <key>avatarImageName</key>
+        <string>avatar2</string>
+        <key>author</key>
+        <string>Kate Parry</string>
+        <key>content</key>
+        <string>https://github.com/jerry0523</string>
+        <key>date</key>
+        <string>1 day ago</string>
+        <key>linkImageName</key>
+        <string>github</string>
+        <key>linkInfo</key>
+        <string>A library that helps to manage the navigation bar style.</string>
+        <key>type</key>
+        <integer>2</integer>
+    </dict>
+    
+    <dict>
+        <key>avatarImageName</key>
+        <string>avatar0</string>
+        <key>author</key>
+        <string>Sam Smith</string>
+        <key>date</key>
+        <string>3 hours ago</string>
+        <key>images</key>
+        <array>
+            <string>picL0</string>
+        </array>
+        <key>type</key>
+        <integer>1</integer>
+    </dict>
+    
+    <dict>
+        <key>avatarImageName</key>
+        <string>avatar1</string>
+        <key>author</key>
+        <string>Lady Gaga</string>
+        <key>content</key>
+        <string>Waters are rising inside the Thai cave where a boys' soccer team has been trapped for days</string>
+        <key>date</key>
+        <string>1 minute ago</string>
+        <key>source</key>
+        <string>facebook.com</string>
+        <key>type</key>
+        <integer>0</integer>
+    </dict>
+    
+</array>
+</plist>

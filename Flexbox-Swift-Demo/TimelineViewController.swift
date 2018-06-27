@@ -2,13 +2,30 @@
 //  TimelineViewController.swift
 //  Flexbox-Swift
 //
-//  Created by 王杰 on 2018/6/22.
+//  Created by Jerry on 2018/6/22.
 //  Copyright © 2018年 com.jerry. All rights reserved.
 //
 
 import UIKit
 
+extension Array {
+    
+    mutating func randamArray() -> Array {
+        var list = self
+        for index in 0..<list.count {
+            let newIndex = Int(arc4random_uniform(UInt32(list.count-index))) + index
+            if index != newIndex {
+                list.swapAt(index, newIndex)
+            }
+        }
+        self = list
+        return list
+    }
+}
+
 class TimelineViewController: UITableViewController {
+    
+    var data: [MsgModel]!
 
     @IBAction func didClickCloseItem(_ sender: UIBarButtonItem) {
         dismiss(animated: true, completion: nil)
@@ -16,15 +33,32 @@ class TimelineViewController: UITableViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        tableView.register(SimpleTextMsgCell.self, forCellReuseIdentifier: "simple")
+        
+        MsgModelType.allCases.forEach { modelType in
+            tableView.register(modelType.cellClass, forCellReuseIdentifier: modelType.identifier)
+        }
+         
+        if  let plistURL = Bundle.main.url(forResource: "data", withExtension: "plist"),
+            let plistData = try? Data(contentsOf: plistURL) {
+            let decoder = PropertyListDecoder()
+            data = try? decoder.decode([MsgModel].self, from: plistData)
+            
+            (0...5).forEach{ _ in data = data + data }
+        }
+        
+        data = data.randamArray()
     }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 30
+        return data.count
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "simple", for: indexPath)
+        let model = data[indexPath.row]
+        let cell = tableView.dequeueReusableCell(withIdentifier: model.reuseIdentifier, for: indexPath)
+        if let modelCell = cell as? MsgElement {
+            modelCell.update(model)
+        }
         return cell
     }
     
