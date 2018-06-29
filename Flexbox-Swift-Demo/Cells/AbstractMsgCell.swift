@@ -159,9 +159,6 @@ class AbstractMsgCell: UITableViewCell, MsgElement {
                                      contentBox.rightAnchor.constraint(equalTo: contentView.rightAnchor),
                                      contentBox.topAnchor.constraint(equalTo: contentView.topAnchor),
                                      contentBox.bottomAnchor.constraint(equalTo: contentView.bottomAnchor)])
-        
-        layer.shouldRasterize = true
-        layer.rasterizationScale = UIScreen.main.scale
     }
     
     //for subclasses to override

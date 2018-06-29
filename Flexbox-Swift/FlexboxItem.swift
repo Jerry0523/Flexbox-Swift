@@ -99,15 +99,8 @@ extension FlexboxItem {
         flexFrame = FlexboxRect(x: 0, y: 0, w: size.w, h: size.h)
     }
     
-    func reMeasure(direction: Flexbox.Direction) {
-        var size: FlexboxSize?
-        switch direction {
-        case .row, .rowReverse:
-            size = delegate?.onMeasure(flexFrame?.size ?? FlexboxSize.zero)
-        case .column, .columnReverse:
-            size = delegate?.onMeasure(flexFrame?.size ?? FlexboxSize.zero)
-        }
-        if let size = size {
+    func reMeasure() {
+        if let size = delegate?.onMeasure(flexFrame?.size ?? FlexboxSize.zero) {
             flexFrame?.size = size
         }
     }
@@ -134,12 +127,16 @@ extension FlexboxItem {
             } else if let shrinkOffset = shrinkOffset {
                 let ow = flexFrame?.w ?? 0
                 flexFrame?.w -= shrinkOffset
-                reMeasure(direction: arrangement.flexDirection)
+                reMeasure()
+                if flexFrame?.w ?? 0 < ow - shrinkOffset {
+                    flexFrame?.w = ow - shrinkOffset
+                }
+                let deltaOffset = ow - (flexFrame?.w ?? 0)
                 fixedCrossDimension = max(fixedCrossDimension, flexFrame?.h ?? 0)
                 if arrangement.isAxisReverse {
-                    flexFrame?.x += shrinkOffset
+                    flexFrame?.x += deltaOffset
                 }
-                fixedAxisOffset -= arrangement.axisRatio * (ow - (flexFrame?.w ?? 0))
+                fixedAxisOffset -= arrangement.axisRatio * deltaOffset
             }
         } else {
             if let growOffset = growOffset {
@@ -151,12 +148,16 @@ extension FlexboxItem {
             } else if let shrinkOffset = shrinkOffset {
                 let oh = flexFrame?.h ?? 0
                 flexFrame?.h -= shrinkOffset
-                reMeasure(direction: arrangement.flexDirection)
+                reMeasure()
+                if flexFrame?.h ?? 0 < oh - shrinkOffset {
+                    flexFrame?.h = oh - shrinkOffset
+                }
+                let deltaOffset = oh - (flexFrame?.h ?? 0)
                 fixedCrossDimension = max(fixedCrossDimension, flexFrame?.w ?? 0)
                 if arrangement.isAxisReverse {
-                    flexFrame?.y += shrinkOffset
+                    flexFrame?.y += deltaOffset
                 }
-                fixedAxisOffset -= arrangement.axisRatio * (oh - (flexFrame?.h ?? 0))
+                fixedAxisOffset -= arrangement.axisRatio * deltaOffset
             }
         }
     }

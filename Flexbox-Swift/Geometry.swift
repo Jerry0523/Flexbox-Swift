@@ -74,11 +74,17 @@ struct FlexboxInsets: Equatable {
 
 struct FlexboxArrangement {
     
-    var isHorizontal: Bool
+    let direction: Flexbox.Direction
     
-    var isAxisReverse: Bool
+    let isCrossReverse: Bool
     
-    var isCrossReverse: Bool
+    var isAxisReverse: Bool {
+        return direction == .rowReverse || direction == .columnReverse
+    }
+    
+    var isHorizontal: Bool {
+        return direction == .row || direction == .rowReverse
+    }
     
     var axisRatio: Float {
         get {
@@ -99,21 +105,4 @@ struct FlexboxArrangement {
             }
         }
     }
-    
-    var flexDirection: Flexbox.Direction {
-        if isHorizontal {
-            if isAxisReverse {
-                return .rowReverse
-            } else {
-                return .row
-            }
-        } else {
-            if isAxisReverse {
-                return .columnReverse
-            } else {
-                return .column
-            }
-        }
-    }
-    
 }
