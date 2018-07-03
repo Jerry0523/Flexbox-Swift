@@ -106,3 +106,187 @@ struct FlexboxArrangement {
         }
     }
 }
+
+protocol AnyDirectionalDimension {
+    
+    func axisDim(_ direction: Flexbox.Direction) -> Float
+    
+    func crossDim(_ direction: Flexbox.Direction) -> Float
+    
+    mutating func updateAxisDim(_ newValue: Float, direction: Flexbox.Direction)
+    
+    mutating func updateCrossDim(_ newValue: Float, direction: Flexbox.Direction)
+}
+
+extension AnyDirectionalDimension {
+    
+    mutating func updateAxisDim(withRefrence: AnyDirectionalDimension, inDirection: Flexbox.Direction) {
+        updateAxisDim(withRefrence.axisDim(inDirection), direction: inDirection)
+    }
+    
+    mutating func updateCrossDim(withRefrence: AnyDirectionalDimension, inDirection: Flexbox.Direction) {
+        updateCrossDim(withRefrence.crossDim(inDirection), direction: inDirection)
+    }
+}
+
+extension FlexboxSize: AnyDirectionalDimension {
+    
+    func axisDim(_ direction: Flexbox.Direction) -> Float {
+        switch direction {
+        case .row, .rowReverse:
+            return w
+        case .column, .columnReverse:
+            return h
+        }
+    }
+    
+    func crossDim(_ direction: Flexbox.Direction) -> Float {
+        switch direction {
+        case .row, .rowReverse:
+            return h
+        case .column, .columnReverse:
+            return w
+        }
+    }
+    
+    mutating func updateAxisDim(_ newValue: Float, direction: Flexbox.Direction) {
+        switch direction {
+        case .row, .rowReverse:
+            w = newValue
+        case .column, .columnReverse:
+            h = newValue
+        }
+    }
+    
+    mutating func updateCrossDim(_ newValue: Float, direction: Flexbox.Direction) {
+        switch direction {
+        case .row, .rowReverse:
+            h = newValue
+        case .column, .columnReverse:
+            w = newValue
+        }
+    }
+}
+
+extension FlexboxPoint: AnyDirectionalDimension {
+    
+    func axisDim(_ direction: Flexbox.Direction) -> Float {
+        switch direction {
+        case .row, .rowReverse:
+            return x
+        case .column, .columnReverse:
+            return y
+        }
+    }
+    
+    func crossDim(_ direction: Flexbox.Direction) -> Float {
+        switch direction {
+        case .row, .rowReverse:
+            return y
+        case .column, .columnReverse:
+            return x
+        }
+    }
+    
+    mutating func updateAxisDim(_ newValue: Float, direction: Flexbox.Direction) {
+        switch direction {
+        case .row, .rowReverse:
+            x = newValue
+        case .column, .columnReverse:
+            y = newValue
+        }
+    }
+    
+    mutating func updateCrossDim(_ newValue: Float, direction: Flexbox.Direction) {
+        switch direction {
+        case .row, .rowReverse:
+            y = newValue
+        case .column, .columnReverse:
+            x = newValue
+        }
+    }
+}
+
+extension FlexboxInsets: AnyDirectionalDimension {
+    
+    func axisDim(_ direction: Flexbox.Direction) -> Float {
+        switch direction {
+        case .row, .rowReverse:
+            return left + right
+        case .column, .columnReverse:
+            return top + bottom
+        }
+    }
+    
+    func crossDim(_ direction: Flexbox.Direction) -> Float {
+        switch direction {
+        case .row, .rowReverse:
+            return top + bottom
+        case .column, .columnReverse:
+            return left + right
+        }
+    }
+    
+    func axisDim(_ direction: Flexbox.Direction) -> (Float, Float) {
+        switch direction {
+        case .row:
+            return (left, right)
+        case .rowReverse:
+            return (right, left)
+        case .column:
+            return (top, bottom)
+        case .columnReverse:
+            return (bottom, top)
+        }
+    }
+    
+    func crossDim(_ direction: Flexbox.Direction) -> (Float, Float) {
+        switch direction {
+        case .row:
+            return (top, bottom)
+        case .rowReverse:
+            return (bottom, top)
+        case .column:
+            return (left, right)
+        case .columnReverse:
+            return (right, left)
+        }
+    }
+    
+    mutating func updateAxisDim(_ newValue: Float, direction: Flexbox.Direction) {
+        fatalError("unsupported")
+    }
+    
+    mutating func updateCrossDim(_ newValue: Float, direction: Flexbox.Direction) {
+        fatalError("unsupported")
+    }
+}
+
+extension FlexboxItem: AnyDirectionalDimension {
+    
+    func axisDim(_ direction: Flexbox.Direction) -> Float {
+        switch direction {
+        case .row, .rowReverse:
+            return flexWidth
+        case .column, .columnReverse:
+            return flexHeight
+        }
+    }
+    
+    func crossDim(_ direction: Flexbox.Direction) -> Float {
+        switch direction {
+        case .row, .rowReverse:
+            return flexHeight
+        case .column, .columnReverse:
+            return flexWidth
+        }
+    }
+    
+    func updateAxisDim(_ newValue: Float, direction: Flexbox.Direction) {
+        fatalError("unsupported")
+    }
+    
+    func updateCrossDim(_ newValue: Float, direction: Flexbox.Direction) {
+        fatalError("unsupported")
+    }
+}

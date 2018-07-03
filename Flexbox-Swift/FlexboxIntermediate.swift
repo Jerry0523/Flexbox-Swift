@@ -6,48 +6,39 @@
 //  Copyright © 2018年 com.jerry. All rights reserved.
 //
 
-protocol FlexboxIntermediate {
+struct FlexboxIntermediate {
     
-    var flexDirection: Flexbox.Direction { get set }
+    var flexDirection: Flexbox.Direction
     
-    var flexContainerDimension: FlexboxSize { get set }
+    var flexWrap: Flexbox.Wrap
     
-    var flexWrap: Flexbox.Wrap { get set }
+    var flexAlignItems: Flexbox.AlignItems
     
-    var flexAlignItems: Flexbox.AlignItems { get set }
+    var flexAlignContent: Flexbox.AlignContent
     
-    var flexAlignContent: Flexbox.AlignContent { get set }
+    var flexJustifyContent: Flexbox.JustifyContent
     
-    var flexJustifyContent: Flexbox.JustifyContent { get set }
+    var cursor = FlexboxPoint.zero
     
-    var cursor: FlexboxPoint { get set }
+    var flexContainerDimension = FlexboxSize.zero
     
-    var dimensionOfCurrentCross: Float { get set }
+    var dimensionOfCurrentCross = Float(0)
     
-    var indexOfItemsInCurrentAxis: Int { get set }
+    var indexOfItemsInCurrentAxis = -1
     
-    var growOfItemsInCurrentAxis: [Int: Float] { get set }
+    var growOfItemsInCurrentAxis = [Int: Float]()
     
-    var shrinkOfItemsInCurrentAxis: [Int: Float] { get set }
+    var shrinkOfItemsInCurrentAxis = [Int: Float]()
     
-    var indexesOfAxisForItems: [Int: Int] { get set }
+    var indexesOfAxisForItems = [Int: Int]()
     
-    var dimensionsOfCross: [Float] { get set }
+    var dimensionsOfCross = [Float]()
     
-    var intrinsicSize: FlexboxSize { get set }
+    var intrinsicSize = FlexboxSize.zero
     
-    var flexDebugTag: String? { get set }
+    var flexDebugTag: String?
     
-    var flexIsMeasuring: Bool { get set }
-    
-    init()
-    
-    mutating func fixInCross(_ items: [FlexboxItem])
-    
-    mutating func fixInAxis(_ items: [FlexboxItem], shouldAppendAxisDimension: Bool)
-}
-
-extension FlexboxIntermediate {
+    var flexIsMeasuring = false
     
     var flexboxArrangement: FlexboxArrangement {
         get {
@@ -56,7 +47,7 @@ extension FlexboxIntermediate {
     }
     
     init(direction: Flexbox.Direction, alignItems: Flexbox.AlignItems, alignContent: Flexbox.AlignContent, wrap: Flexbox.Wrap, justifyContent: Flexbox.JustifyContent, containerDimension: FlexboxSize, debugTag: String?, isMeasuring: Bool) {
-        self.init()
+        
         flexDirection = direction
         flexAlignItems = alignItems
         flexAlignContent = alignContent
@@ -155,10 +146,54 @@ extension FlexboxIntermediate {
         }
     }
     
+    mutating func fixInAxis(_ items: [FlexboxItem], shouldAppendAxisDimension: Bool) {
+        var itemsAxisDimension = Float(0)
+        let growAndShrinkVal = calculateGrowAndShrink(dimensionToFix: { flexboxArrangement.isAxisReverse ? (-cursor.axisDim(flexDirection)) : (cursor.axisDim(flexDirection) - flexContainerDimension.axisDim(flexDirection)) })
+        var fixedAxisOffset = Float(0)
+        items.enumerated().forEach { (index, item) in
+            if var origin = item.flexFrame?.origin {
+                origin.updateAxisDim(origin.axisDim(flexDirection) + fixedAxisOffset, direction: flexDirection)
+                item.flexFrame?.origin = origin
+            }
+            item.fixGrowAndShrinkInAxis(arrangement: flexboxArrangement, growOffset: growAndShrinkVal.growValInLine?[index], shrinkOffset: growAndShrinkVal.shrinkValInLine?[index], fixedAxisOffset: &fixedAxisOffset, fixedCrossDimension: &dimensionOfCurrentCross)
+            itemsAxisDimension += item.axisDim(flexDirection)
+        }
+        if growAndShrinkVal.growValInLine == nil && growAndShrinkVal.shrinkValInLine == nil && !flexIsMeasuring {
+            items.fixDistributionInAxis(arrangement: flexboxArrangement, justifyContent: flexJustifyContent, containerDimension: flexContainerDimension, axisDimension: itemsAxisDimension)
+        }
+        
+        if shouldAppendAxisDimension {
+            dimensionsOfCross.append(dimensionOfCurrentCross)
+        } else {
+            dimensionsOfCross.removeLast()
+            dimensionsOfCross.append(dimensionOfCurrentCross)
+        }
+        intrinsicSize.updateAxisDim(max(intrinsicSize.axisDim(flexDirection), itemsAxisDimension), direction: flexDirection)
+    }
+    
+    mutating func fixInCross(_ items: [FlexboxItem]) {
+        cursor.updateCrossDim(cursor.crossDim(flexDirection) + flexboxArrangement.crossRatio * dimensionOfCurrentCross, direction: flexDirection)
+        if flexboxArrangement.isCrossReverse {
+            if  let firstItem = items.first,
+                let firstItemFrame = firstItem.flexFrame,
+                let firstCrossDimension = dimensionsOfCross.first {
+                let marginVal = (flexDirection == .row || flexDirection == .rowReverse) ? firstItem.flexMargin.top : firstItem.flexMargin.left
+                intrinsicSize.updateCrossDim(firstItemFrame.origin.crossDim(flexDirection) - marginVal + firstCrossDimension - cursor.crossDim(flexDirection), direction: flexDirection)
+            } else {
+                intrinsicSize.updateCrossDim(0, direction: flexDirection)
+            }
+        } else {
+            intrinsicSize.updateCrossDim(withRefrence: cursor, inDirection: flexDirection)
+        }
+        if !flexIsMeasuring {
+            items.fixDistributionInCross(arrangement: flexboxArrangement, alignContent: flexAlignContent, alignItems: flexAlignItems, dimensionsOfCross: dimensionsOfCross, flexContainerDimension: flexContainerDimension, dimensionOfCurrentCross: dimensionOfCurrentCross, indexesOfAxisForItems: indexesOfAxisForItems)
+        }
+    }
+    
     func calculateGrowAndShrink(dimensionToFix: () -> Float)  -> (growValInLine: [Int: Float]?, shrinkValInLine: [Int: Float]?){
         var growValInLine: [Int: Float]? = nil
         var shrinkValInLine: [Int: Float]? = nil
-    
+        
         let lengthToFix = dimensionToFix()
         if lengthToFix > 0 {
             let shrinkSum = shrinkOfItemsInCurrentAxis.reduce(0, {$0 + $1.value})
@@ -173,189 +208,5 @@ extension FlexboxIntermediate {
         }
         return (growValInLine, shrinkValInLine)
     }
+    
 }
-
-protocol AnyDirectionalDimension {
-    
-    func axisDim(_ direction: Flexbox.Direction) -> Float
-    
-    func crossDim(_ direction: Flexbox.Direction) -> Float
-    
-    mutating func updateAxisDim(_ newValue: Float, direction: Flexbox.Direction)
-    
-    mutating func updateCrossDim(_ newValue: Float, direction: Flexbox.Direction)
-}
-
-extension AnyDirectionalDimension {
-    
-    mutating func updateAxisDim(withRefrence: AnyDirectionalDimension, inDirection: Flexbox.Direction) {
-        updateAxisDim(withRefrence.axisDim(inDirection), direction: inDirection)
-    }
-    
-    mutating func updateCrossDim(withRefrence: AnyDirectionalDimension, inDirection: Flexbox.Direction) {
-        updateCrossDim(withRefrence.crossDim(inDirection), direction: inDirection)
-    }
-}
-
-extension FlexboxSize: AnyDirectionalDimension {
-   
-    func axisDim(_ direction: Flexbox.Direction) -> Float {
-        switch direction {
-        case .row, .rowReverse:
-            return w
-        case .column, .columnReverse:
-            return h
-        }
-    }
-    
-    func crossDim(_ direction: Flexbox.Direction) -> Float {
-        switch direction {
-        case .row, .rowReverse:
-            return h
-        case .column, .columnReverse:
-            return w
-        }
-    }
-    
-    mutating func updateAxisDim(_ newValue: Float, direction: Flexbox.Direction) {
-        switch direction {
-        case .row, .rowReverse:
-            w = newValue
-        case .column, .columnReverse:
-            h = newValue
-        }
-    }
-    
-    mutating func updateCrossDim(_ newValue: Float, direction: Flexbox.Direction) {
-        switch direction {
-        case .row, .rowReverse:
-            h = newValue
-        case .column, .columnReverse:
-            w = newValue
-        }
-    }
-}
-
-extension FlexboxPoint: AnyDirectionalDimension {
-    
-    func axisDim(_ direction: Flexbox.Direction) -> Float {
-        switch direction {
-        case .row, .rowReverse:
-            return x
-        case .column, .columnReverse:
-            return y
-        }
-    }
-    
-    func crossDim(_ direction: Flexbox.Direction) -> Float {
-        switch direction {
-        case .row, .rowReverse:
-            return y
-        case .column, .columnReverse:
-            return x
-        }
-    }
-    
-    mutating func updateAxisDim(_ newValue: Float, direction: Flexbox.Direction) {
-        switch direction {
-        case .row, .rowReverse:
-            x = newValue
-        case .column, .columnReverse:
-            y = newValue
-        }
-    }
-    
-    mutating func updateCrossDim(_ newValue: Float, direction: Flexbox.Direction) {
-        switch direction {
-        case .row, .rowReverse:
-            y = newValue
-        case .column, .columnReverse:
-            x = newValue
-        }
-    }
-}
-
-extension FlexboxInsets: AnyDirectionalDimension {
-    
-    func axisDim(_ direction: Flexbox.Direction) -> Float {
-        switch direction {
-        case .row, .rowReverse:
-            return left + right
-        case .column, .columnReverse:
-            return top + bottom
-        }
-    }
-    
-    func crossDim(_ direction: Flexbox.Direction) -> Float {
-        switch direction {
-        case .row, .rowReverse:
-            return top + bottom
-        case .column, .columnReverse:
-            return left + right
-        }
-    }
-    
-    func axisDim(_ direction: Flexbox.Direction) -> (Float, Float) {
-        switch direction {
-        case .row:
-            return (left, right)
-        case .rowReverse:
-            return (right, left)
-        case .column:
-            return (top, bottom)
-        case .columnReverse:
-            return (bottom, top)
-        }
-    }
-    
-    func crossDim(_ direction: Flexbox.Direction) -> (Float, Float) {
-        switch direction {
-        case .row:
-            return (top, bottom)
-        case .rowReverse:
-            return (bottom, top)
-        case .column:
-            return (left, right)
-        case .columnReverse:
-            return (right, left)
-        }
-    }
-    
-    mutating func updateAxisDim(_ newValue: Float, direction: Flexbox.Direction) {
-        fatalError("unsupported")
-    }
-    
-    mutating func updateCrossDim(_ newValue: Float, direction: Flexbox.Direction) {
-        fatalError("unsupported")
-    }
-}
-
-extension FlexboxItem: AnyDirectionalDimension {
-    
-    func axisDim(_ direction: Flexbox.Direction) -> Float {
-        switch direction {
-        case .row, .rowReverse:
-            return flexWidth
-        case .column, .columnReverse:
-            return flexHeight
-        }
-    }
-    
-    func crossDim(_ direction: Flexbox.Direction) -> Float {
-        switch direction {
-        case .row, .rowReverse:
-            return flexHeight
-        case .column, .columnReverse:
-            return flexWidth
-        }
-    }
-    
-    func updateAxisDim(_ newValue: Float, direction: Flexbox.Direction) {
-        fatalError("unsupported")
-    }
-    
-    func updateCrossDim(_ newValue: Float, direction: Flexbox.Direction) {
-        fatalError("unsupported")
-    }
-}
-

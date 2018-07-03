@@ -15,7 +15,7 @@ class Flexbox {
     }
     
     func layout(_ items: [FlexboxItem], size: FlexboxSize, isMeasuring: Bool = false) {
-        var intermediate = flexDirection.intermediateType.init(direction: flexDirection, alignItems: alignItems, alignContent:alignContent, wrap: flexWrap, justifyContent: justifyContent, containerDimension: size, debugTag: debugTag, isMeasuring: isMeasuring)
+        var intermediate = FlexboxIntermediate(direction: flexDirection, alignItems: alignItems, alignContent:alignContent, wrap: flexWrap, justifyContent: justifyContent, containerDimension: size, debugTag: debugTag, isMeasuring: isMeasuring)
         intermediate.layout(items)
         intrinsicSize = intermediate.intrinsicSize
     }
@@ -91,16 +91,6 @@ class Flexbox {
         
         case columnReverse
         
-        var intermediateType: FlexboxIntermediate.Type {
-            get {
-                switch self {
-                case .row, .rowReverse:
-                    return FlexboxHorizontalIntermediate.self
-                case .column, .columnReverse:
-                    return FlexboxVerticalIntermediate.self
-                }
-            }
-        }
     }
     
     enum Wrap {

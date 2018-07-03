@@ -22,11 +22,9 @@
 		C4A681B920B4011000F3EDD7 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C4A681B720B4011000F3EDD7 /* LaunchScreen.storyboard */; };
 		C4A681C220B40C9000F3EDD7 /* Flexbox.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4A681C120B40C9000F3EDD7 /* Flexbox.swift */; };
 		C4A681C420B410D800F3EDD7 /* FlexBox+CocoaTouch.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4A681C320B410D800F3EDD7 /* FlexBox+CocoaTouch.swift */; };
-		C4A681C620B686F300F3EDD7 /* FlexboxHorizontalIntermediate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4A681C520B686F300F3EDD7 /* FlexboxHorizontalIntermediate.swift */; };
 		C4A681C820B687D000F3EDD7 /* FlexboxItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4A681C720B687D000F3EDD7 /* FlexboxItem.swift */; };
 		C4A681CA20B69CC400F3EDD7 /* PlaygroundItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4A681C920B69CC400F3EDD7 /* PlaygroundItemView.swift */; };
 		C4A681CC20B69DA300F3EDD7 /* PlaygroundItemView.xib in Resources */ = {isa = PBXBuildFile; fileRef = C4A681CB20B69DA300F3EDD7 /* PlaygroundItemView.xib */; };
-		C4A681D020B7D25900F3EDD7 /* FlexboxVerticalIntermediate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4A681CF20B7D25900F3EDD7 /* FlexboxVerticalIntermediate.swift */; };
 		C4A681D220BBCF9A00F3EDD7 /* Geometry.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4A681D120BBCF9A00F3EDD7 /* Geometry.swift */; };
 /* End PBXBuildFile section */
 
@@ -48,11 +46,9 @@
 		C4A681BA20B4011000F3EDD7 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		C4A681C120B40C9000F3EDD7 /* Flexbox.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Flexbox.swift; sourceTree = "<group>"; };
 		C4A681C320B410D800F3EDD7 /* FlexBox+CocoaTouch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "FlexBox+CocoaTouch.swift"; sourceTree = "<group>"; };
-		C4A681C520B686F300F3EDD7 /* FlexboxHorizontalIntermediate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlexboxHorizontalIntermediate.swift; sourceTree = "<group>"; };
 		C4A681C720B687D000F3EDD7 /* FlexboxItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlexboxItem.swift; sourceTree = "<group>"; };
 		C4A681C920B69CC400F3EDD7 /* PlaygroundItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaygroundItemView.swift; sourceTree = "<group>"; };
 		C4A681CB20B69DA300F3EDD7 /* PlaygroundItemView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PlaygroundItemView.xib; sourceTree = "<group>"; };
-		C4A681CF20B7D25900F3EDD7 /* FlexboxVerticalIntermediate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FlexboxVerticalIntermediate.swift; sourceTree = "<group>"; };
 		C4A681D120BBCF9A00F3EDD7 /* Geometry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Geometry.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -129,8 +125,6 @@
 				C4A681C720B687D000F3EDD7 /* FlexboxItem.swift */,
 				C4A681D120BBCF9A00F3EDD7 /* Geometry.swift */,
 				C449B8A920C64EA00058C2F8 /* FlexboxIntermediate.swift */,
-				C4A681C520B686F300F3EDD7 /* FlexboxHorizontalIntermediate.swift */,
-				C4A681CF20B7D25900F3EDD7 /* FlexboxVerticalIntermediate.swift */,
 				C4A681C320B410D800F3EDD7 /* FlexBox+CocoaTouch.swift */,
 			);
 			path = "Flexbox-Swift";
@@ -215,10 +209,8 @@
 				C4A681C220B40C9000F3EDD7 /* Flexbox.swift in Sources */,
 				C4A681B120B4010F00F3EDD7 /* PlaygroundViewController.swift in Sources */,
 				C46DCA4F20E216A300E8D2AA /* MsgBottomToolbar.swift in Sources */,
-				C4A681D020B7D25900F3EDD7 /* FlexboxVerticalIntermediate.swift in Sources */,
 				C4A681AF20B4010F00F3EDD7 /* AppDelegate.swift in Sources */,
 				C4A681C420B410D800F3EDD7 /* FlexBox+CocoaTouch.swift in Sources */,
-				C4A681C620B686F300F3EDD7 /* FlexboxHorizontalIntermediate.swift in Sources */,
 				C46DCA5120E21E6700E8D2AA /* AbstractMsgCell.swift in Sources */,
 				C46DCA5320E2237300E8D2AA /* SimpleImageMsgCell.swift in Sources */,
 				C46DCA4C20DD0BE800E8D2AA /* SimpleTextMsgCell.swift in Sources */,
