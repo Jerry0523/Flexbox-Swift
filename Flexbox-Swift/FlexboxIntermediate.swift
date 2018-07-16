@@ -66,7 +66,9 @@ struct FlexboxIntermediate {
     }
     
     mutating func layout(_ items: [FlexboxItem]) {
-        
+        if items.count == 0 {
+            return
+        }
         items.enumerated().forEach { (idx, item) in
             if prepare(item) {
                 fixInAxis(Array(items[(idx - indexOfItemsInCurrentAxis)..<idx]), shouldAppendAxisDimension: false)
@@ -208,5 +210,4 @@ struct FlexboxIntermediate {
         }
         return (growValInLine, shrinkValInLine)
     }
-    
 }

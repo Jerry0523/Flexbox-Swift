@@ -5,12 +5,19 @@
 	<dict>
 		<key>avatarImageName</key>
 		<string>avatar0</string>
-		<key>author</key>
-		<string>Jerry Wong</string>
-		<key>content</key>
-		<string>Officials are searching for 12 teenage soccer players and their coach who are thought to be trapped in a cave in Thailand after rising waters blocked the cave&apos;s path</string>
+        <key>content</key>
+        <dict>
+            <key>author</key>
+            <string>Jerry Wong</string>
+            <key>content</key>
+            <string>Officials are searching for 12 teenage soccer players and their coach who are thought to be trapped in a cave in Thailand after rising waters blocked the cave&apos;s path</string>
+        </dict>
 		<key>date</key>
 		<string>2018-06-22</string>
+        <key>peopleWhoLikes</key>
+        <array>
+            <string>Adele</string>
+        </array>
 		<key>type</key>
 		<integer>0</integer>
 	</dict>
@@ -18,10 +25,13 @@
     <dict>
         <key>avatarImageName</key>
         <string>avatar1</string>
-        <key>author</key>
-        <string>Adele</string>
         <key>content</key>
-        <string>Brandy is a spirit produced by distilling wine.</string>
+        <dict>
+            <key>author</key>
+            <string>Adele</string>
+            <key>content</key>
+            <string>Brandy is a spirit produced by distilling wine.</string>
+        </dict>
         <key>date</key>
         <string>2018-06-23</string>
         <key>images</key>
@@ -33,6 +43,21 @@
             <string>pic1</string>
             <string>pic2</string>
         </array>
+        <key>comments</key>
+        <array>
+            <dict>
+                <key>author</key>
+                <string>Jerry Wong</string>
+                <key>content</key>
+                <string>NICE PLACE!!!</string>
+            </dict>
+            <dict>
+                <key>author</key>
+                <string>Kate Parry</string>
+                <key>content</key>
+                <string>Bitch. How dare you punk out on me!</string>
+            </dict>
+        </array>
         <key>type</key>
         <integer>1</integer>
     </dict>
@@ -40,16 +65,24 @@
     <dict>
         <key>avatarImageName</key>
         <string>avatar2</string>
-        <key>author</key>
-        <string>Kate Parry</string>
         <key>content</key>
-        <string>https://github.com/jerry0523</string>
+        <dict>
+            <key>author</key>
+            <string>Kate Parry</string>
+            <key>content</key>
+            <string>https://github.com/jerry0523</string>
+        </dict>
         <key>date</key>
         <string>1 day ago</string>
         <key>linkImageName</key>
         <string>github</string>
         <key>linkInfo</key>
         <string>A library that helps to manage the navigation bar style.</string>
+        <key>peopleWhoLikes</key>
+        <array>
+            <string>Jerry Wong</string>
+            <string>Lady Gaga</string>
+        </array>
         <key>type</key>
         <integer>2</integer>
     </dict>
@@ -57,8 +90,11 @@
     <dict>
         <key>avatarImageName</key>
         <string>avatar0</string>
-        <key>author</key>
-        <string>Sam Smith</string>
+        <key>content</key>
+        <dict>
+            <key>author</key>
+            <string>Sam Smith</string>
+        </dict>
         <key>date</key>
         <string>3 hours ago</string>
         <key>images</key>
@@ -72,10 +108,13 @@
     <dict>
         <key>avatarImageName</key>
         <string>avatar1</string>
-        <key>author</key>
-        <string>Lady Gaga</string>
         <key>content</key>
-        <string>Waters are rising inside the Thai cave where a boys' soccer team has been trapped for days</string>
+        <dict>
+            <key>author</key>
+            <string>Lady Gaga</string>
+            <key>content</key>
+            <string>Waters are rising inside the Thai cave where a boys' soccer team has been trapped for days</string>
+        </dict>
         <key>date</key>
         <string>1 minute ago</string>
         <key>source</key>

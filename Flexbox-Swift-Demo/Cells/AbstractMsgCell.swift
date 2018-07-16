@@ -13,13 +13,19 @@ protocol MsgElement: class {
     func update(_ model: MsgModel)
 }
 
-struct MsgModel: Codable {
-    
-    var avatarImageName: String
+struct ContentModel: Codable {
     
     var author: String
     
     var content: String?
+    
+}
+
+struct MsgModel: Codable {
+    
+    var avatarImageName: String
+    
+    var content: ContentModel
     
     var date: String
     
@@ -30,6 +36,10 @@ struct MsgModel: Codable {
     var linkInfo: String?
     
     var images: [String]?
+    
+    var peopleWhoLikes: [String]?
+    
+    var comments: [ContentModel]?
     
     var type: Int
     
@@ -124,15 +134,45 @@ class AbstractMsgCell: UITableViewCell, MsgElement {
     }()
     
     //the info box, right beside the avater image view
-    let infoBox = { () -> FlexboxTransformView in
+    let containerBox = { () -> FlexboxTransformView in
         let infoBox = FlexboxTransformView()
-        infoBox.flexbox.debugTag = "info"
+        infoBox.flexbox.debugTag = "container"
         
         infoBox.flexbox.flexDirection = .column
         infoBox.flexbox.justifyContent = .center
         infoBox.flexGrow = 1.0
         infoBox.flexMargin = FlexboxInsets(top: 0, left: 10, bottom: 0, right: 0)
         return infoBox
+    }()
+    
+    let infoBox = { () -> FlexboxTransformView in
+        let infoBox = FlexboxTransformView()
+        infoBox.flexbox.debugTag = "info"
+        
+        infoBox.flexbox.flexDirection = .column
+        infoBox.flexbox.justifyContent = .center
+        return infoBox
+    }()
+    
+    let accessoryBox = { () -> FlexboxTransformView in
+        let infoBox = FlexboxTransformView()
+        infoBox.flexbox.debugTag = "accessory"
+        
+        infoBox.flexbox.flexDirection = .column
+        infoBox.flexbox.justifyContent = .center
+        return infoBox
+    }()
+    
+    let toolbar = { () -> MsgBottomToolbar in
+        let toolbar = MsgBottomToolbar()
+        toolbar.flexMargin = FlexboxInsets(top: 6, left: 0, bottom: 0, right: 0)
+        return toolbar
+    }()
+    
+    let commentView = { () -> MsgCommentView in
+        let commentView = MsgCommentView()
+        commentView.flexMargin = FlexboxInsets(top: 6, left: 0, bottom: 0, right: 0)
+        return commentView
     }()
     
     //the content box
@@ -151,8 +191,14 @@ class AbstractMsgCell: UITableViewCell, MsgElement {
         
         configArrangedSubViews()
         
+        accessoryBox.addSubview(toolbar)
+        accessoryBox.addSubview(commentView)
+        
+        containerBox.addSubview(infoBox)
+        containerBox.addSubview(accessoryBox)
+        
         contentBox.addSubview(avatarImageView)
-        contentBox.addSubview(infoBox)
+        contentBox.addSubview(containerBox)
         contentView.addSubview(contentBox)
         
         NSLayoutConstraint.activate([contentBox.leftAnchor.constraint(equalTo: contentView.leftAnchor),
@@ -167,6 +213,8 @@ class AbstractMsgCell: UITableViewCell, MsgElement {
     }
     
     func update(_ model: MsgModel) {
+        toolbar.update(model)
+        commentView.update(model)
         avatarImageView.image = UIImage(named: model.avatarImageName)
         contentBox.invalidateIntrinsicContentSize()
     }

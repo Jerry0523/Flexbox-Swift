@@ -219,32 +219,26 @@ extension FlexboxItem {
         }
     }
     
-    fileprivate func fixHorizontalDistributionInAxis(justifyContent: Flexbox.JustifyContent, axisDimension: Float, containerDimension: FlexboxSize, itemIndex: Int, itemCount: Int, arrangement: FlexboxArrangement) {
+    fileprivate func fixDistributionInAxis(direction: Flexbox.Direction, justifyContent: Flexbox.JustifyContent, axisDimension: Float, containerDimension: FlexboxSize, itemIndex: Int, itemCount: Int, arrangement: FlexboxArrangement) {
+        guard var origin = flexFrame?.origin else {
+            return
+        }
+        
+        let originAxisDim = origin.axisDim(direction)
+        let containerDim = containerDimension.axisDim(direction)
+        
         switch justifyContent {
         case .end:
-            flexFrame?.x += arrangement.axisRatio * (containerDimension.w - axisDimension)
+            origin.updateAxisDim(originAxisDim + arrangement.axisRatio * (containerDim - axisDimension), direction: direction)
         case .center:
-            flexFrame?.x += arrangement.axisRatio * (containerDimension.w - axisDimension) * 0.5
+            origin.updateAxisDim(originAxisDim + arrangement.axisRatio * (containerDim - axisDimension) * 0.5, direction: direction)
         case .spaceBetween:
-            flexFrame?.x += arrangement.axisRatio * ((containerDimension.w - axisDimension) * Float(itemIndex) / Float(itemCount - 1))
+            origin.updateAxisDim(originAxisDim + arrangement.axisRatio * (containerDim - axisDimension) * Float(itemIndex) / Float(itemCount - 1), direction: direction)
         case .spaceAround:
-            flexFrame?.x += arrangement.axisRatio * ((containerDimension.w - axisDimension) * (Float(itemIndex) + 0.5) / Float(itemCount))
+            origin.updateAxisDim(originAxisDim + arrangement.axisRatio * (containerDim - axisDimension) * (Float(itemIndex) + 0.5) / Float(itemCount), direction: direction)
         case .start: break
         }
-    }
-    
-    fileprivate func fixVerticalDistributionInAxis(justifyContent: Flexbox.JustifyContent, axisDimension: Float, containerDimension: FlexboxSize, itemIndex: Int, itemCount: Int, arrangement: FlexboxArrangement) {
-        switch justifyContent {
-        case .end:
-            flexFrame?.y += arrangement.axisRatio * (containerDimension.h - axisDimension)
-        case .center:
-            flexFrame?.y += arrangement.axisRatio * (containerDimension.h - axisDimension) * 0.5
-        case .spaceBetween:
-            flexFrame?.y += arrangement.axisRatio * ((containerDimension.h - axisDimension) * Float(itemIndex) / Float(itemCount - 1))
-        case .spaceAround:
-            flexFrame?.y += arrangement.axisRatio * ((containerDimension.h - axisDimension) * (Float(itemIndex) + 0.5) / Float(itemCount))
-        case .start: break
-        }
+        flexFrame?.origin = origin
     }
 }
 
@@ -269,11 +263,7 @@ extension Array where Element == FlexboxItem {
         }
         
         enumerated().forEach { (index, item) in
-            if arrangement.isHorizontal {
-                item.fixHorizontalDistributionInAxis(justifyContent: mFlexJustifyConent, axisDimension: axisDimension, containerDimension: containerDimension, itemIndex: index, itemCount: count, arrangement: arrangement)
-            } else {
-                item.fixVerticalDistributionInAxis(justifyContent: mFlexJustifyConent, axisDimension: axisDimension, containerDimension: containerDimension, itemIndex: index, itemCount: count, arrangement: arrangement)
-            }
+             item.fixDistributionInAxis(direction: arrangement.direction, justifyContent: mFlexJustifyConent, axisDimension: axisDimension, containerDimension: containerDimension, itemIndex: index, itemCount: count, arrangement: arrangement)
         }
     }
     
@@ -284,6 +274,9 @@ extension Array where Element == FlexboxItem {
                 mAlignContent = .center
             }
             let contentHeight = dimensionsOfCross.reduce(0, +)
+            if contentHeight == 0 {
+                return
+            }
             enumerated().forEach { (offset, item) in
                 guard let lineIndex = indexesOfAxisForItems[offset] else {
                     return
@@ -324,6 +317,9 @@ extension Array where Element == FlexboxItem {
                 mAlignContent = .center
             }
             let contentWidth = dimensionsOfCross.reduce(0, +)
+            if contentWidth == 0 {
+                return
+            }
             enumerated().forEach { (offset, item) in
                 guard let lineIndex = indexesOfAxisForItems[offset] else {
                     return

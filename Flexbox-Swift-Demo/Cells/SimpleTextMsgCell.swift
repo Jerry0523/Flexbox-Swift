@@ -25,23 +25,15 @@ class SimpleTextMsgCell: AbstractMsgCell {
         label.font = UIFont.systemFont(ofSize: 14.0)
         return label
     }()
-    
-    let toolbar = { () -> MsgBottomToolbar in
-        let toolbar = MsgBottomToolbar()
-        toolbar.flexMargin = FlexboxInsets(top: 6, left: 0, bottom: 0, right: 0)
-        return toolbar
-    }()
 
     override func configArrangedSubViews() {
         infoBox.addSubview(nameLabel)
         infoBox.addSubview(contentLabel)
-        infoBox.addSubview(toolbar)
     }
     
     override func update(_ model: MsgModel) {
-        toolbar.update(model)
-        nameLabel.text = model.author
-        if let content = model.content {
+        nameLabel.text = model.content.author
+        if let content = model.content.content {
             contentLabel.text = content
             contentLabel.isHidden = false
         } else {

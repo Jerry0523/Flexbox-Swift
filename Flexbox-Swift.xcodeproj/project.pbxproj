@@ -26,6 +26,7 @@
 		C4A681CA20B69CC400F3EDD7 /* PlaygroundItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4A681C920B69CC400F3EDD7 /* PlaygroundItemView.swift */; };
 		C4A681CC20B69DA300F3EDD7 /* PlaygroundItemView.xib in Resources */ = {isa = PBXBuildFile; fileRef = C4A681CB20B69DA300F3EDD7 /* PlaygroundItemView.xib */; };
 		C4A681D220BBCF9A00F3EDD7 /* Geometry.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4A681D120BBCF9A00F3EDD7 /* Geometry.swift */; };
+		C4EAB94B20FAEDFF0029B4DE /* MsgCommentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4EAB94A20FAEDFF0029B4DE /* MsgCommentView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -50,6 +51,7 @@
 		C4A681C920B69CC400F3EDD7 /* PlaygroundItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaygroundItemView.swift; sourceTree = "<group>"; };
 		C4A681CB20B69DA300F3EDD7 /* PlaygroundItemView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PlaygroundItemView.xib; sourceTree = "<group>"; };
 		C4A681D120BBCF9A00F3EDD7 /* Geometry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Geometry.swift; sourceTree = "<group>"; };
+		C4EAB94A20FAEDFF0029B4DE /* MsgCommentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MsgCommentView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -78,6 +80,7 @@
 			isa = PBXGroup;
 			children = (
 				C46DCA4E20E216A300E8D2AA /* MsgBottomToolbar.swift */,
+				C4EAB94A20FAEDFF0029B4DE /* MsgCommentView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -209,6 +212,7 @@
 				C4A681C220B40C9000F3EDD7 /* Flexbox.swift in Sources */,
 				C4A681B120B4010F00F3EDD7 /* PlaygroundViewController.swift in Sources */,
 				C46DCA4F20E216A300E8D2AA /* MsgBottomToolbar.swift in Sources */,
+				C4EAB94B20FAEDFF0029B4DE /* MsgCommentView.swift in Sources */,
 				C4A681AF20B4010F00F3EDD7 /* AppDelegate.swift in Sources */,
 				C4A681C420B410D800F3EDD7 /* FlexBox+CocoaTouch.swift in Sources */,
 				C46DCA5120E21E6700E8D2AA /* AbstractMsgCell.swift in Sources */,

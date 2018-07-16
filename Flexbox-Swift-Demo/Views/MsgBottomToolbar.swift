@@ -2,7 +2,7 @@
 //  MsgBottomToolbar.swift
 //  Flexbox-Swift
 //
-//  Created by 王杰 on 2018/6/26.
+//  Created by Jerry on 2018/6/26.
 //  Copyright © 2018年 com.jerry. All rights reserved.
 //
 
