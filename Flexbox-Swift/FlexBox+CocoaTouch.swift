@@ -32,13 +32,18 @@ class FlexboxView: UIView, FlexboxDelegate {
         if frame == CGRect.zero {
             return
         }
-        flexbox.layout(visibleSubViews.map{ $0.flexboxItem }, size: FlexboxSize(w: Float(frame.width - layoutMargins.left - layoutMargins.right), h: Float(frame.height - layoutMargins.top - layoutMargins.bottom)))
+        var layoutItems = visibleSubViews.map{ $0.flexboxItem }
+        flexbox.layout(&layoutItems, size: FlexboxSize(w: Float(frame.width - layoutMargins.left - layoutMargins.right), h: Float(frame.height - layoutMargins.top - layoutMargins.bottom)))
         mIntrinsicSize = flexbox.intrinsicSize.cgSize
-        visibleSubViews.forEach { $0.frame = $0.flexFrame?.offsetBy(dx: Float(layoutMargins.left), dy: Float(layoutMargins.top)) ?? CGRect.zero }
+        visibleSubViews.enumerated().forEach { (offset, subView) in
+            subView.flexboxItem = layoutItems[offset]
+            subView.frame = subView.flexFrame?.offsetBy(dx: Float(layoutMargins.left), dy: Float(layoutMargins.top)) ?? CGRect.zero
+        }
     }
     
     override func sizeThatFits(_ size: CGSize) -> CGSize {
-        flexbox.layout(visibleSubViews.map { $0.flexboxItem }, size: FlexboxSize(CGSize(width: size.width - layoutMargins.left - layoutMargins.right, height: size.height - layoutMargins.top - layoutMargins.bottom)), isMeasuring: true)
+        var layoutItems = visibleSubViews.map{ $0.flexboxItem }
+        flexbox.layout(&layoutItems, size: FlexboxSize(CGSize(width: size.width - layoutMargins.left - layoutMargins.right, height: size.height - layoutMargins.top - layoutMargins.bottom)), isMeasuring: true)
         mIntrinsicSize = flexbox.intrinsicSize.cgSize
         return CGSize(width: mIntrinsicSize.width + layoutMargins.left + layoutMargins.right, height: mIntrinsicSize.height + layoutMargins.top + layoutMargins.bottom)
     }
@@ -101,11 +106,13 @@ extension UIView {
         get {
             var item = objc_getAssociatedObject(self, &UIView.flexboxItemKey) as? FlexboxItem
             if item == nil {
-                item = FlexboxItem(delegate: self)
+                item = FlexboxItem(onMeasure: self.onMeasure)
                 objc_setAssociatedObject(self, &UIView.flexboxItemKey, item, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
             }
             return item!
-            
+        }
+        set {
+            objc_setAssociatedObject(self, &UIView.flexboxItemKey, newValue, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
         }
     }
     
@@ -191,7 +198,7 @@ extension UIView {
     
 }
 
-extension UIView: FlexboxItemDelegate {
+extension UIView {
     
     func onMeasure(_ size: FlexboxSize) -> FlexboxSize {
         if constraints.count > 0 {

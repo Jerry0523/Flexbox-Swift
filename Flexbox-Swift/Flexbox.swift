@@ -14,9 +14,9 @@ class Flexbox {
         self.delegate = delegate
     }
     
-    func layout(_ items: [FlexboxItem], size: FlexboxSize, isMeasuring: Bool = false) {
+    func layout(_ items: inout [FlexboxItem], size: FlexboxSize, isMeasuring: Bool = false) {
         var intermediate = FlexboxIntermediate(direction: flexDirection, alignItems: alignItems, alignContent:alignContent, wrap: flexWrap, justifyContent: justifyContent, containerDimension: size, debugTag: debugTag, isMeasuring: isMeasuring)
-        intermediate.layout(items)
+        intermediate.layout(&items)
         intrinsicSize = intermediate.intrinsicSize
     }
     

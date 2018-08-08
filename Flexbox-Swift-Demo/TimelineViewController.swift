@@ -37,15 +37,15 @@ class TimelineViewController: UITableViewController {
         MsgModelType.allCases.forEach { modelType in
             tableView.register(modelType.cellClass, forCellReuseIdentifier: modelType.identifier)
         }
-         
+        
         if  let plistURL = Bundle.main.url(forResource: "data", withExtension: "plist"),
             let plistData = try? Data(contentsOf: plistURL) {
             let decoder = PropertyListDecoder()
             data = try? decoder.decode([MsgModel].self, from: plistData)
-            
+
             (0...5).forEach{ _ in data = data + data }
         }
-        
+
         data = data.randamArray()
     }
     

@@ -10,7 +10,11 @@ import UIKit
 
 class SimpleLinkMsgCell: SimpleTextMsgCell {
 
-    let linkImageView = UIImageView(image: #imageLiteral(resourceName: "github"))
+    let linkImageView = { () -> UIImageView in
+        let imageView = UIImageView(image: #imageLiteral(resourceName: "github"))
+        imageView.flexShrink = 0
+        return imageView
+    }()
     
     let linkTitleLabel = { () -> UILabel in
         let label = UILabel()
