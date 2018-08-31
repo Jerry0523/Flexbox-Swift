@@ -15,7 +15,7 @@ struct FlexboxPoint: Equatable {
     static let zero = FlexboxPoint(x: 0, y: 0)
 }
 
-struct FlexboxSize: Equatable {
+struct FlexboxSize: Equatable, Hashable {
     
     var w: Float
     

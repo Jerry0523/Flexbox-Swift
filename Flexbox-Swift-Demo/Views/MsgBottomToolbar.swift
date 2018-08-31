@@ -43,7 +43,10 @@ class MsgBottomToolbar: FlexboxTransformView {
     
     override init(frame: CGRect) {
         super.init(frame: frame)
+        
         flexbox.alignItems = .end
+        flexbox.debugTag = "toolbar"
+        
         addSubview(dateLabel)
         addSubview(sourceLabel)
         addSubview(dislikeButton)

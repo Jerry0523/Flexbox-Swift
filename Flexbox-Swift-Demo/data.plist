@@ -123,5 +123,23 @@
         <integer>0</integer>
     </dict>
     
+    <dict>
+        <key>avatarImageName</key>
+        <string>avatar1</string>
+        <key>content</key>
+        <dict>
+            <key>author</key>
+            <string>Lady Gaga</string>
+            <key>content</key>
+            <string>I surrender.</string>
+        </dict>
+        <key>date</key>
+        <string>1 minute ago</string>
+        <key>source</key>
+        <string>facebook.com</string>
+        <key>type</key>
+        <integer>0</integer>
+    </dict>
+    
 </array>
 </plist>
