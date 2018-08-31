@@ -14,10 +14,11 @@ class Flexbox {
         self.delegate = delegate
     }
     
-    func layout(_ items: inout [FlexboxItem], size: FlexboxSize, isMeasuring: Bool = false) {
+    func layout(_ items: [FlexboxItem], size: FlexboxSize, isMeasuring: Bool = false) -> [FlexboxItem] {
         var intermediate = FlexboxIntermediate(direction: flexDirection, alignItems: alignItems, alignContent:alignContent, wrap: flexWrap, justifyContent: justifyContent, containerDimension: size, debugTag: debugTag, isMeasuring: isMeasuring)
-        intermediate.layout(&items)
+        let ret = intermediate.layout(items)
         intrinsicSize = intermediate.intrinsicSize
+        return ret
     }
     
     var flexFlow:(direction: Direction, wrap: Wrap) {

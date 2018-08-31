@@ -33,7 +33,7 @@ class FlexboxView: UIView, FlexboxDelegate {
             return
         }
         var layoutItems = visibleSubViews.map{ $0.flexboxItem }
-        flexbox.layout(&layoutItems, size: FlexboxSize(w: Float(frame.width - layoutMargins.left - layoutMargins.right), h: Float(frame.height - layoutMargins.top - layoutMargins.bottom)))
+        layoutItems = flexbox.layout(layoutItems, size: FlexboxSize(w: Float(frame.width - layoutMargins.left - layoutMargins.right), h: Float(frame.height - layoutMargins.top - layoutMargins.bottom)))
         mIntrinsicSize = flexbox.intrinsicSize.cgSize
         visibleSubViews.enumerated().forEach { (offset, subView) in
             subView.flexboxItem = layoutItems[offset]
@@ -43,7 +43,7 @@ class FlexboxView: UIView, FlexboxDelegate {
     
     override func sizeThatFits(_ size: CGSize) -> CGSize {
         var layoutItems = visibleSubViews.map{ $0.flexboxItem }
-        flexbox.layout(&layoutItems, size: FlexboxSize(CGSize(width: size.width - layoutMargins.left - layoutMargins.right, height: size.height - layoutMargins.top - layoutMargins.bottom)), isMeasuring: true)
+        layoutItems = flexbox.layout(layoutItems, size: FlexboxSize(CGSize(width: size.width - layoutMargins.left - layoutMargins.right, height: size.height - layoutMargins.top - layoutMargins.bottom)), isMeasuring: true)
         mIntrinsicSize = flexbox.intrinsicSize.cgSize
         return CGSize(width: mIntrinsicSize.width + layoutMargins.left + layoutMargins.right, height: mIntrinsicSize.height + layoutMargins.top + layoutMargins.bottom)
     }

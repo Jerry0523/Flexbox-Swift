@@ -65,7 +65,7 @@ extension FlexboxItem {
         }
     }
     
-    mutating func onMeasure(direction: Flexbox.Direction, containerDimension: FlexboxSize) {
+    func onMeasure(direction: Flexbox.Direction, containerDimension: FlexboxSize) -> FlexboxSize {
         var size = FlexboxSize.zero
         switch flexBasis {
         case .auto:
@@ -96,7 +96,7 @@ extension FlexboxItem {
                 size.h = max(size.h, val)
             }
         }
-        flexFrame = FlexboxRect(x: 0, y: 0, w: size.w, h: size.h)
+        return size
     }
     
     mutating func reMeasure() {

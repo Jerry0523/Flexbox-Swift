@@ -65,43 +65,49 @@ struct FlexboxIntermediate {
         }
     }
     
-    mutating func layout(_ items: inout [FlexboxItem]) {
+    mutating func layout(_ items: [FlexboxItem]) -> [FlexboxItem] {
         if items.count == 0 {
-            return
+            return items
         }
+        var ret = [FlexboxItem]()
         items.enumerated().forEach { (idx, item) in
             var mItem = item
-            if prepare(&mItem) {
-                var fixedItems = Array(items[(idx - indexOfItemsInCurrentAxis)..<idx])
-                fixInAxis(&fixedItems, shouldAppendAxisDimension: false)
-                items.replaceSubrange((idx - indexOfItemsInCurrentAxis)..<idx, with: fixedItems)
+            let preparedVal = prepare(mItem)
+            mItem = preparedVal.0
+            if preparedVal.1 {
+                var fixedItems = Array(ret[(idx - indexOfItemsInCurrentAxis)..<idx])
+                fixedItems = fixInAxis(fixedItems, shouldAppendAxisDimension: false)
+                ret.replaceSubrange((idx - indexOfItemsInCurrentAxis)..<idx, with: fixedItems)
                 wrap()
             }
-            move(&mItem)
+            mItem = move(mItem)
             let axisIndex = dimensionsOfCross.count
             indexesOfAxisForItems[idx] = axisIndex
-            items[idx] = mItem
+            ret.append(mItem)
         }
         
-        var fixedItems = Array(items[(items.count - 1 - indexOfItemsInCurrentAxis)...items.count - 1])
-        fixInAxis(&fixedItems, shouldAppendAxisDimension: true)
-        items.replaceSubrange((items.count - 1 - indexOfItemsInCurrentAxis)...items.count - 1, with: fixedItems)
-        fixInCross(&items)
+        var fixedItems = Array(ret[(ret.count - 1 - indexOfItemsInCurrentAxis)...ret.count - 1])
+        fixedItems = fixInAxis(fixedItems, shouldAppendAxisDimension: true)
+        ret.replaceSubrange((ret.count - 1 - indexOfItemsInCurrentAxis)...ret.count - 1, with: fixedItems)
+        ret = fixInCross(ret)
+        return ret
     }
     
-    mutating func prepare(_ item: inout FlexboxItem) -> Bool {
+    mutating func prepare(_ item: FlexboxItem) -> (FlexboxItem, Bool) {
+        var ret = item
         indexOfItemsInCurrentAxis += 1
-        item.onMeasure(direction: flexDirection, containerDimension: flexContainerDimension)
+        let measuredSize = ret.onMeasure(direction: flexDirection, containerDimension: flexContainerDimension)
+        ret.flexFrame = FlexboxRect(x: 0, y: 0, w: measuredSize.w, h: measuredSize.h)
         var shouldWrap = flexWrap.isWrapEnabled
         if flexboxArrangement.isAxisReverse {
-            shouldWrap = shouldWrap && cursor.axisDim(flexDirection) - item.axisDim(flexDirection) < Flexbox.dimensionThreshold
+            shouldWrap = shouldWrap && cursor.axisDim(flexDirection) - ret.axisDim(flexDirection) < Flexbox.dimensionThreshold
         } else {
-            shouldWrap = shouldWrap && cursor.axisDim(flexDirection) + item.axisDim(flexDirection) - flexContainerDimension.axisDim(flexDirection) > Flexbox.dimensionThreshold
+            shouldWrap = shouldWrap && cursor.axisDim(flexDirection) + ret.axisDim(flexDirection) - flexContainerDimension.axisDim(flexDirection) > Flexbox.dimensionThreshold
         }
         if shouldWrap {
             dimensionsOfCross.append(dimensionOfCurrentCross)
         }
-        return shouldWrap && indexOfItemsInCurrentAxis > 0
+        return (ret, shouldWrap && indexOfItemsInCurrentAxis > 0)
     }
     
     mutating func wrap() {
@@ -117,29 +123,30 @@ struct FlexboxIntermediate {
         shrinkOfItemsInCurrentAxis.removeAll()
     }
     
-    mutating func move(_ item: inout FlexboxItem) {
+    mutating func move(_ item: FlexboxItem) -> FlexboxItem {
+        var ret = item
         if flexboxArrangement.isHorizontal {
             if flexboxArrangement.isAxisReverse {
-                item.flexFrame!.x = cursor.x - item.flexMargin.right - item.flexFrame!.w
+                ret.flexFrame!.x = cursor.x - item.flexMargin.right - item.flexFrame!.w
             } else {
-                item.flexFrame!.x = cursor.x + item.flexMargin.left
+                ret.flexFrame!.x = cursor.x + item.flexMargin.left
             }
             if flexboxArrangement.isCrossReverse {
-                item.flexFrame!.y = cursor.y - item.flexMargin.bottom - item.flexFrame!.h
+                ret.flexFrame!.y = cursor.y - item.flexMargin.bottom - item.flexFrame!.h
             } else {
-                item.flexFrame!.y = cursor.y + item.flexMargin.top
+                ret.flexFrame!.y = cursor.y + item.flexMargin.top
             }
             
         } else {
             if flexboxArrangement.isAxisReverse {
-                item.flexFrame!.y = cursor.y + item.flexMargin.bottom - item.flexFrame!.h
+                ret.flexFrame!.y = cursor.y + item.flexMargin.bottom - item.flexFrame!.h
             } else {
-                item.flexFrame!.y = cursor.y + item.flexMargin.top
+                ret.flexFrame!.y = cursor.y + item.flexMargin.top
             }
             if flexboxArrangement.isCrossReverse {
-                item.flexFrame!.x = cursor.x - item.flexMargin.right - item.flexFrame!.w
+                ret.flexFrame!.x = cursor.x - item.flexMargin.right - item.flexFrame!.w
             } else {
-                item.flexFrame!.x = cursor.x + item.flexMargin.left
+                ret.flexFrame!.x = cursor.x + item.flexMargin.left
             }
         }
         
@@ -152,13 +159,15 @@ struct FlexboxIntermediate {
         if item.flexShrink > 0 {
             shrinkOfItemsInCurrentAxis[indexOfItemsInCurrentAxis] = item.flexShrink
         }
+        return ret
     }
     
-    mutating func fixInAxis(_ items: inout [FlexboxItem], shouldAppendAxisDimension: Bool) {
+    mutating func fixInAxis(_ items: [FlexboxItem], shouldAppendAxisDimension: Bool) -> [FlexboxItem] {
         var itemsAxisDimension = Float(0)
         let growAndShrinkVal = calculateGrowAndShrink(dimensionToFix: { flexboxArrangement.isAxisReverse ? (-cursor.axisDim(flexDirection)) : (cursor.axisDim(flexDirection) - flexContainerDimension.axisDim(flexDirection)) })
         var fixedAxisOffset = Float(0)
-        items.enumerated().forEach { (index, item) in
+        var ret = items
+        ret.enumerated().forEach { (index, item) in
             var mItem = item
             if var origin = mItem.flexFrame?.origin {
                 origin.updateAxisDim(origin.axisDim(flexDirection) + fixedAxisOffset, direction: flexDirection)
@@ -166,10 +175,10 @@ struct FlexboxIntermediate {
             }
             mItem.fixGrowAndShrinkInAxis(arrangement: flexboxArrangement, growOffset: growAndShrinkVal.growValInLine?[index], shrinkOffset: growAndShrinkVal.shrinkValInLine?[index], fixedAxisOffset: &fixedAxisOffset, fixedCrossDimension: &dimensionOfCurrentCross)
             itemsAxisDimension += mItem.axisDim(flexDirection)
-            items[index] = mItem
+            ret[index] = mItem
         }
         if growAndShrinkVal.growValInLine == nil && growAndShrinkVal.shrinkValInLine == nil && !flexIsMeasuring {
-            items.fixDistributionInAxis(arrangement: flexboxArrangement, justifyContent: flexJustifyContent, containerDimension: flexContainerDimension, axisDimension: itemsAxisDimension)
+            ret.fixDistributionInAxis(arrangement: flexboxArrangement, justifyContent: flexJustifyContent, containerDimension: flexContainerDimension, axisDimension: itemsAxisDimension)
         }
         
         if shouldAppendAxisDimension {
@@ -179,9 +188,10 @@ struct FlexboxIntermediate {
             dimensionsOfCross.append(dimensionOfCurrentCross)
         }
         intrinsicSize.updateAxisDim(max(intrinsicSize.axisDim(flexDirection), itemsAxisDimension), direction: flexDirection)
+        return ret
     }
     
-    mutating func fixInCross(_ items: inout [FlexboxItem]) {
+    mutating func fixInCross(_ items: [FlexboxItem]) -> [FlexboxItem] {
         cursor.updateCrossDim(cursor.crossDim(flexDirection) + flexboxArrangement.crossRatio * dimensionOfCurrentCross, direction: flexDirection)
         if flexboxArrangement.isCrossReverse {
             if  let firstItem = items.first,
@@ -195,9 +205,11 @@ struct FlexboxIntermediate {
         } else {
             intrinsicSize.updateCrossDim(withRefrence: cursor, inDirection: flexDirection)
         }
+        var ret = items
         if !flexIsMeasuring {
-            items.fixDistributionInCross(arrangement: flexboxArrangement, alignContent: flexAlignContent, alignItems: flexAlignItems, dimensionsOfCross: dimensionsOfCross, flexContainerDimension: flexContainerDimension, dimensionOfCurrentCross: dimensionOfCurrentCross, indexesOfAxisForItems: indexesOfAxisForItems)
+            ret.fixDistributionInCross(arrangement: flexboxArrangement, alignContent: flexAlignContent, alignItems: flexAlignItems, dimensionsOfCross: dimensionsOfCross, flexContainerDimension: flexContainerDimension, dimensionOfCurrentCross: dimensionOfCurrentCross, indexesOfAxisForItems: indexesOfAxisForItems)
         }
+        return ret
     }
     
     func calculateGrowAndShrink(dimensionToFix: () -> Float)  -> (growValInLine: [Int: Float]?, shrinkValInLine: [Int: Float]?){
