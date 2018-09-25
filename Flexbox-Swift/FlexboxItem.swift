@@ -99,10 +99,12 @@ extension FlexboxItem {
         return size
     }
     
-    mutating func reMeasure() {
+    func reMeasure() -> FlexboxItem {
+        var ret = self
         if let size = onMeasure?(flexFrame?.size ?? FlexboxSize.zero) {
-            flexFrame?.size = size
+            ret.flexFrame?.size = size
         }
+        return ret
     }
 }
 
@@ -116,145 +118,154 @@ extension FlexboxItem: CustomDebugStringConvertible {
 
 extension FlexboxItem {
     
-    mutating func fixGrowAndShrinkInAxis(arrangement: FlexboxArrangement, growOffset: Float?, shrinkOffset: Float?, fixedAxisOffset: inout Float, fixedCrossDimension: inout Float) {
+    func fixGrowAndShrinkInAxis(arrangement: FlexboxArrangement, growOffset: Float?, shrinkOffset: Float?, fixedAxisOffset: inout Float, fixedCrossDimension: inout Float) -> FlexboxItem {
+        var ret = self
         if arrangement.isHorizontal {
             if let growOffset = growOffset {
-                flexFrame?.w += growOffset
+                ret.flexFrame?.w += growOffset
                 if arrangement.isAxisReverse {
-                    flexFrame?.x -= growOffset
+                    ret.flexFrame?.x -= growOffset
                 }
                 fixedAxisOffset += arrangement.axisRatio * growOffset
             } else if let shrinkOffset = shrinkOffset {
                 let ow = flexFrame?.w ?? 0
-                flexFrame?.w -= shrinkOffset
-                reMeasure()
-                if flexFrame?.w ?? 0 < ow - shrinkOffset {
-                    flexFrame?.w = ow - shrinkOffset
+                ret.flexFrame?.w -= shrinkOffset
+                ret = ret.reMeasure()
+                if ret.flexFrame?.w ?? 0 < ow - shrinkOffset {
+                    ret.flexFrame?.w = ow - shrinkOffset
                 }
-                let deltaOffset = ow - (flexFrame?.w ?? 0)
-                fixedCrossDimension = max(fixedCrossDimension, flexFrame?.h ?? 0)
+                let deltaOffset = ow - (ret.flexFrame?.w ?? 0)
+                fixedCrossDimension = max(fixedCrossDimension, ret.flexFrame?.h ?? 0)
                 if arrangement.isAxisReverse {
-                    flexFrame?.x += deltaOffset
+                    ret.flexFrame?.x += deltaOffset
                 }
                 fixedAxisOffset -= arrangement.axisRatio * deltaOffset
             }
         } else {
             if let growOffset = growOffset {
-                flexFrame?.h += growOffset
+                ret.flexFrame?.h += growOffset
                 if arrangement.isAxisReverse {
-                    flexFrame?.y -= growOffset
+                    ret.flexFrame?.y -= growOffset
                 }
                 fixedAxisOffset += arrangement.axisRatio * growOffset
             } else if let shrinkOffset = shrinkOffset {
                 let oh = flexFrame?.h ?? 0
-                flexFrame?.h -= shrinkOffset
-                reMeasure()
-                if flexFrame?.h ?? 0 < oh - shrinkOffset {
-                    flexFrame?.h = oh - shrinkOffset
+                ret.flexFrame?.h -= shrinkOffset
+                ret = ret.reMeasure()
+                if ret.flexFrame?.h ?? 0 < oh - shrinkOffset {
+                    ret.flexFrame?.h = oh - shrinkOffset
                 }
-                let deltaOffset = oh - (flexFrame?.h ?? 0)
-                fixedCrossDimension = max(fixedCrossDimension, flexFrame?.w ?? 0)
+                let deltaOffset = oh - (ret.flexFrame?.h ?? 0)
+                fixedCrossDimension = max(fixedCrossDimension, ret.flexFrame?.w ?? 0)
                 if arrangement.isAxisReverse {
-                    flexFrame?.y += deltaOffset
+                    ret.flexFrame?.y += deltaOffset
                 }
                 fixedAxisOffset -= arrangement.axisRatio * deltaOffset
             }
         }
+        return ret
     }
     
-    mutating func fixAlignmentInCross(arrangement: FlexboxArrangement, alignItems: Flexbox.AlignItems, dimensionOfCross: Float) {
+    func fixAlignmentInCross(arrangement: FlexboxArrangement, alignItems: Flexbox.AlignItems, dimensionOfCross: Float) -> FlexboxItem {
         if flexFrame == nil {
-            return
+            return self
         }
         
         let alignment = alignSelf.toAlignItems() ?? alignItems
-        if arrangement.isHorizontal {
-            fixHorizontalAlignmentInCross(alignItems: alignment, dimensionOfCross: dimensionOfCross, isReverse: arrangement.isCrossReverse)
-        } else {
-            fixVerticalAlignmentInCross(alignItems: alignment, dimensionOfCross: dimensionOfCross, isReverse: arrangement.isCrossReverse)
-        }
+        return arrangement.isHorizontal
+            ?
+                fixHorizontalAlignmentInCross(alignItems: alignment, dimensionOfCross: dimensionOfCross, isReverse: arrangement.isCrossReverse)
+            :
+                fixVerticalAlignmentInCross(alignItems: alignment, dimensionOfCross: dimensionOfCross, isReverse: arrangement.isCrossReverse)
     }
     
-    private mutating func fixVerticalAlignmentInCross(alignItems: Flexbox.AlignItems, dimensionOfCross: Float, isReverse: Bool) {
+    private func fixVerticalAlignmentInCross(alignItems: Flexbox.AlignItems, dimensionOfCross: Float, isReverse: Bool) -> FlexboxItem {
+        var ret = self
         switch alignItems {
         case .start:
             if isReverse {
                 let offsetX = flexFrame!.x - flexMargin.left + dimensionOfCross - flexMargin.right - flexFrame!.w
-                flexFrame?.x = offsetX
+                ret.flexFrame?.x = offsetX
             }
         case .end:
             if !isReverse {
                 let offsetX = flexFrame!.x - flexMargin.left + dimensionOfCross - flexMargin.right - flexFrame!.w
-                flexFrame?.x = offsetX
+                ret.flexFrame?.x = offsetX
             }
         case .center:
             let offsetX = flexFrame!.x - flexMargin.left + (dimensionOfCross - flexWidth) * 0.5 + flexMargin.left
-            flexFrame?.x = offsetX
+            ret.flexFrame?.x = offsetX
         case .stretch:
             let offsetW = dimensionOfCross - flexMargin.left - flexMargin.right
-            flexFrame?.w = offsetW
+            ret.flexFrame?.w = offsetW
         case .baseline:break
         }
+        return ret
     }
     
-    private mutating func fixHorizontalAlignmentInCross(alignItems: Flexbox.AlignItems, dimensionOfCross: Float, isReverse: Bool) {
+    private func fixHorizontalAlignmentInCross(alignItems: Flexbox.AlignItems, dimensionOfCross: Float, isReverse: Bool) -> FlexboxItem {
+        var ret = self
         switch alignItems {
         case .start:
             if isReverse {
                 let offsetY = flexFrame!.y - flexMargin.top + dimensionOfCross - flexMargin.bottom - flexFrame!.h
-                flexFrame?.y = offsetY
+                ret.flexFrame?.y = offsetY
             }
         case .end:
             if !isReverse {
                 let offsetY = flexFrame!.y - flexMargin.top + dimensionOfCross - flexMargin.bottom - flexFrame!.h
-                flexFrame?.y = offsetY
+                ret.flexFrame?.y = offsetY
             }
         case .center:
             let offsetY = flexFrame!.y - flexMargin.top + (dimensionOfCross - flexHeight) * 0.5 + flexMargin.top
-            flexFrame?.y = offsetY
+            ret.flexFrame?.y = offsetY
         case .stretch:
             let offsetH = dimensionOfCross - flexMargin.top - flexMargin.bottom
-            flexFrame?.h = offsetH
+            ret.flexFrame?.h = offsetH
         case .baseline:break
         }
+        return ret
     }
     
-    fileprivate mutating func fixDistributionInAxis(direction: Flexbox.Direction, justifyContent: Flexbox.JustifyContent, axisDimension: Float, containerDimension: FlexboxSize, itemIndex: Int, itemCount: Int, arrangement: FlexboxArrangement) {
+    fileprivate func fixDistributionInAxis(direction: Flexbox.Direction, justifyContent: Flexbox.JustifyContent, axisDimension: Float, containerDimension: FlexboxSize, itemIndex: Int, itemCount: Int, arrangement: FlexboxArrangement) -> FlexboxItem {
         guard var origin = flexFrame?.origin else {
-            return
+            return self
         }
+        var ret = self
+        FlexboxContext.direction = direction
         
-        let originAxisDim = origin.axisDim(direction)
-        let containerDim = containerDimension.axisDim(direction)
+        let originAxisDim = origin.axisVal
+        let containerDim = containerDimension.axisVal
         
         switch justifyContent {
         case .end:
-            origin.updateAxisDim(originAxisDim + arrangement.axisRatio * (containerDim - axisDimension), direction: direction)
+            origin.axisVal = originAxisDim + arrangement.axisRatio * (containerDim - axisDimension)
         case .center:
-            origin.updateAxisDim(originAxisDim + arrangement.axisRatio * (containerDim - axisDimension) * 0.5, direction: direction)
+            origin.axisVal = originAxisDim + arrangement.axisRatio * (containerDim - axisDimension) * 0.5
         case .spaceBetween:
-            origin.updateAxisDim(originAxisDim + arrangement.axisRatio * (containerDim - axisDimension) * Float(itemIndex) / Float(itemCount - 1), direction: direction)
+            origin.axisVal = originAxisDim + arrangement.axisRatio * (containerDim - axisDimension) * Float(itemIndex) / Float(itemCount - 1)
         case .spaceAround:
-            origin.updateAxisDim(originAxisDim + arrangement.axisRatio * (containerDim - axisDimension) * (Float(itemIndex) + 0.5) / Float(itemCount), direction: direction)
+            origin.axisVal = originAxisDim + arrangement.axisRatio * (containerDim - axisDimension) * (Float(itemIndex) + 0.5) / Float(itemCount)
         case .start: break
         }
-        flexFrame?.origin = origin
+        ret.flexFrame?.origin = origin
+        return ret
     }
 }
 
 extension Array where Element == FlexboxItem {
     
-    mutating func fixDistributionInCross(arrangement: FlexboxArrangement, alignContent: Flexbox.AlignContent, alignItems: Flexbox.AlignItems, dimensionsOfCross: [Float], flexContainerDimension: FlexboxSize, dimensionOfCurrentCross: Float, indexesOfAxisForItems: [Int: Int]) {
-        if arrangement.isHorizontal {
-            fixHorizontalDistributionInCross(arrangement: arrangement, alignContent: alignContent, alignItems: alignItems, dimensionsOfCross: dimensionsOfCross, flexContainerDimension: flexContainerDimension, dimensionOfCurrentCross: dimensionOfCurrentCross, indexesOfAxisForItems: indexesOfAxisForItems)
-        } else {
-            fixVerticalDistributionInCross(arrangement: arrangement, alignContent: alignContent, alignItems: alignItems, dimensionsOfCross: dimensionsOfCross, flexContainerDimension: flexContainerDimension, dimensionOfCurrentCross: dimensionOfCurrentCross, indexesOfAxisForItems: indexesOfAxisForItems)
-        }
+    func fixDistributionInCross(arrangement: FlexboxArrangement, alignContent: Flexbox.AlignContent, alignItems: Flexbox.AlignItems, dimensionsOfCross: [Float], flexContainerDimension: FlexboxSize, dimensionOfCurrentCross: Float, indexesOfAxisForItems: [Int: Int]) -> Array {
+        return arrangement.isHorizontal
+            ?
+                fixHorizontalDistributionInCross(arrangement: arrangement, alignContent: alignContent, alignItems: alignItems, dimensionsOfCross: dimensionsOfCross, flexContainerDimension: flexContainerDimension, dimensionOfCurrentCross: dimensionOfCurrentCross, indexesOfAxisForItems: indexesOfAxisForItems)
+            :
+                fixVerticalDistributionInCross(arrangement: arrangement, alignContent: alignContent, alignItems: alignItems, dimensionsOfCross: dimensionsOfCross, flexContainerDimension: flexContainerDimension, dimensionOfCurrentCross: dimensionOfCurrentCross, indexesOfAxisForItems: indexesOfAxisForItems)
     }
     
-    mutating func fixDistributionInAxis(arrangement: FlexboxArrangement, justifyContent: Flexbox.JustifyContent, containerDimension: FlexboxSize, axisDimension: Float) {
+    func fixDistributionInAxis(arrangement: FlexboxArrangement, justifyContent: Flexbox.JustifyContent, containerDimension: FlexboxSize, axisDimension: Float) -> Array {
         if justifyContent == .start {
-            return
+            return self
         }
         
         var mFlexJustifyConent = justifyContent
@@ -262,100 +273,98 @@ extension Array where Element == FlexboxItem {
             mFlexJustifyConent = .center
         }
         
-        enumerated().forEach { (arg) in
-            var (index, item) = arg
-            item.fixDistributionInAxis(direction: arrangement.direction, justifyContent: mFlexJustifyConent, axisDimension: axisDimension, containerDimension: containerDimension, itemIndex: index, itemCount: count, arrangement: arrangement)
-            self[index] = item
+        return enumerated().map {
+            $0.element.fixDistributionInAxis(direction: arrangement.direction, justifyContent: mFlexJustifyConent, axisDimension: axisDimension, containerDimension: containerDimension, itemIndex: $0.offset, itemCount: count, arrangement: arrangement)
         }
     }
     
-    private mutating func fixHorizontalDistributionInCross(arrangement: FlexboxArrangement, alignContent: Flexbox.AlignContent, alignItems: Flexbox.AlignItems, dimensionsOfCross: [Float], flexContainerDimension: FlexboxSize, dimensionOfCurrentCross: Float, indexesOfAxisForItems: [Int: Int]) {
+    private func fixHorizontalDistributionInCross(arrangement: FlexboxArrangement, alignContent: Flexbox.AlignContent, alignItems: Flexbox.AlignItems, dimensionsOfCross: [Float], flexContainerDimension: FlexboxSize, dimensionOfCurrentCross: Float, indexesOfAxisForItems: [Int: Int]) -> Array {
+        var ret = self
         if !(alignContent == .start && alignItems == .start) {
             var mAlignContent = alignContent
             if (mAlignContent == .spaceBetween || mAlignContent == .spaceAround) && dimensionsOfCross.count == 1 {
                 mAlignContent = .center
             }
             let contentHeight = dimensionsOfCross.reduce(0, +)
-            if contentHeight == 0 {
-                return
-            }
-            enumerated().forEach { (offset, item) in
-                guard let lineIndex = indexesOfAxisForItems[offset] else {
-                    return
-                }
-                var mItem = item
-                var dimensionOfCross = dimensionsOfCross[lineIndex]
-                if arrangement.isCrossReverse {
-                    let reverseOffsetY = dimensionOfCross - (mItem.flexFrame?.h ?? 0) - mItem.flexMargin.top
-                    mItem.flexFrame?.y -= reverseOffsetY
-                }
-                
-                switch mAlignContent {
-                case .start: break
-                case .end:
-                    mItem.flexFrame?.y += arrangement.crossRatio * (flexContainerDimension.h - contentHeight)
-                case .center:
-                    mItem.flexFrame?.y += arrangement.crossRatio * ((flexContainerDimension.h - contentHeight) * 0.5)
-                case .spaceBetween:
-                    mItem.flexFrame?.y += arrangement.crossRatio * ((flexContainerDimension.h - contentHeight) * Float(lineIndex) / Float(dimensionsOfCross.count - 1))
-                case .spaceAround:
-                    mItem.flexFrame?.y += arrangement.crossRatio * ((flexContainerDimension.h - contentHeight) * (Float(lineIndex) + 0.5) / Float(dimensionsOfCross.count))
-                case .stretch:
-                    var stretchOffsetY = Float(0)
-                    for stretchLineIndex in 0..<(arrangement.isCrossReverse ? lineIndex + 1 : lineIndex) {
-                        stretchOffsetY += dimensionsOfCross[stretchLineIndex]
+            if contentHeight != 0 {
+                ret = enumerated().map { (offset, item) -> Element in
+                    guard let lineIndex = indexesOfAxisForItems[offset] else {
+                        return item
                     }
-                    mItem.flexFrame?.y += arrangement.crossRatio * (stretchOffsetY * flexContainerDimension.h / contentHeight - stretchOffsetY)
-                    dimensionOfCross += (flexContainerDimension.h - contentHeight) * (dimensionOfCross / contentHeight)
+                    var mItem = item
+                    var dimensionOfCross = dimensionsOfCross[lineIndex]
+                    if arrangement.isCrossReverse {
+                        let reverseOffsetY = dimensionOfCross - (mItem.flexFrame?.h ?? 0) - mItem.flexMargin.top
+                        mItem.flexFrame?.y -= reverseOffsetY
+                    }
+                    
+                    switch mAlignContent {
+                    case .start: break
+                    case .end:
+                        mItem.flexFrame?.y += arrangement.crossRatio * (flexContainerDimension.h - contentHeight)
+                    case .center:
+                        mItem.flexFrame?.y += arrangement.crossRatio * ((flexContainerDimension.h - contentHeight) * 0.5)
+                    case .spaceBetween:
+                        mItem.flexFrame?.y += arrangement.crossRatio * ((flexContainerDimension.h - contentHeight) * Float(lineIndex) / Float(dimensionsOfCross.count - 1))
+                    case .spaceAround:
+                        mItem.flexFrame?.y += arrangement.crossRatio * ((flexContainerDimension.h - contentHeight) * (Float(lineIndex) + 0.5) / Float(dimensionsOfCross.count))
+                    case .stretch:
+                        var stretchOffsetY = Float(0)
+                        for stretchLineIndex in 0..<(arrangement.isCrossReverse ? lineIndex + 1 : lineIndex) {
+                            stretchOffsetY += dimensionsOfCross[stretchLineIndex]
+                        }
+                        mItem.flexFrame?.y += arrangement.crossRatio * (stretchOffsetY * flexContainerDimension.h / contentHeight - stretchOffsetY)
+                        dimensionOfCross += (flexContainerDimension.h - contentHeight) * (dimensionOfCross / contentHeight)
+                    }
+                    return mItem.fixAlignmentInCross(arrangement: arrangement, alignItems: alignItems, dimensionOfCross: dimensionOfCross)
                 }
-                mItem.fixAlignmentInCross(arrangement: arrangement, alignItems: alignItems, dimensionOfCross: dimensionOfCross)
-                self[offset] = mItem
             }
         }
+        return ret
     }
     
-    private mutating func fixVerticalDistributionInCross(arrangement: FlexboxArrangement, alignContent: Flexbox.AlignContent, alignItems: Flexbox.AlignItems, dimensionsOfCross: [Float], flexContainerDimension: FlexboxSize, dimensionOfCurrentCross: Float, indexesOfAxisForItems: [Int: Int]) {
+    private func fixVerticalDistributionInCross(arrangement: FlexboxArrangement, alignContent: Flexbox.AlignContent, alignItems: Flexbox.AlignItems, dimensionsOfCross: [Float], flexContainerDimension: FlexboxSize, dimensionOfCurrentCross: Float, indexesOfAxisForItems: [Int: Int]) -> Array {
+        var ret = self
         if !(alignContent == .start && alignItems == .start) {
             var mAlignContent = alignContent
             if (mAlignContent == .spaceBetween || mAlignContent == .spaceAround) && dimensionsOfCross.count == 1 {
                 mAlignContent = .center
             }
             let contentWidth = dimensionsOfCross.reduce(0, +)
-            if contentWidth == 0 {
-                return
-            }
-            enumerated().forEach { (offset, item) in
-                guard let lineIndex = indexesOfAxisForItems[offset] else {
-                    return
-                }
-                var mItem = item
-                var dimensionOfCross = dimensionsOfCross[lineIndex]
-                if arrangement.isCrossReverse {
-                    let reverseOffsetX = dimensionOfCross - (mItem.flexFrame?.w ?? 0) - mItem.flexMargin.left
-                    mItem.flexFrame?.x -= reverseOffsetX
-                }
-                
-                switch mAlignContent {
-                case .start: break
-                case .end:
-                    mItem.flexFrame?.x += arrangement.crossRatio * (flexContainerDimension.w - contentWidth)
-                case .center:
-                    mItem.flexFrame?.x += arrangement.crossRatio * ((flexContainerDimension.w - contentWidth) * 0.5)
-                case .spaceBetween:
-                    mItem.flexFrame?.x += arrangement.crossRatio * ((flexContainerDimension.w - contentWidth) * Float(lineIndex) / Float(dimensionsOfCross.count - 1))
-                case .spaceAround:
-                    mItem.flexFrame?.x += arrangement.crossRatio * ((flexContainerDimension.w - contentWidth) * (Float(lineIndex) + 0.5) / Float(dimensionsOfCross.count))
-                case .stretch:
-                    var stretchOffsetX = Float(0)
-                    for stretchLineIndex in 0..<(arrangement.isCrossReverse ? lineIndex + 1 : lineIndex) {
-                        stretchOffsetX += dimensionsOfCross[stretchLineIndex]
+            if contentWidth != 0 {
+                ret = enumerated().map({ (offset, item) -> Element in
+                    guard let lineIndex = indexesOfAxisForItems[offset] else {
+                        return item
                     }
-                    mItem.flexFrame?.x += arrangement.crossRatio * (stretchOffsetX * flexContainerDimension.w / contentWidth - stretchOffsetX)
-                    dimensionOfCross += (flexContainerDimension.w - contentWidth) * (dimensionOfCross / contentWidth)
-                }
-                mItem.fixAlignmentInCross(arrangement: arrangement, alignItems: alignItems, dimensionOfCross: dimensionOfCross)
-                self[offset] = mItem
+                    var mItem = item
+                    var dimensionOfCross = dimensionsOfCross[lineIndex]
+                    if arrangement.isCrossReverse {
+                        let reverseOffsetX = dimensionOfCross - (mItem.flexFrame?.w ?? 0) - mItem.flexMargin.left
+                        mItem.flexFrame?.x -= reverseOffsetX
+                    }
+                    
+                    switch mAlignContent {
+                    case .start: break
+                    case .end:
+                        mItem.flexFrame?.x += arrangement.crossRatio * (flexContainerDimension.w - contentWidth)
+                    case .center:
+                        mItem.flexFrame?.x += arrangement.crossRatio * ((flexContainerDimension.w - contentWidth) * 0.5)
+                    case .spaceBetween:
+                        mItem.flexFrame?.x += arrangement.crossRatio * ((flexContainerDimension.w - contentWidth) * Float(lineIndex) / Float(dimensionsOfCross.count - 1))
+                    case .spaceAround:
+                        mItem.flexFrame?.x += arrangement.crossRatio * ((flexContainerDimension.w - contentWidth) * (Float(lineIndex) + 0.5) / Float(dimensionsOfCross.count))
+                    case .stretch:
+                        var stretchOffsetX = Float(0)
+                        for stretchLineIndex in 0..<(arrangement.isCrossReverse ? lineIndex + 1 : lineIndex) {
+                            stretchOffsetX += dimensionsOfCross[stretchLineIndex]
+                        }
+                        mItem.flexFrame?.x += arrangement.crossRatio * (stretchOffsetX * flexContainerDimension.w / contentWidth - stretchOffsetX)
+                        dimensionOfCross += (flexContainerDimension.w - contentWidth) * (dimensionOfCross / contentWidth)
+                    }
+                    return mItem.fixAlignmentInCross(arrangement: arrangement, alignItems: alignItems, dimensionOfCross: dimensionOfCross)
+                })
             }
         }
+        return ret
     }
 }

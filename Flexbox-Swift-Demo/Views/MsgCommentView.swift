@@ -55,9 +55,9 @@ extension MsgCommentView: MsgElement {
             attributedText.append(NSAttributedString(string: " "))
             peopleWhoLikes.enumerated().forEach { (offset, element) in
                 if offset > 0 {
-                    attributedText.append(NSAttributedString(string: ", ", attributes: [NSAttributedStringKey.foregroundColor: UIColor.black, NSAttributedStringKey.font: UIFont.systemFont(ofSize: 12.0)]))
+                    attributedText.append(NSAttributedString(string: ", ", attributes: [NSAttributedString.Key.foregroundColor: UIColor.black, NSAttributedString.Key.font: UIFont.systemFont(ofSize: 12.0)]))
                 }
-                attributedText.append(NSAttributedString(string: element, attributes: [NSAttributedStringKey.foregroundColor: themeColor, NSAttributedStringKey.font: UIFont.systemFont(ofSize: 12.0)]))
+                attributedText.append(NSAttributedString(string: element, attributes: [NSAttributedString.Key.foregroundColor: themeColor, NSAttributedString.Key.font: UIFont.systemFont(ofSize: 12.0)]))
             }
             peopleWhoLike.attributedText = attributedText
             
@@ -72,9 +72,9 @@ extension MsgCommentView: MsgElement {
                 let label = UILabel()
                 label.numberOfLines = 0
                 let attributedText = NSMutableAttributedString()
-                attributedText.append(NSAttributedString(string: commentModel.author, attributes: [NSAttributedStringKey.foregroundColor: themeColor, NSAttributedStringKey.font: UIFont.systemFont(ofSize: 12.0)]))
-                attributedText.append(NSAttributedString(string: ": ", attributes: [NSAttributedStringKey.foregroundColor: UIColor.black, NSAttributedStringKey.font: UIFont.systemFont(ofSize: 12.0)]))
-                attributedText.append(NSAttributedString(string: commentModel.content ?? "", attributes: [NSAttributedStringKey.foregroundColor: UIColor.black, NSAttributedStringKey.font: UIFont.systemFont(ofSize: 12.0)]))
+                attributedText.append(NSAttributedString(string: commentModel.author, attributes: [NSAttributedString.Key.foregroundColor: themeColor, NSAttributedString.Key.font: UIFont.systemFont(ofSize: 12.0)]))
+                attributedText.append(NSAttributedString(string: ": ", attributes: [NSAttributedString.Key.foregroundColor: UIColor.black, NSAttributedString.Key.font: UIFont.systemFont(ofSize: 12.0)]))
+                attributedText.append(NSAttributedString(string: commentModel.content ?? "", attributes: [NSAttributedString.Key.foregroundColor: UIColor.black, NSAttributedString.Key.font: UIFont.systemFont(ofSize: 12.0)]))
                 label.attributedText = attributedText
                 if offset > 0 {
                     label.flexMargin = FlexboxInsets(top: 2, left: 0, bottom: 0, right: 0)

@@ -15,7 +15,7 @@ class Flexbox {
     }
     
     func layout(_ items: [FlexboxItem], size: FlexboxSize, isMeasuring: Bool = false) -> [FlexboxItem] {
-        var intermediate = FlexboxIntermediate(direction: flexDirection, alignItems: alignItems, alignContent:alignContent, wrap: flexWrap, justifyContent: justifyContent, containerDimension: size, debugTag: debugTag, isMeasuring: isMeasuring)
+        let intermediate = FlexboxIntermediate(direction: flexDirection, alignItems: alignItems, alignContent:alignContent, wrap: flexWrap, justifyContent: justifyContent, containerDimension: size, debugTag: debugTag, isMeasuring: isMeasuring)
         let ret = intermediate.layout(items)
         intrinsicSize = intermediate.intrinsicSize
         return ret

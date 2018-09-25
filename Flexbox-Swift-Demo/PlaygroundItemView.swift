@@ -83,7 +83,7 @@ class PlaygroundItemView: UIView {
             flexShrink -= 1
         }
         shrinkValLabel.text = String(format: "%.0f", flexShrink)
-        sender.selectedSegmentIndex = UISegmentedControlNoSegment
+        sender.selectedSegmentIndex = UISegmentedControl.noSegment
         notifyLayoutAnimated()
     }
     
@@ -94,7 +94,7 @@ class PlaygroundItemView: UIView {
             flexGrow -= 1
         }
         growValLabel.text = String(format: "%.0f", flexGrow)
-        sender.selectedSegmentIndex = UISegmentedControlNoSegment
+        sender.selectedSegmentIndex = UISegmentedControl.noSegment
         notifyLayoutAnimated()
     }
 }
