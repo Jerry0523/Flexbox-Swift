@@ -6,35 +6,35 @@
 //  Copyright © 2018年 com.jerry. All rights reserved.
 //
 
-struct FlexboxPoint: Equatable {
+public struct FlexboxPoint: Equatable {
     
-    var x: Float
+    public var x: Float
     
-    var y: Float
+    public var y: Float
     
-    static let zero = FlexboxPoint(x: 0, y: 0)
+    public static let zero = FlexboxPoint(x: 0, y: 0)
 }
 
-struct FlexboxSize: Equatable {
+public struct FlexboxSize: Equatable {
     
-    var w: Float
+    public var w: Float
     
-    var h: Float
+    public var h: Float
     
-    static let zero = FlexboxSize(w: 0, h: 0)
+    public static let zero = FlexboxSize(w: 0, h: 0)
 }
 
-struct FlexboxRect: Equatable {
+public struct FlexboxRect: Equatable {
     
-    var x: Float
+    public var x: Float
     
-    var y: Float
+    public var y: Float
     
-    var w: Float
+    public var w: Float
     
-    var h: Float
+    public var h: Float
     
-    var size: FlexboxSize {
+    public var size: FlexboxSize {
         get {
             return FlexboxSize(w: w, h: h)
         }
@@ -45,7 +45,7 @@ struct FlexboxRect: Equatable {
         }
     }
     
-    var origin: FlexboxPoint {
+    public var origin: FlexboxPoint {
         get {
             return FlexboxPoint(x: x, y: y)
         }
@@ -56,20 +56,27 @@ struct FlexboxRect: Equatable {
         }
     }
     
-    static let zero = FlexboxRect(x: 0, y: 0, w: 0, h: 0)
+    public static let zero = FlexboxRect(x: 0, y: 0, w: 0, h: 0)
 }
 
-struct FlexboxInsets: Equatable {
+public struct FlexboxInsets: Equatable {
     
-    var top: Float
+    public var top: Float
     
-    var left: Float
+    public var left: Float
     
-    var bottom: Float
+    public var bottom: Float
     
-    var right: Float
+    public var right: Float
     
-    static let zero = FlexboxInsets(top: 0, left: 0, bottom: 0, right: 0)
+    public init(top: Float, left: Float, bottom: Float, right: Float) {
+        self.top = top
+        self.left = left
+        self.bottom = bottom
+        self.right = right
+    }
+    
+    public static let zero = FlexboxInsets(top: 0, left: 0, bottom: 0, right: 0)
 }
 
 struct FlexboxArrangement {

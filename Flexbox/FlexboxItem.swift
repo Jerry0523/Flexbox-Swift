@@ -6,13 +6,13 @@
 //  Copyright © 2018年 com.jerry. All rights reserved.
 //
 
-struct FlexboxItem {
+public struct FlexboxItem {
     
-    init(onMeasure: ((FlexboxSize) -> FlexboxSize)?) {
+    public init(onMeasure: ((FlexboxSize) -> FlexboxSize)?) {
         self.onMeasure = onMeasure
     }
     
-    var flex: (flexGrow: Float, flexShrink: Float, flexBasis: FlexBasis) {
+    public var flex: (flexGrow: Float, flexShrink: Float, flexBasis: FlexBasis) {
         get {
             return (flexGrow, flexShrink, flexBasis)
         }
@@ -24,23 +24,23 @@ struct FlexboxItem {
         }
     }
     
-    var flexOrder = 0
+    public var flexOrder = 0
     
-    var flexGrow = Float(0)
+    public var flexGrow = Float(0)
     
-    var flexShrink = Float(1.0)
+    public var flexShrink = Float(1.0)
     
-    var flexBasis = FlexBasis.auto
+    public var flexBasis = FlexBasis.auto
     
-    var alignSelf = Flexbox.AlignSelf.auto
+    public var alignSelf = Flexbox.AlignSelf.auto
     
-    var flexMargin =  FlexboxInsets.zero
+    public var flexMargin =  FlexboxInsets.zero
     
-    var flexFrame: FlexboxRect?
+    public var flexFrame: FlexboxRect?
     
-    var onMeasure: ((FlexboxSize) -> FlexboxSize)?
+    public var onMeasure: ((FlexboxSize) -> FlexboxSize)?
     
-    enum FlexBasis {
+    public enum FlexBasis {
         
         case auto
         
@@ -110,7 +110,7 @@ extension FlexboxItem {
 
 extension FlexboxItem: CustomDebugStringConvertible {
     
-    var debugDescription: String {
+    public var debugDescription: String {
         return "{flexOrder: \(flexOrder), flexGrow: \(flexGrow), flexShrink: \(flexShrink), flexBasis: \(String(describing: flexBasis)), flexMargin: (\(flexMargin.top),\(flexMargin.left),\(flexMargin.bottom),\(flexMargin.right)), flexFrame: (\(flexFrame?.x ?? 0),\(flexFrame?.y ?? 0),\(flexFrame?.w ?? 0),\(flexFrame?.h ?? 0))}"
     }
     

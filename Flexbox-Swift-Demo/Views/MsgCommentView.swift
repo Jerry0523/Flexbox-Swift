@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import Flexbox
 
 class MsgCommentView: FlexboxView {
     

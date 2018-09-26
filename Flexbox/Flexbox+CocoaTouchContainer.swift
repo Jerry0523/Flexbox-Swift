@@ -16,31 +16,31 @@ protocol AnyFlexboxContainer {
     
 }
 
-class FlexboxTableViewCell : UITableViewCell, AnyFlexboxContainer {
+open class FlexboxTableViewCell : UITableViewCell, AnyFlexboxContainer {
     
-    let flexboxContentView = FlexboxTransformView()
+    public let flexboxContentView = FlexboxTransformView()
     
-    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
+    override public init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         addFlexboxContentView()
     }
     
-    required init?(coder aDecoder: NSCoder) {
+    required public init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
     }
     
 }
 
-class FlexboxCollectionViewCell : UICollectionViewCell, AnyFlexboxContainer {
+open class FlexboxCollectionViewCell : UICollectionViewCell, AnyFlexboxContainer {
     
-    let flexboxContentView = FlexboxTransformView()
+    public let flexboxContentView = FlexboxTransformView()
     
-    override init(frame: CGRect) {
+    override public init(frame: CGRect) {
         super.init(frame: frame)
         addFlexboxContentView()
     }
     
-    required init?(coder aDecoder: NSCoder) {
+    required public init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
     }
     

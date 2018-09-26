@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import Flexbox
 
 protocol MsgElement: class {
     

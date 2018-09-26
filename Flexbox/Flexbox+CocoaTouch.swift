@@ -8,9 +8,9 @@
 
 import UIKit
 
-class FlexboxView: UIView, FlexboxDelegate {
+open class FlexboxView: UIView, FlexboxDelegate {
     
-    private(set) lazy var flexbox = Flexbox(delegate: self)
+    open private(set) lazy var flexbox = Flexbox(delegate: self)
     
     var visibleSubViews: [UIView] {
         get {
@@ -18,16 +18,16 @@ class FlexboxView: UIView, FlexboxDelegate {
         }
     }
     
-    override init(frame: CGRect) {
+    override public init(frame: CGRect) {
         super.init(frame: frame)
         layoutMargins = UIEdgeInsets.zero
     }
     
-    required init?(coder aDecoder: NSCoder) {
+    required public init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
     }
     
-    override func layoutSubviews() {
+    override open func layoutSubviews() {
         super.layoutSubviews()
         if frame == CGRect.zero {
             return
@@ -41,14 +41,14 @@ class FlexboxView: UIView, FlexboxDelegate {
         }
     }
     
-    override func sizeThatFits(_ size: CGSize) -> CGSize {
+    override open func sizeThatFits(_ size: CGSize) -> CGSize {
         var layoutItems = visibleSubViews.map{ $0.flexboxItem }
         layoutItems = flexbox.layout(layoutItems, size: FlexboxSize(CGSize(width: size.width - layoutMargins.left - layoutMargins.right, height: size.height - layoutMargins.top - layoutMargins.bottom)), isMeasuring: true)
         mIntrinsicSize = flexbox.intrinsicSize.cgSize
         return CGSize(width: mIntrinsicSize.width + layoutMargins.left + layoutMargins.right, height: mIntrinsicSize.height + layoutMargins.top + layoutMargins.bottom)
     }
     
-    override var intrinsicContentSize: CGSize {
+    override open var intrinsicContentSize: CGSize {
         get {
             var size = frame.size
             var mSuperView = superview
@@ -69,9 +69,9 @@ class FlexboxView: UIView, FlexboxDelegate {
     }
 }
 
-class FlexboxTransformView: FlexboxView {
+open class FlexboxTransformView: FlexboxView {
     
-    override class var layerClass: Swift.AnyClass {
+    override open class var layerClass: Swift.AnyClass {
         get {
             return TransformLayer.self
         }
@@ -100,9 +100,9 @@ class FlexboxTransformView: FlexboxView {
     }
 }
 
-extension UIView {
+public extension UIView {
     
-    var flexboxItem: FlexboxItem {
+    public var flexboxItem: FlexboxItem {
         get {
             var item = objc_getAssociatedObject(self, &UIView.flexboxItemKey) as? FlexboxItem
             if item == nil {
@@ -116,7 +116,7 @@ extension UIView {
         }
     }
     
-    var flex: (flexGrow: Float, flexShrink: Float, flexBasis: FlexboxItem.FlexBasis) {
+    public var flex: (flexGrow: Float, flexShrink: Float, flexBasis: FlexboxItem.FlexBasis) {
         get {
             return flexboxItem.flex
         }
@@ -126,7 +126,7 @@ extension UIView {
         }
     }
     
-    var flexOrder: Int {
+    public var flexOrder: Int {
         get {
             return flexboxItem.flexOrder
         }
@@ -136,7 +136,7 @@ extension UIView {
         }
     }
     
-    var flexGrow: Float {
+    public var flexGrow: Float {
         get {
             return flexboxItem.flexGrow
         }
@@ -146,7 +146,7 @@ extension UIView {
         }
     }
     
-    var flexShrink: Float {
+    public var flexShrink: Float {
         get {
             return flexboxItem.flexShrink
         }
@@ -156,7 +156,7 @@ extension UIView {
         }
     }
     
-    var flexBasis: FlexboxItem.FlexBasis {
+    public var flexBasis: FlexboxItem.FlexBasis {
         get {
             return flexboxItem.flexBasis
         }
@@ -166,7 +166,7 @@ extension UIView {
         }
     }
     
-    var flexMargin: FlexboxInsets {
+    public var flexMargin: FlexboxInsets {
         get {
             return flexboxItem.flexMargin
         }
@@ -175,7 +175,7 @@ extension UIView {
         }
     }
     
-    var flexFrame: FlexboxRect? {
+    public var flexFrame: FlexboxRect? {
         get {
             return flexboxItem.flexFrame
         }
@@ -184,7 +184,7 @@ extension UIView {
         }
     }
     
-    var alignSelf: Flexbox.AlignSelf {
+    public var alignSelf: Flexbox.AlignSelf {
         get {
             return flexboxItem.alignSelf
         }

@@ -6,15 +6,15 @@
 //  Copyright © 2018年 com.jerry. All rights reserved.
 //
 
-class Flexbox {
+open class Flexbox {
     
-    var debugTag: String?
+    public var debugTag: String?
     
-    init(delegate: FlexboxDelegate) {
+    public init(delegate: FlexboxDelegate) {
         self.delegate = delegate
     }
     
-    func layout(_ items: [FlexboxItem], size: FlexboxSize, isMeasuring: Bool = false) -> [FlexboxItem] {
+    public func layout(_ items: [FlexboxItem], size: FlexboxSize, isMeasuring: Bool = false) -> [FlexboxItem] {
         
         Logger.debugLog(tag: debugTag, msg: "begin to \(isMeasuring ? "measure" : "layout") \(debugTag ?? "")")
         
@@ -26,7 +26,7 @@ class Flexbox {
         return ret
     }
     
-    var flexFlow:(direction: Direction, wrap: Wrap) {
+    public var flexFlow:(direction: Direction, wrap: Wrap) {
         get {
             return (flexDirection, flexWrap)
         }
@@ -37,9 +37,9 @@ class Flexbox {
         }
     }
     
-    weak var delegate: FlexboxDelegate?
+    public weak var delegate: FlexboxDelegate?
     
-    private(set) var intrinsicSize = FlexboxSize.zero {
+    public private(set) var intrinsicSize = FlexboxSize.zero {
         didSet {
             if oldValue != intrinsicSize {
                 delegate?.invalidateIntrinsicContentSize()
@@ -47,7 +47,7 @@ class Flexbox {
         }
     }
     
-    var flexDirection = Direction.row {
+    public var flexDirection = Direction.row {
         didSet {
             if oldValue != flexDirection {
                 delegate?.setNeedsLayout()
@@ -55,7 +55,7 @@ class Flexbox {
         }
     }
     
-    var flexWrap = Wrap.nowrap {
+    public var flexWrap = Wrap.nowrap {
         didSet {
             if oldValue != flexWrap {
                 delegate?.setNeedsLayout()
@@ -63,7 +63,7 @@ class Flexbox {
         }
     }
     
-    var justifyContent = JustifyContent.start {
+    public var justifyContent = JustifyContent.start {
         didSet {
             if oldValue != justifyContent {
                 delegate?.setNeedsLayout()
@@ -71,7 +71,7 @@ class Flexbox {
         }
     }
     
-    var alignItems = AlignItems.stretch {
+    public var alignItems = AlignItems.stretch {
         didSet {
             if oldValue != alignItems {
                 delegate?.setNeedsLayout()
@@ -79,7 +79,7 @@ class Flexbox {
         }
     }
     
-    var alignContent = AlignContent.stretch {
+    public var alignContent = AlignContent.stretch {
         didSet {
             if oldValue != alignContent {
                 delegate?.setNeedsLayout()
@@ -87,7 +87,7 @@ class Flexbox {
         }
     }
     
-    enum Direction {
+    public enum Direction {
         
         case row
         
@@ -99,7 +99,7 @@ class Flexbox {
         
     }
     
-    enum Wrap {
+    public enum Wrap {
         
         case nowrap
         
@@ -114,7 +114,7 @@ class Flexbox {
         }
     }
     
-    enum JustifyContent {
+    public enum JustifyContent {
         
         case start
         
@@ -128,7 +128,7 @@ class Flexbox {
         
     }
     
-    enum AlignItems {
+    public enum AlignItems {
         
         case start
         
@@ -143,7 +143,7 @@ class Flexbox {
         
     }
     
-    enum AlignContent {
+    public enum AlignContent {
         
         case start
         
@@ -159,7 +159,7 @@ class Flexbox {
         
     }
     
-    enum AlignSelf {
+    public enum AlignSelf {
         
         case auto
         
@@ -201,13 +201,13 @@ class Flexbox {
         }
     }
     
-    struct Logger {
+    public struct Logger {
         
         #if DEBUG
         private static var tags =  Set<String>()
         #endif
         
-        static func addDebugTag(_ tag: String) {
+        public static func addDebugTag(_ tag: String) {
             #if DEBUG
                 tags.insert(tag)
             #endif
@@ -225,7 +225,7 @@ class Flexbox {
     static let dimensionThreshold = Float(0.5)
 }
 
-protocol FlexboxDelegate: class {
+public protocol FlexboxDelegate: class {
     
     func setNeedsLayout()
     
