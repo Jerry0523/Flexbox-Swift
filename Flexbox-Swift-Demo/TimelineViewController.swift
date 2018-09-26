@@ -10,15 +10,14 @@ import UIKit
 
 extension Array {
     
-    mutating func randamArray() -> Array {
+    var random: Array {
         var list = self
         for index in 0..<list.count {
-            let newIndex = Int(arc4random_uniform(UInt32(list.count-index))) + index
+            let newIndex = Int(arc4random_uniform(UInt32(list.count - index))) + index
             if index != newIndex {
                 list.swapAt(index, newIndex)
             }
         }
-        self = list
         return list
     }
 }
@@ -45,7 +44,7 @@ class TimelineViewController: UITableViewController {
             (0...5).forEach{ _ in data = data + data }
         }
 
-        data = data.randamArray()
+        data = data.random
     }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
