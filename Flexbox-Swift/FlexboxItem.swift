@@ -111,7 +111,7 @@ extension FlexboxItem {
 extension FlexboxItem: CustomDebugStringConvertible {
     
     var debugDescription: String {
-        return "flexOrder: \(flexOrder)\nflexGrow: \(flexGrow)\nflexShrink: \(flexShrink)\nflexBasis: \(String(describing: flexBasis))\nflexMargin: (\(flexMargin.top),\(flexMargin.left),\(flexMargin.bottom),\(flexMargin.right))\nflexFrame: (\(flexFrame?.x ?? 0),\(flexFrame?.y ?? 0),\(flexFrame?.w ?? 0),\(flexFrame?.h ?? 0))"
+        return "{flexOrder: \(flexOrder), flexGrow: \(flexGrow), flexShrink: \(flexShrink), flexBasis: \(String(describing: flexBasis)), flexMargin: (\(flexMargin.top),\(flexMargin.left),\(flexMargin.bottom),\(flexMargin.right)), flexFrame: (\(flexFrame?.x ?? 0),\(flexFrame?.y ?? 0),\(flexFrame?.w ?? 0),\(flexFrame?.h ?? 0))}"
     }
     
 }
@@ -232,7 +232,7 @@ extension FlexboxItem {
             return self
         }
         var ret = self
-        FlexboxContext.direction = direction
+        Flexbox.Context.direction = direction
         
         let originAxisDim = origin.axisVal
         let containerDim = containerDimension.axisVal

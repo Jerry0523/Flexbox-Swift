@@ -14,23 +14,22 @@ class MsgCommentView: FlexboxView {
         let label = UILabel()
         label.font = UIFont.systemFont(ofSize: 12.0)
         label.textColor = themeColor
-        label.flexMargin = FlexboxInsets(top: 0, left: 0, bottom: 2, right: 0)
         return label
     }()
     
     let commentBox = { () -> FlexboxTransformView in
         let infoBox = FlexboxTransformView()
+        infoBox.flexMargin = FlexboxInsets(top: 2, left: 0, bottom: 0, right: 0)
         infoBox.flexbox.flexDirection = .column
-        infoBox.flexbox.justifyContent = .center
+        infoBox.flexbox.justifyContent = .start
         return infoBox
     }()
     
     override init(frame: CGRect) {
         super.init(frame: frame)
-        layoutMargins = UIEdgeInsets(top: 2, left: 4, bottom: 2, right: 4)
+        layoutMargins = UIEdgeInsets(top: 2, left: 4, bottom: 3, right: 4)
         backgroundColor = UIColor(white: 0.95, alpha: 1.0)
         flexbox.flexDirection = .column
-        flexbox.debugTag = "comment"
         addSubview(peopleWhoLike)
         addSubview(commentBox)
     }
@@ -47,7 +46,7 @@ extension MsgCommentView: MsgElement {
         if let peopleWhoLikes = model.peopleWhoLikes, peopleWhoLikes.count > 0 {
             peopleWhoLike.isHidden = false
             
-            let attachment = NSTextAttachment.init(data: nil, ofType: nil)
+            let attachment = NSTextAttachment(data: nil, ofType: nil)
             attachment.image = #imageLiteral(resourceName: "heart")
             
             let attributedText = NSMutableAttributedString(attributedString: NSAttributedString(attachment: attachment))

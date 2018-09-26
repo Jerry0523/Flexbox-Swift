@@ -57,7 +57,7 @@ class FlexboxIntermediate {
         flexDebugTag = debugTag
         flexIsMeasuring = isMeasuring
         
-        FlexboxContext.direction = direction
+        Flexbox.Context.direction = direction
         
         if flexboxArrangement.isCrossReverse {
             cursor.crossVal = flexContainerDimension.crossVal
@@ -81,6 +81,7 @@ class FlexboxIntermediate {
                 fixedItems = fixInAxis(fixedItems, shouldAppendAxisDimension: false)
                 ret.replaceSubrange((idx - indexOfItemsInCurrentAxis)..<idx, with: fixedItems)
                 wrap()
+                Flexbox.Logger.debugLog(tag: flexDebugTag, msg: "wrapping \(mItem)")
             }
             mItem = move(mItem)
             let axisIndex = dimensionsOfCross.count
@@ -102,7 +103,7 @@ class FlexboxIntermediate {
         ret.flexFrame = FlexboxRect(x: 0, y: 0, w: measuredSize.w, h: measuredSize.h)
         var shouldWrap = flexWrap.isWrapEnabled
         
-        FlexboxContext.direction = flexDirection
+        Flexbox.Context.direction = flexDirection
         
         if flexboxArrangement.isAxisReverse {
             shouldWrap = shouldWrap && cursor.axisVal - ret.axisVal < Flexbox.dimensionThreshold
@@ -112,6 +113,9 @@ class FlexboxIntermediate {
         if shouldWrap {
             dimensionsOfCross.append(dimensionOfCurrentCross)
         }
+        
+        Flexbox.Logger.debugLog(tag: flexDebugTag, msg: "prepearing \(item)")
+        
         return (ret, shouldWrap && indexOfItemsInCurrentAxis > 0)
     }
     
@@ -155,7 +159,7 @@ class FlexboxIntermediate {
             }
         }
         
-        FlexboxContext.direction = flexDirection
+        Flexbox.Context.direction = flexDirection
         
         cursor.axisVal = cursor.axisVal + flexboxArrangement.axisRatio * item.axisVal
         dimensionOfCurrentCross = max(dimensionOfCurrentCross, item.crossVal)
@@ -166,12 +170,14 @@ class FlexboxIntermediate {
         if item.flexShrink > 0 {
             shrinkOfItemsInCurrentAxis[indexOfItemsInCurrentAxis] = item.flexShrink
         }
+        Flexbox.Logger.debugLog(tag: flexDebugTag, msg: "moving \(ret)")
         return ret
     }
     
     func fixInAxis(_ items: [FlexboxItem], shouldAppendAxisDimension: Bool) -> [FlexboxItem] {
         var itemsAxisDimension = Float(0)
-        FlexboxContext.direction = flexDirection
+        Flexbox.Logger.debugLog(tag: flexDebugTag, msg: "fixing in axis")
+        Flexbox.Context.direction = flexDirection
         let growAndShrinkVal = calculateGrowAndShrink(dimensionToFix: { flexboxArrangement.isAxisReverse ? (-cursor.axisVal) : (cursor.axisVal - flexContainerDimension.axisVal) })
         var fixedAxisOffset = Float(0)
         var ret = items.enumerated().map { (index, item) -> FlexboxItem in
@@ -180,14 +186,17 @@ class FlexboxIntermediate {
                 origin.axisVal = origin.axisVal + fixedAxisOffset
                 mItem.flexFrame?.origin = origin
             }
-            mItem = mItem.fixGrowAndShrinkInAxis(arrangement: flexboxArrangement, growOffset: growAndShrinkVal.growValInLine?[index], shrinkOffset: growAndShrinkVal.shrinkValInLine?[index], fixedAxisOffset: &fixedAxisOffset, fixedCrossDimension: &dimensionOfCurrentCross)
-            FlexboxContext.direction = flexDirection
+            let newItem = mItem.fixGrowAndShrinkInAxis(arrangement: flexboxArrangement, growOffset: growAndShrinkVal.growValInLine?[index], shrinkOffset: growAndShrinkVal.shrinkValInLine?[index], fixedAxisOffset: &fixedAxisOffset, fixedCrossDimension: &dimensionOfCurrentCross)
+            Flexbox.Logger.debugLog(tag: flexDebugTag, msg: "growing and shrinking in axis for \(mItem), result \(newItem)")
+            mItem = newItem
+            Flexbox.Context.direction = flexDirection
             itemsAxisDimension += mItem.axisVal
             return mItem
         }
         
         if growAndShrinkVal.growValInLine == nil && growAndShrinkVal.shrinkValInLine == nil && !flexIsMeasuring {
             ret = ret.fixDistributionInAxis(arrangement: flexboxArrangement, justifyContent: flexJustifyContent, containerDimension: flexContainerDimension, axisDimension: itemsAxisDimension)
+            Flexbox.Logger.debugLog(tag: flexDebugTag, msg: "fixing distribution in axis")
         }
         
         if shouldAppendAxisDimension {
@@ -197,11 +206,13 @@ class FlexboxIntermediate {
             dimensionsOfCross.append(dimensionOfCurrentCross)
         }
         intrinsicSize.axisVal = max(intrinsicSize.axisVal, itemsAxisDimension)
+        Flexbox.Logger.debugLog(tag: flexDebugTag, msg: "modifying intrinsic size in axis \(intrinsicSize.axisVal)")
         return ret
     }
     
     func fixInCross(_ items: [FlexboxItem]) -> [FlexboxItem] {
-        FlexboxContext.direction = flexDirection
+        Flexbox.Logger.debugLog(tag: flexDebugTag, msg: "fixing in cross")
+        Flexbox.Context.direction = flexDirection
         cursor.crossVal = cursor.crossVal + flexboxArrangement.crossRatio * dimensionOfCurrentCross
         if flexboxArrangement.isCrossReverse {
             if  let firstItem = items.first,
@@ -215,6 +226,7 @@ class FlexboxIntermediate {
         } else {
             intrinsicSize.crossVal = cursor.crossVal
         }
+        Flexbox.Logger.debugLog(tag: flexDebugTag, msg: "modifying intrinsic size in cross \(intrinsicSize.crossVal)")
         return flexIsMeasuring ? items :
                     items.fixDistributionInCross(arrangement: flexboxArrangement, alignContent: flexAlignContent, alignItems: flexAlignItems, dimensionsOfCross: dimensionsOfCross, flexContainerDimension: flexContainerDimension, dimensionOfCurrentCross: dimensionOfCurrentCross, indexesOfAxisForItems: indexesOfAxisForItems)
     }

@@ -15,8 +15,13 @@ class Flexbox {
     }
     
     func layout(_ items: [FlexboxItem], size: FlexboxSize, isMeasuring: Bool = false) -> [FlexboxItem] {
+        
+        Logger.debugLog(tag: debugTag, msg: "begin to \(isMeasuring ? "measure" : "layout") \(debugTag ?? "")")
+        
         let intermediate = FlexboxIntermediate(direction: flexDirection, alignItems: alignItems, alignContent:alignContent, wrap: flexWrap, justifyContent: justifyContent, containerDimension: size, debugTag: debugTag, isMeasuring: isMeasuring)
         let ret = intermediate.layout(items)
+        
+        Logger.debugLog(tag: debugTag, msg: "layout end \(ret)")
         intrinsicSize = intermediate.intrinsicSize
         return ret
     }
@@ -178,6 +183,42 @@ class Flexbox {
             case .stretch: return .stretch
             default: return nil
             }
+        }
+    }
+    
+    struct Context {
+        
+        private static var mDirection = Direction.row
+        
+        static var direction: Direction {
+            get {
+                return mDirection
+            }
+            
+            set {
+                mDirection = newValue
+            }
+        }
+    }
+    
+    struct Logger {
+        
+        #if DEBUG
+        private static var tags =  Set<String>()
+        #endif
+        
+        static func addDebugTag(_ tag: String) {
+            #if DEBUG
+                tags.insert(tag)
+            #endif
+        }
+        
+        static func debugLog(tag: String?, msg: @autoclosure () -> String) {
+            #if DEBUG
+                if let tag = tag, tags.contains(tag) {
+                    print("<-----", msg(), "----->")
+                }
+            #endif
         }
     }
     

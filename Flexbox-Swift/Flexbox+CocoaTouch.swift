@@ -1,5 +1,5 @@
 //
-//  UIView+FlexBox.swift
+//  Flexbox+CocoaTouch.swift
 //  Flexbox-Swift
 //
 //  Created by Jerry on 2018/5/22.

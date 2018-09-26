@@ -107,23 +107,6 @@ struct FlexboxArrangement {
     }
 }
 
-struct FlexboxContext {
-    
-    var direction: Flexbox.Direction
-    
-    static var current = FlexboxContext(direction: .row)
-    
-    static var direction: Flexbox.Direction {
-        get {
-            return current.direction
-        }
-        
-        set {
-            current.direction = newValue
-        }
-    }
-}
-
 protocol AnyDirectionalDimension {
     
     var axisVal: Float { get set }
@@ -136,7 +119,7 @@ extension FlexboxSize: AnyDirectionalDimension {
     
     var axisVal: Float {
         get {
-            switch FlexboxContext.direction {
+            switch Flexbox.Context.direction {
             case .row, .rowReverse:
                 return w
             case .column, .columnReverse:
@@ -144,7 +127,7 @@ extension FlexboxSize: AnyDirectionalDimension {
             }
         }
         set {
-            switch FlexboxContext.direction {
+            switch Flexbox.Context.direction {
             case .row, .rowReverse:
                 w = newValue
             case .column, .columnReverse:
@@ -155,7 +138,7 @@ extension FlexboxSize: AnyDirectionalDimension {
     
     var crossVal: Float {
         get {
-            switch FlexboxContext.direction {
+            switch Flexbox.Context.direction {
             case .row, .rowReverse:
                 return h
             case .column, .columnReverse:
@@ -163,7 +146,7 @@ extension FlexboxSize: AnyDirectionalDimension {
             }
         }
         set {
-            switch FlexboxContext.direction {
+            switch Flexbox.Context.direction {
             case .row, .rowReverse:
                 h = newValue
             case .column, .columnReverse:
@@ -178,7 +161,7 @@ extension FlexboxPoint: AnyDirectionalDimension {
     
     var axisVal: Float {
         get {
-            switch FlexboxContext.direction {
+            switch Flexbox.Context.direction {
             case .row, .rowReverse:
                 return x
             case .column, .columnReverse:
@@ -186,7 +169,7 @@ extension FlexboxPoint: AnyDirectionalDimension {
             }
         }
         set {
-            switch FlexboxContext.direction {
+            switch Flexbox.Context.direction {
             case .row, .rowReverse:
                 x = newValue
             case .column, .columnReverse:
@@ -197,7 +180,7 @@ extension FlexboxPoint: AnyDirectionalDimension {
     
     var crossVal: Float {
         get {
-            switch FlexboxContext.direction {
+            switch Flexbox.Context.direction {
             case .row, .rowReverse:
                 return y
             case .column, .columnReverse:
@@ -205,7 +188,7 @@ extension FlexboxPoint: AnyDirectionalDimension {
             }
         }
         set {
-            switch FlexboxContext.direction {
+            switch Flexbox.Context.direction {
             case .row, .rowReverse:
                 y = newValue
             case .column, .columnReverse:
@@ -219,7 +202,7 @@ extension FlexboxInsets: AnyDirectionalDimension {
     
     var axisVal: Float {
         get {
-            switch FlexboxContext.direction {
+            switch Flexbox.Context.direction {
             case .row, .rowReverse:
                 return left + right
             case .column, .columnReverse:
@@ -233,7 +216,7 @@ extension FlexboxInsets: AnyDirectionalDimension {
     
     var crossVal: Float {
         get {
-            switch FlexboxContext.direction {
+            switch Flexbox.Context.direction {
             case .row, .rowReverse:
                 return top + bottom
             case .column, .columnReverse:
@@ -246,7 +229,7 @@ extension FlexboxInsets: AnyDirectionalDimension {
     }
     
     var axisVals: (Float, Float) {
-        switch FlexboxContext.direction {
+        switch Flexbox.Context.direction {
         case .row:
             return (left, right)
         case .rowReverse:
@@ -259,7 +242,7 @@ extension FlexboxInsets: AnyDirectionalDimension {
     }
     
     var crossVals: (Float, Float) {
-        switch FlexboxContext.direction {
+        switch Flexbox.Context.direction {
         case .row:
             return (top, bottom)
         case .rowReverse:
@@ -276,7 +259,7 @@ extension FlexboxItem: AnyDirectionalDimension {
     
     var axisVal: Float {
         get {
-            switch FlexboxContext.direction {
+            switch Flexbox.Context.direction {
             case .row, .rowReverse:
                 return flexWidth
             case .column, .columnReverse:
@@ -290,7 +273,7 @@ extension FlexboxItem: AnyDirectionalDimension {
     
     var crossVal: Float {
         get {
-            switch FlexboxContext.direction {
+            switch Flexbox.Context.direction {
             case .row, .rowReverse:
                 return flexHeight
             case .column, .columnReverse:

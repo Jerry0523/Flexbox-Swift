@@ -42,7 +42,6 @@ class TimelineViewController: UITableViewController {
             let plistData = try? Data(contentsOf: plistURL) {
             let decoder = PropertyListDecoder()
             data = try? decoder.decode([MsgModel].self, from: plistData)
-
             (0...5).forEach{ _ in data = data + data }
         }
 

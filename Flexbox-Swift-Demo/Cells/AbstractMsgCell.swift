@@ -121,7 +121,7 @@ enum MsgModelType: Int, CaseIterable {
     }
 }
 
-class AbstractMsgCell: UITableViewCell, MsgElement {
+class AbstractMsgCell: FlexboxTableViewCell, MsgElement {
     
     let avatarImageView = { () -> UIImageView in
         let imageView = UIImageView()
@@ -175,19 +175,12 @@ class AbstractMsgCell: UITableViewCell, MsgElement {
         return commentView
     }()
     
-    //the content box
-    let contentBox = { () -> FlexboxTransformView in
-        let contentBox = FlexboxTransformView()
-        contentBox.layoutMargins = UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
-        contentBox.flexbox.alignItems = .center
-        contentBox.flexbox.debugTag = "content"
-        contentBox.flexGrow = 1.0
-        contentBox.translatesAutoresizingMaskIntoConstraints = false
-        return contentBox
-    }()
-    
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
+        
+        flexboxContentView.layoutMargins = UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
+        flexboxContentView.flexbox.alignItems = .center
+        flexboxContentView.flexbox.debugTag = "content"
         
         configArrangedSubViews()
         
@@ -197,14 +190,8 @@ class AbstractMsgCell: UITableViewCell, MsgElement {
         containerBox.addSubview(infoBox)
         containerBox.addSubview(accessoryBox)
         
-        contentBox.addSubview(avatarImageView)
-        contentBox.addSubview(containerBox)
-        contentView.addSubview(contentBox)
-        
-        NSLayoutConstraint.activate([contentBox.leftAnchor.constraint(equalTo: contentView.leftAnchor),
-                                     contentBox.rightAnchor.constraint(equalTo: contentView.rightAnchor),
-                                     contentBox.topAnchor.constraint(equalTo: contentView.topAnchor),
-                                     contentBox.bottomAnchor.constraint(equalTo: contentView.bottomAnchor)])
+        flexboxContentView.addSubview(avatarImageView)
+        flexboxContentView.addSubview(containerBox)
     }
     
     //for subclasses to override
@@ -216,7 +203,7 @@ class AbstractMsgCell: UITableViewCell, MsgElement {
         toolbar.update(model)
         commentView.update(model)
         avatarImageView.image = UIImage(named: model.avatarImageName)
-        contentBox.invalidateIntrinsicContentSize()
+        flexboxContentView.invalidateIntrinsicContentSize()
     }
     
     required init?(coder aDecoder: NSCoder) {

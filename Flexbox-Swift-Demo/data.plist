@@ -83,6 +83,15 @@
             <string>Jerry Wong</string>
             <string>Lady Gaga</string>
         </array>
+        <key>comments</key>
+        <array>
+            <dict>
+                <key>author</key>
+                <string>Lady Gaga</string>
+                <key>content</key>
+                <string>Amazing!!!</string>
+            </dict>
+        </array>
         <key>type</key>
         <integer>2</integer>
     </dict>
