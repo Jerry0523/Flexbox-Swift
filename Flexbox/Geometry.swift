@@ -81,6 +81,8 @@ public struct FlexboxInsets: Equatable {
 
 struct FlexboxArrangement {
     
+    let isWrap: Bool
+    
     let direction: Flexbox.Direction
     
     let isCrossReverse: Bool

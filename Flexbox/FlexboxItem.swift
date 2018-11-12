@@ -99,9 +99,13 @@ extension FlexboxItem {
         return size
     }
     
-    func reMeasure() -> FlexboxItem {
+    func reMeasure(isHorizontal: Bool, isShrinking: Bool) -> FlexboxItem {
         var ret = self
-        if let size = onMeasure?(flexFrame?.size ?? FlexboxSize.zero) {
+        let oldSize = flexFrame?.size ?? FlexboxSize.zero
+        if let size = onMeasure?(oldSize) {
+            if isShrinking && ((isHorizontal && size.w > oldSize.w) || (!isHorizontal && size.h > oldSize.h)) {
+                return ret
+            }
             ret.flexFrame?.size = size
         }
         return ret
@@ -130,7 +134,7 @@ extension FlexboxItem {
             } else if let shrinkOffset = shrinkOffset {
                 let ow = flexFrame?.w ?? 0
                 ret.flexFrame?.w -= shrinkOffset
-                ret = ret.reMeasure()
+                ret = ret.reMeasure(isHorizontal: arrangement.isHorizontal, isShrinking: !arrangement.isWrap)
                 if ret.flexFrame?.w ?? 0 < ow - shrinkOffset {
                     ret.flexFrame?.w = ow - shrinkOffset
                 }
@@ -151,7 +155,7 @@ extension FlexboxItem {
             } else if let shrinkOffset = shrinkOffset {
                 let oh = flexFrame?.h ?? 0
                 ret.flexFrame?.h -= shrinkOffset
-                ret = ret.reMeasure()
+                ret = ret.reMeasure(isHorizontal: arrangement.isHorizontal, isShrinking: !arrangement.isWrap)
                 if ret.flexFrame?.h ?? 0 < oh - shrinkOffset {
                     ret.flexFrame?.h = oh - shrinkOffset
                 }
