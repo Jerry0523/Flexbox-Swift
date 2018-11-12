@@ -42,7 +42,7 @@ class FlexboxIntermediate {
     
     var flexboxArrangement: FlexboxArrangement {
         get {
-            return FlexboxArrangement(isWrap: flexWrap.isWrapEnabled, direction: flexDirection, isCrossReverse: flexWrap == .wrapReverse)
+            return FlexboxArrangement(direction: flexDirection, isCrossReverse: flexWrap == .wrapReverse)
         }
     }
     
